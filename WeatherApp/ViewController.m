@@ -41,8 +41,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
 - (IBAction)refresh:(UIButton *)sender {
 
-    [self downloadWeather];
-    [self downloadForecast];
+  
     [self.weatherView setNeedsDisplay];
 }
 

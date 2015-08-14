@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* WeatherService.m */; };
 		0F1A5ED7BD568258AE9ABAD7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855FBCBEE01F83EF1845821 /* libPods.a */; };
 		CE0656651B7D41E700208170 /* WeatherView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0656641B7D41E700208170 /* WeatherView.m */; };
 		CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B8AEB1B77F5AE00716155 /* TableViewController.m */; };
@@ -31,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04B3E0831B7E0B030010BE5E /* WeatherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherService.h; sourceTree = "<group>"; };
+		04B3E0841B7E0B030010BE5E /* WeatherService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherService.m; sourceTree = "<group>"; };
 		248880C98D2A720CAED18737 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		CE0656631B7D41E700208170 /* WeatherView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherView.h; sourceTree = "<group>"; };
 		CE0656641B7D41E700208170 /* WeatherView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherView.m; sourceTree = "<group>"; };
@@ -125,6 +128,8 @@
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
 				CE69C1EA1B77954E005CC71D /* Supporting Files */,
+				04B3E0831B7E0B030010BE5E /* WeatherService.h */,
+				04B3E0841B7E0B030010BE5E /* WeatherService.m */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 			files = (
 				CE69C1F31B77954E005CC71D /* ViewController.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
+				04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
 				CE0656651B7D41E700208170 /* WeatherView.m in Sources */,
 				CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */,
@@ -424,6 +430,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = WeatherApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -435,6 +442,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = WeatherApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
