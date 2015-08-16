@@ -176,13 +176,29 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     [self.locationManager startUpdatingLocation];
     [self downloadWeather];
     [self downloadForecast];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appWillEnterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
 }
+
+
+- (void)appWillEnterForeground{ //Application will enter foreground.
+//    [self.weatherView.circle removeFromSuperlayer];
+//    self.weatherView.circle = nil;
+    [self.weatherView setNeedsDisplay];
+//    return self;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.weatherView setNeedsDisplay];
+}
 
 @end

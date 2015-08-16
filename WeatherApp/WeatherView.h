@@ -10,4 +10,6 @@
 
 @interface WeatherView : UIView
 
+//@property (nonatomic, strong) CAShapeLayer *circle;
+
 @end
