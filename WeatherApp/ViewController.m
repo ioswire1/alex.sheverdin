@@ -186,7 +186,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 - (void)appWillEnterForeground{ //Application will enter foreground.
 //    [self.weatherView.circle removeFromSuperlayer];
 //    self.weatherView.circle = nil;
-    [self.weatherView setNeedsDisplay];
+//    [self.weatherView setNeedsDisplay];
 //    return self;
 }
 

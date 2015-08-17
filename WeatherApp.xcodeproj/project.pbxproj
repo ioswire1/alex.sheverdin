@@ -19,6 +19,9 @@
 		CE69C1F81B77954E005CC71D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F71B77954E005CC71D /* Images.xcassets */; };
 		CE69C1FB1B77954E005CC71D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F91B77954E005CC71D /* LaunchScreen.xib */; };
 		CE69C2071B77954F005CC71D /* WeatherAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C2061B77954F005CC71D /* WeatherAppTests.m */; };
+		CE93C4341B8103FD0098BA9B /* WeatherApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */; };
+		CE93C4711B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CE93C4741B822C540098BA9B /* Forecast.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4731B822C540098BA9B /* Forecast.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,11 @@
 		CE69C2001B77954F005CC71D /* WeatherAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE69C2051B77954F005CC71D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE69C2061B77954F005CC71D /* WeatherAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherAppTests.m; sourceTree = "<group>"; };
+		CE93C4331B8103FD0098BA9B /* WeatherApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeatherApp.xcdatamodel; sourceTree = "<group>"; };
+		CE93C46F1B822B5D0098BA9B /* NSManagedObject+ActiveRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+ActiveRecord.h"; sourceTree = "<group>"; };
+		CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+ActiveRecord.m"; sourceTree = "<group>"; };
+		CE93C4721B822C540098BA9B /* Forecast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Forecast.h; path = Model/Forecast.h; sourceTree = "<group>"; };
+		CE93C4731B822C540098BA9B /* Forecast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Forecast.m; path = Model/Forecast.m; sourceTree = "<group>"; };
 		D855FBCBEE01F83EF1845821 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1448282D2A60B07889A747A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,6 +126,9 @@
 		CE69C1E91B77954E005CC71D /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				CE93C4751B822C5D0098BA9B /* Model */,
+				CE93C46F1B822B5D0098BA9B /* NSManagedObject+ActiveRecord.h */,
+				CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */,
 				CE69C1F11B77954E005CC71D /* ViewController.h */,
 				CE69C1F21B77954E005CC71D /* ViewController.m */,
 				CE69C1F41B77954E005CC71D /* Main.storyboard */,
@@ -127,9 +138,9 @@
 				CE3B8AEB1B77F5AE00716155 /* TableViewController.m */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
-				CE69C1EA1B77954E005CC71D /* Supporting Files */,
 				04B3E0831B7E0B030010BE5E /* WeatherService.h */,
 				04B3E0841B7E0B030010BE5E /* WeatherService.m */,
+				CE69C1EA1B77954E005CC71D /* Supporting Files */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -160,6 +171,16 @@
 				CE69C2051B77954F005CC71D /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CE93C4751B822C5D0098BA9B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */,
+				CE93C4721B822C540098BA9B /* Forecast.h */,
+				CE93C4731B822C540098BA9B /* Forecast.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,7 +321,10 @@
 				CE69C1F31B77954E005CC71D /* ViewController.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */,
+				CE93C4341B8103FD0098BA9B /* WeatherApp.xcdatamodeld in Sources */,
+				CE93C4711B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
+				CE93C4741B822C540098BA9B /* Forecast.m in Sources */,
 				CE0656651B7D41E700208170 /* WeatherView.m in Sources */,
 				CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */,
 			);
@@ -429,6 +453,7 @@
 			baseConfigurationReference = 248880C98D2A720CAED18737 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -441,6 +466,7 @@
 			baseConfigurationReference = F1448282D2A60B07889A747A /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -513,6 +539,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CE93C4331B8103FD0098BA9B /* WeatherApp.xcdatamodel */,
+			);
+			currentVersion = CE93C4331B8103FD0098BA9B /* WeatherApp.xcdatamodel */;
+			path = WeatherApp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CE69C1DF1B77954E005CC71D /* Project object */;
 }
