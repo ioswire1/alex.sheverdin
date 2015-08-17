@@ -1,6 +1,8 @@
 # alex.sheverdin
 
-<img src="https://github.com/ioswire1/alex.sheverdin/blob/master/MainScreen.png" align="center">
+<p align=center>
+<img src="https://github.com/ioswire1/alex.sheverdin/blob/master/MainScreen.png">
+</p>
 
 Воспользовавшись http://openweathermap.org API, создать приложение для iPhone устройства, с минимальной версией iOS 8.0.
 
