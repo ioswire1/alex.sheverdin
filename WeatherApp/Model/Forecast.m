@@ -11,7 +11,7 @@
 
 @implementation Forecast
 
-@dynamic dateTime;
+@dynamic dt_txt;
 @dynamic temp;
 @dynamic wDescription;
 @dynamic icon;

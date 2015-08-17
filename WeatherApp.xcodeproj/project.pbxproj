@@ -21,7 +21,8 @@
 		CE69C2071B77954F005CC71D /* WeatherAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C2061B77954F005CC71D /* WeatherAppTests.m */; };
 		CE93C4341B8103FD0098BA9B /* WeatherApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */; };
 		CE93C4711B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		CE93C4741B822C540098BA9B /* Forecast.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4731B822C540098BA9B /* Forecast.m */; };
+		CE93C4781B82758A0098BA9B /* Forecast+API.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4771B82758A0098BA9B /* Forecast+API.m */; };
+		CE93C4811B8277130098BA9B /* Forecast.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93C4801B8277130098BA9B /* Forecast.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +60,10 @@
 		CE93C4331B8103FD0098BA9B /* WeatherApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeatherApp.xcdatamodel; sourceTree = "<group>"; };
 		CE93C46F1B822B5D0098BA9B /* NSManagedObject+ActiveRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+ActiveRecord.h"; sourceTree = "<group>"; };
 		CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+ActiveRecord.m"; sourceTree = "<group>"; };
-		CE93C4721B822C540098BA9B /* Forecast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Forecast.h; path = Model/Forecast.h; sourceTree = "<group>"; };
-		CE93C4731B822C540098BA9B /* Forecast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Forecast.m; path = Model/Forecast.m; sourceTree = "<group>"; };
+		CE93C4761B82758A0098BA9B /* Forecast+API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Forecast+API.h"; path = "Model/Forecast+API.h"; sourceTree = "<group>"; };
+		CE93C4771B82758A0098BA9B /* Forecast+API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Forecast+API.m"; path = "Model/Forecast+API.m"; sourceTree = "<group>"; };
+		CE93C47F1B8277130098BA9B /* Forecast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Forecast.h; path = Model/Forecast.h; sourceTree = "<group>"; };
+		CE93C4801B8277130098BA9B /* Forecast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Forecast.m; path = Model/Forecast.m; sourceTree = "<group>"; };
 		D855FBCBEE01F83EF1845821 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1448282D2A60B07889A747A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -176,9 +179,11 @@
 		CE93C4751B822C5D0098BA9B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				CE93C47F1B8277130098BA9B /* Forecast.h */,
+				CE93C4801B8277130098BA9B /* Forecast.m */,
 				CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */,
-				CE93C4721B822C540098BA9B /* Forecast.h */,
-				CE93C4731B822C540098BA9B /* Forecast.m */,
+				CE93C4761B82758A0098BA9B /* Forecast+API.h */,
+				CE93C4771B82758A0098BA9B /* Forecast+API.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -320,13 +325,14 @@
 			files = (
 				CE69C1F31B77954E005CC71D /* ViewController.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
+				CE93C4811B8277130098BA9B /* Forecast.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */,
 				CE93C4341B8103FD0098BA9B /* WeatherApp.xcdatamodeld in Sources */,
 				CE93C4711B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
-				CE93C4741B822C540098BA9B /* Forecast.m in Sources */,
 				CE0656651B7D41E700208170 /* WeatherView.m in Sources */,
 				CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */,
+				CE93C4781B82758A0098BA9B /* Forecast+API.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

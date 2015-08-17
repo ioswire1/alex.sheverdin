@@ -10,6 +10,8 @@
 #import "ASIHTTPRequest.h"
 #import "TableViewController.h"
 #import "WeatherView.h"
+#import "AppDelegate.h"
+#import "Forecast+API.h"
 
 //static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?lat=50&lon=36.25&units=metric";
 static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?q=kharkiv&units=metric";
@@ -20,7 +22,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 @interface ViewController ()
 
 @property (nonatomic, strong) NSDictionary *allWeatherData;
-@property (nonatomic, strong) NSArray *forcast;
+@property (nonatomic, strong) NSArray *forecast;
 @property (nonatomic, weak) TableViewController *tableViewController;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
@@ -40,9 +42,10 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
 
 - (IBAction)refresh:(UIButton *)sender {
-
+    [self downloadWeather];
+    [self downloadForecast];
   
-    [self.weatherView setNeedsDisplay];
+    //[self.weatherView setNeedsDisplay];
 }
 
 - (NSURL *) composeURLWithType:(ASHURLType) URLType {
@@ -74,6 +77,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
             self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
                                                                   options:0
                                                                     error:&error];
+            
             NSDictionary *dict = [self.allWeatherData valueForKey:@"main"];
             self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [[dict valueForKey:@"temp"] intValue]];
             self.lblCity.text = [self.allWeatherData valueForKey:@"name"];
@@ -88,6 +92,10 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     }];
 }
 
+- (NSManagedObjectContext *)managedObjectContext {
+    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
+}
+
 - (void) downloadForecast {
     
     [self downloadWeatherDataFromURL:[self composeURLWithType:ASHURLTypeForecastCityName] withBlock:^(id result) {
@@ -96,10 +104,22 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
         } else if ([result isKindOfClass:[NSData class]]) {
             NSError *error;
             self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&error];
-            self.forcast = [self.allWeatherData valueForKey:@"list"];
+
+           if (!error) {
+               
+                self.forecast = [self.allWeatherData valueForKey:@"list"];
+
+                for (NSDictionary *dictionary in self.forecast) {
+                    [Forecast forecastWithDictionary:dictionary inContext:[self managedObjectContext]];
+                }
+                
+                if (![[self managedObjectContext] save:&error]) {
+                    NSLog(@"%@", error);
+                }
+            }
             
             
-            self.tableViewController.forcast = self.forcast;
+            self.tableViewController.forcast = self.forecast;
             [self.tableViewController refreshTable];
         }
         
@@ -131,7 +151,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     if ([segue.identifier isEqualToString:@"ToTable"]) {
         if ([segue.destinationViewController isKindOfClass:[TableViewController class]]) {
             self.tableViewController = (TableViewController *)segue.destinationViewController;
-            self.tableViewController.forcast = self.forcast;
+            self.tableViewController.forcast = self.forecast;
         }
     }
 }

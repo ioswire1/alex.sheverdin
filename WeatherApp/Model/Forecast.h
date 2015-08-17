@@ -12,7 +12,7 @@
 
 @interface Forecast : NSManagedObject
 
-@property (nonatomic, retain) NSString * dateTime;
+@property (nonatomic, retain) NSString * dt_txt;
 @property (nonatomic, retain) NSNumber * temp;
 @property (nonatomic, retain) NSString * wDescription;
 @property (nonatomic, retain) id icon;
