@@ -116,6 +116,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
             
             //UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
             //[self.imageWeather setImage:image];
+            [self.imageWeather setImage:weather.weatherIcon];
         }
     }];
 }
@@ -142,7 +143,6 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
                     NSLog(@"%@", error);
                 }
             }
-            
             
             self.tableViewController.forcast = self.forecast;
             [self.tableViewController refreshTable];
@@ -187,6 +187,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"didFailWithError: %@", error);
+    //!!! Replace UIAlertView with UIAlertController
     UIAlertView *errorAlert = [[UIAlertView alloc]
                                initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [errorAlert show];
@@ -196,6 +197,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
      didUpdateLocations:(NSArray*)locations {
     
     CLLocation *currentLocation = [locations lastObject];
+    
     if (currentLocation != nil) {
         self.lblLongitude.text = [NSString stringWithFormat:@"%.2f", currentLocation.coordinate.longitude];
         self.lblLatitude.text = [NSString stringWithFormat:@"%.2f", currentLocation.coordinate.latitude];
@@ -213,6 +215,9 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    //!!! Add check for Location Service is On
+    // init locationManager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
@@ -221,6 +226,8 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     [self.locationManager startUpdatingLocation];
     [self downloadWeather];
     [self downloadForecast];
+    // notification for entering app to foreground (instead viewWillAppear)
+    //!!! where removeObserver to be done?
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWillEnterForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
@@ -229,10 +236,10 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
 
 - (void)appWillEnterForeground{ //Application will enter foreground.
+//!!! what about Layer ?
 //    [self.weatherView.circle removeFromSuperlayer];
 //    self.weatherView.circle = nil;
     [self.weatherView setNeedsDisplay];
-//    return self;
 }
 
 

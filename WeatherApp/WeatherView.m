@@ -86,6 +86,12 @@
                 startAngle:M_PI/2
                   endAngle:M_PI*5/2
                  clockwise:YES];
+    
+    [[UIColor lightGrayColor] setStroke];
+    [path stroke];
+    
+    CGContextRestoreGState(context); // restore context
+    
     CAShapeLayer *circle = [CAShapeLayer layer];
     circle.path = path.CGPath;
     circle.position = bounds.origin;
@@ -119,7 +125,7 @@
     [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     circle.strokeEnd = 0.0f;
 
-    CGContextRestoreGState(context); // restore context
+//    CGContextRestoreGState(context); // restore context
 }
 
 

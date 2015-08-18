@@ -15,7 +15,7 @@
         <attribute name="temp_max" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="temp_min" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="weatherDescription" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="weatherIcon" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="weatherIcon" optional="YES" attributeType="Transformable" valueTransformerName="ImageTransformer" syncable="YES"/>
         <attribute name="windDeg" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="windSpeed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
     </entity>

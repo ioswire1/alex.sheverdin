@@ -7,6 +7,8 @@
 //
 
 #import "Weather+API.h"
+#import <UIKit/UIKit.h>
+
 
 @implementation Weather (API)
 
@@ -58,8 +60,15 @@
     NSDictionary *weatherDic = [[dictionary valueForKey:@"weather"] firstObject];
     weather.weatherDescription = [weatherDic valueForKey:@"description"];
     //weather.weatherIcon = [weatherDic valueForKey:@"icon"];
-
+    
+    NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",[weatherDic valueForKey:@"icon"]];
+    
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
+   
+    weather.weatherIcon = image;
+    
     return weather;
+    
 }
 
 @end

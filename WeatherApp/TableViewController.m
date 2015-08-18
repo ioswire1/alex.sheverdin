@@ -19,13 +19,17 @@
 
 @implementation TableViewController
 
+
 - (void)refreshTable {
     
     [self.tableView reloadData];
 }
 
+
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
+    
     self.fetchedResults = [Forecast fetchAllSortedBy:@"dt_txt" ascending:YES withPredicate:nil groupBy:nil];
     self.fetchedResults.delegate = self;
     
@@ -35,6 +39,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -48,7 +53,9 @@
     [self.tableView beginUpdates];
 }
 
+
 - (void)controller:(NSFetchedResultsController *)controller
+
    didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath
      forChangeType:(NSFetchedResultsChangeType)type
@@ -74,15 +81,17 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    
     [self.tableView endUpdates];
 }
 
 - (void)configurateCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    
     Forecast *forecast = [self.fetchedResults objectAtIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithFormat:@"%dºC", [forecast.temp intValue]];
-        NSRange range = NSMakeRange(0, 16);
-        cell.detailTextLabel.text = [forecast.dt_txt substringWithRange: range];
-        //cell.detailTextLabel.text = forecast.dt_txt;
+    cell.textLabel.text = [NSString stringWithFormat:@"%dºC", [forecast.temp intValue]];
+    NSRange range = NSMakeRange(0, 16);
+    cell.detailTextLabel.text = [forecast.dt_txt substringWithRange: range];
+    
 }
 
 
@@ -91,21 +100,24 @@
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     return [[self.fetchedResults sections] count];
 }
 
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     id  sectionInfo = [[self.fetchedResults sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //static NSString *cellIdentifier = @"Cell Forecast";
-    
-        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                               reuseIdentifier:@"Cell Forecast"];
-    
     //UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                               reuseIdentifier:@"Cell Forecast"];
+
     [self configurateCell:cell atIndexPath:indexPath];
     return cell;
 }
