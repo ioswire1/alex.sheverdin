@@ -12,6 +12,8 @@
 		CE0656651B7D41E700208170 /* WeatherView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0656641B7D41E700208170 /* WeatherView.m */; };
 		CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B8AEB1B77F5AE00716155 /* TableViewController.m */; };
 		CE3B8AEE1B78E68300716155 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3B8AED1B78E68300716155 /* CoreLocation.framework */; };
+		CE4571801B83A2FD00323C90 /* Weather+API.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45717F1B83A2FD00323C90 /* Weather+API.m */; };
+		CE4571861B83B0D700323C90 /* Weather.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4571851B83B0D700323C90 /* Weather.m */; };
 		CE69C1ED1B77954E005CC71D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1EC1B77954E005CC71D /* main.m */; };
 		CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1EF1B77954E005CC71D /* AppDelegate.m */; };
 		CE69C1F31B77954E005CC71D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1F21B77954E005CC71D /* ViewController.m */; };
@@ -44,6 +46,10 @@
 		CE3B8AEA1B77F5AE00716155 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
 		CE3B8AEB1B77F5AE00716155 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 		CE3B8AED1B78E68300716155 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		CE45717E1B83A2FD00323C90 /* Weather+API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Weather+API.h"; path = "Model/Weather+API.h"; sourceTree = "<group>"; };
+		CE45717F1B83A2FD00323C90 /* Weather+API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Weather+API.m"; path = "Model/Weather+API.m"; sourceTree = "<group>"; };
+		CE4571841B83B0D700323C90 /* Weather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Weather.h; path = Model/Weather.h; sourceTree = "<group>"; };
+		CE4571851B83B0D700323C90 /* Weather.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Weather.m; path = Model/Weather.m; sourceTree = "<group>"; };
 		CE69C1E71B77954E005CC71D /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE69C1EB1B77954E005CC71D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE69C1EC1B77954E005CC71D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -130,15 +136,13 @@
 			isa = PBXGroup;
 			children = (
 				CE93C4751B822C5D0098BA9B /* Model */,
-				CE93C46F1B822B5D0098BA9B /* NSManagedObject+ActiveRecord.h */,
-				CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */,
+				CE69C1F41B77954E005CC71D /* Main.storyboard */,
 				CE69C1F11B77954E005CC71D /* ViewController.h */,
 				CE69C1F21B77954E005CC71D /* ViewController.m */,
-				CE69C1F41B77954E005CC71D /* Main.storyboard */,
-				CE0656631B7D41E700208170 /* WeatherView.h */,
-				CE0656641B7D41E700208170 /* WeatherView.m */,
 				CE3B8AEA1B77F5AE00716155 /* TableViewController.h */,
 				CE3B8AEB1B77F5AE00716155 /* TableViewController.m */,
+				CE0656631B7D41E700208170 /* WeatherView.h */,
+				CE0656641B7D41E700208170 /* WeatherView.m */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
 				04B3E0831B7E0B030010BE5E /* WeatherService.h */,
@@ -179,11 +183,17 @@
 		CE93C4751B822C5D0098BA9B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */,
+				CE4571841B83B0D700323C90 /* Weather.h */,
+				CE4571851B83B0D700323C90 /* Weather.m */,
+				CE45717E1B83A2FD00323C90 /* Weather+API.h */,
+				CE45717F1B83A2FD00323C90 /* Weather+API.m */,
 				CE93C47F1B8277130098BA9B /* Forecast.h */,
 				CE93C4801B8277130098BA9B /* Forecast.m */,
-				CE93C4321B8103FD0098BA9B /* WeatherApp.xcdatamodeld */,
 				CE93C4761B82758A0098BA9B /* Forecast+API.h */,
 				CE93C4771B82758A0098BA9B /* Forecast+API.m */,
+				CE93C46F1B822B5D0098BA9B /* NSManagedObject+ActiveRecord.h */,
+				CE93C4701B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -323,7 +333,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4571861B83B0D700323C90 /* Weather.m in Sources */,
 				CE69C1F31B77954E005CC71D /* ViewController.m in Sources */,
+				CE4571801B83A2FD00323C90 /* Weather+API.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				CE93C4811B8277130098BA9B /* Forecast.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */,

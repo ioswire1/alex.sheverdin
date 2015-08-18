@@ -6,7 +6,21 @@
         <attribute name="temp" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="wDescription" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Weather" representedClassName="Weather" syncable="YES">
+        <attribute name="dt" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="humidity" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pressure" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="temp" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="temp_max" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="temp_min" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="weatherDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weatherIcon" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="windDeg" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="windSpeed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Forecast" positionX="-54" positionY="-9" width="128" height="103"/>
+        <element name="Weather" positionX="-36" positionY="36" width="128" height="210"/>
     </elements>
 </model>

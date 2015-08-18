@@ -13,10 +13,10 @@
 + (Forecast *)forecastWithDictionary:(NSDictionary *)dictionary inContext:(NSManagedObjectContext *)context {
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([self class])];
-    NSRange range = NSMakeRange(0, 13);
-    //NSString *dt_txt = dictionary[@"dt_txt"];
-    NSString *dt_txt = [[dictionary valueForKey:@"dt_txt"] substringWithRange: range];
-
+//    NSRange range = NSMakeRange(0, 16);
+//    NSString *dt_txt = [[dictionary valueForKey:@"dt_txt"] substringWithRange: range];
+    NSString *dt_txt = [dictionary valueForKey:@"dt_txt"];
+    
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dt_txt == %@", dt_txt];
     request.predicate = predicate;
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"dt_txt" ascending:YES]];

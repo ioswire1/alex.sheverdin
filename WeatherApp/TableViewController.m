@@ -79,10 +79,11 @@
 
 - (void)configurateCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Forecast *forecast = [self.fetchedResults objectAtIndexPath:indexPath];
-    cell.textLabel.text = forecast.dt_txt;
+        cell.textLabel.text = [NSString stringWithFormat:@"%dºC", [forecast.temp intValue]];
+        NSRange range = NSMakeRange(0, 16);
+        cell.detailTextLabel.text = [forecast.dt_txt substringWithRange: range];
+        //cell.detailTextLabel.text = forecast.dt_txt;
 }
-
-
 
 
 

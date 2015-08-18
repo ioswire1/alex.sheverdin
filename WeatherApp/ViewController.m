@@ -12,6 +12,7 @@
 #import "WeatherView.h"
 #import "AppDelegate.h"
 #import "Forecast+API.h"
+#import "Weather+API.h"
 
 //static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?lat=50&lon=36.25&units=metric";
 static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?q=kharkiv&units=metric";
@@ -36,6 +37,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 @property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
 @property (weak, nonatomic) IBOutlet WeatherView *weatherView;
 
+@property (weak, nonatomic) IBOutlet UILabel *lblUpdateDateTime;
 @end
 
 @implementation ViewController
@@ -68,6 +70,12 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     return [NSURL URLWithString:urlString];
 }
 
+
+- (NSManagedObjectContext *)managedObjectContext {
+    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
+}
+
+
 - (void) downloadWeather {
      [self downloadWeatherDataFromURL:[self composeURLWithType:ASHURLTypeWeatherCoords] withBlock:^(id result) {
         if ([result isKindOfClass:[NSError class]]) {
@@ -77,24 +85,41 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
             self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
                                                                   options:0
                                                                     error:&error];
+             if (!error) {
+                 [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+             }
+            if (![[self managedObjectContext] save:&error]) {
+                NSLog(@"%@", error);
+            }
             
-            NSDictionary *dict = [self.allWeatherData valueForKey:@"main"];
-            self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [[dict valueForKey:@"temp"] intValue]];
-            self.lblCity.text = [self.allWeatherData valueForKey:@"name"];
-            NSLog(@"Data = %@", dict);
-            NSDictionary *weather = [[self.allWeatherData valueForKey:@"weather"] firstObject];
+            Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
             
-            NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",[weather valueForKey:@"icon"]];
             
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
-            [self.imageWeather setImage:image];
+            
+            self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
+            self.lblCity.text = weather.name;
+            NSLog(@"Data = %@", weather);
+           
+            // get date and time of last update
+            NSTimeInterval timeInterval = [weather.dt doubleValue];
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+            NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+            [dateformatter setLocale:[NSLocale currentLocale]];
+            [dateformatter setDateFormat:@"dd.mm.yy HH:mm"];
+            NSString *dateString=[dateformatter stringFromDate:date];
+            NSLog(@"DateTime: %@", dateString);
+            self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
+            
+            
+            
+            //NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",[weather valueForKey:@"icon"]];
+            
+            //UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
+            //[self.imageWeather setImage:image];
         }
     }];
 }
 
-- (NSManagedObjectContext *)managedObjectContext {
-    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
-}
 
 - (void) downloadForecast {
     
@@ -206,7 +231,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 - (void)appWillEnterForeground{ //Application will enter foreground.
 //    [self.weatherView.circle removeFromSuperlayer];
 //    self.weatherView.circle = nil;
-//    [self.weatherView setNeedsDisplay];
+    [self.weatherView setNeedsDisplay];
 //    return self;
 }
 
