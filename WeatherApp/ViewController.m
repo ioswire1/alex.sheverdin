@@ -43,12 +43,21 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 @implementation ViewController
 
 
+#pragma mark - 
+
 - (IBAction)refresh:(UIButton *)sender {
     [self downloadWeather];
     [self downloadForecast];
-  
-    //[self.weatherView setNeedsDisplay];
 }
+
+
+- (NSManagedObjectContext *)managedObjectContext {
+    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
+}
+
+
+// this section needs refactoring
+#pragma mark - Getting Weather & Forecast data
 
 - (NSURL *) composeURLWithType:(ASHURLType) URLType {
     
@@ -71,11 +80,6 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 }
 
 
-- (NSManagedObjectContext *)managedObjectContext {
-    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
-}
-
-
 - (void) downloadWeather {
      [self downloadWeatherDataFromURL:[self composeURLWithType:ASHURLTypeWeatherCoords] withBlock:^(id result) {
         if ([result isKindOfClass:[NSError class]]) {
@@ -93,7 +97,6 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
             }
             
             Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
-            
             
             
             self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
@@ -144,6 +147,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
                 }
             }
             
+            //updating tableView in container controller
             self.tableViewController.forcast = self.forecast;
             [self.tableViewController refreshTable];
         }
@@ -170,6 +174,9 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
     [request startAsynchronous];
 }
+
+
+#pragma mark - Tranfer data to TableViewController object 
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
