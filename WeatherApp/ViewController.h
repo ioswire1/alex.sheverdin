@@ -9,13 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-typedef NS_ENUM(NSInteger, ASHURLType) {
-    ASHURLTypeWeatherCoords,
-    ASHURLTypeForecastCoords,
-    ASHURLTypeWeatherCityName,
-    ASHURLTypeForecastCityName
-};
-
 @interface ViewController : UIViewController <CLLocationManagerDelegate>
 
 @end

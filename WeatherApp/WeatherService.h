@@ -9,11 +9,22 @@
 @import Foundation;
 @import CoreLocation;
 
+
+typedef NS_ENUM(NSInteger, ASHWeatherType) {
+    ASHURLTypeWeatherCoords,
+    ASHURLTypeForecastCoords,
+    ASHURLTypeWeatherCityName,
+    ASHURLTypeForecastCityName
+};
+
+
 @interface WeatherService : NSObject
 
+@property (nonatomic) double longitude;
+@property (nonatomic) double latitude;
+
 + (instancetype)sharedService;
-- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
-- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
+- (void)downloadWeatherData:(ASHWeatherType) weatherType withBlock:(void(^)(id result))completion;
 
 
 @end

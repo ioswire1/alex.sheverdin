@@ -7,17 +7,12 @@
 //
 
 #import "ViewController.h"
-#import "ASIHTTPRequest.h"
 #import "TableViewController.h"
 #import "WeatherView.h"
 #import "AppDelegate.h"
 #import "Forecast+API.h"
 #import "Weather+API.h"
-
-//static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?lat=50&lon=36.25&units=metric";
-static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?q=kharkiv&units=metric";
-//static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecast?lat=50&lon=36.25&units=metric";
-static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecast?q=kharkiv&units=metric";
+#import "WeatherService.h"
 
 
 @interface ViewController ()
@@ -31,8 +26,6 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 @property (weak, nonatomic) IBOutlet UILabel *lblCity;
 @property (weak, nonatomic) IBOutlet UILabel *lblLongitude;
 @property (weak, nonatomic) IBOutlet UILabel *lblLatitude;
-@property (nonatomic) double longitude;
-@property (nonatomic) double latitude;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
 @property (weak, nonatomic) IBOutlet WeatherView *weatherView;
@@ -59,75 +52,53 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 // this section needs refactoring
 #pragma mark - Getting Weather & Forecast data
 
-- (NSURL *) composeURLWithType:(ASHURLType) URLType {
-    
-    NSString *urlString;
-    switch(URLType){
-        case ASHURLTypeWeatherCityName  :
-            urlString = urlWeather;
-            break;
-        case ASHURLTypeForecastCityName  :
-            urlString = urlForecast;
-            break;
-        case ASHURLTypeWeatherCoords  :
-            urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?lat=%.2f&lon=%.2f&units=metric", self.latitude, self.longitude];
-            break;
-        case ASHURLTypeForecastCoords  :
-            urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/forecast?lat=%.2f&lon=%.2f&units=metric", self.latitude, self.longitude];
-            break;
-    }
-    return [NSURL URLWithString:urlString];
-}
-
 
 - (void) downloadWeather {
-     [self downloadWeatherDataFromURL:[self composeURLWithType:ASHURLTypeWeatherCoords] withBlock:^(id result) {
-        if ([result isKindOfClass:[NSError class]]) {
-            //
-        } else if ([result isKindOfClass:[NSData class]]) {
-            NSError *error;
-            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
-                                                                  options:0
-                                                                    error:&error];
-             if (!error) {
-                 [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
-             }
-            if (![[self managedObjectContext] save:&error]) {
-                NSLog(@"%@", error);
-            }
-            
-            Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
-            
-            
-            self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
-            self.lblCity.text = weather.name;
-            NSLog(@"Data = %@", weather);
-           
-            // get date and time of last update
-            NSTimeInterval timeInterval = [weather.dt doubleValue];
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
-            NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
-            [dateformatter setLocale:[NSLocale currentLocale]];
-            [dateformatter setDateFormat:@"dd.mm.yy HH:mm"];
-            NSString *dateString=[dateformatter stringFromDate:date];
-            NSLog(@"DateTime: %@", dateString);
-            self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
-            
-            
-            
-            //NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",[weather valueForKey:@"icon"]];
-            
-            //UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
-            //[self.imageWeather setImage:image];
-            [self.imageWeather setImage:weather.weatherIcon];
+    
+    WeatherService *weatherService = [WeatherService sharedService];
+    
+    [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withBlock:^(id result) {
+    if ([result isKindOfClass:[NSError class]]) {
+        //
+    } else
+        if ([result isKindOfClass:[NSData class]]) {
+        NSError *error;
+        self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
+                                                              options:0
+                                                                error:&error];
+         if (!error) {
+             Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+         }
+        if (![[self managedObjectContext] save:&error]) {
+            NSLog(@"%@", error);
         }
+        
+        Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
+        
+        
+        self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
+        self.lblCity.text = weather.name;
+        NSLog(@"Data = %@", weather);
+       
+        // get date and time of last update
+        NSTimeInterval timeInterval = [weather.dt doubleValue];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+        NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+        [dateformatter setLocale:[NSLocale currentLocale]];
+        [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
+        NSString *dateString=[dateformatter stringFromDate:date];
+        NSLog(@"DateTime: %@", dateString);
+        self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
+        
+        [self.imageWeather setImage:weather.weatherIcon];
+    }
     }];
 }
 
 
 - (void) downloadForecast {
-    
-    [self downloadWeatherDataFromURL:[self composeURLWithType:ASHURLTypeForecastCityName] withBlock:^(id result) {
+    WeatherService *weatherService = [WeatherService sharedService];
+    [weatherService downloadWeatherData: ASHURLTypeForecastCoords withBlock:^(id result) {
         if ([result isKindOfClass:[NSError class]]) {
             //
         } else if ([result isKindOfClass:[NSData class]]) {
@@ -156,24 +127,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
 }
 
-- (void)downloadWeatherDataFromURL:(NSURL *)url withBlock:(void(^)(id result))completion {
-    
-    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:url];
-    __weak typeof(request) wRequest = request;
-    [request setCompletionBlock:^{
-        if (completion) {
-            completion(wRequest.responseData);
-        }
-    }];
-    
-    [request setFailedBlock:^{
-        if (completion) {
-            completion(wRequest.error);
-        }
-    }];
 
-    [request startAsynchronous];
-}
 
 
 #pragma mark - Tranfer data to TableViewController object 
@@ -193,7 +147,7 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    NSLog(@"Qwerty didFailWithError: %@", error);
     //!!! Replace UIAlertView with UIAlertController
     UIAlertView *errorAlert = [[UIAlertView alloc]
                                initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -208,8 +162,10 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     if (currentLocation != nil) {
         self.lblLongitude.text = [NSString stringWithFormat:@"%.2f", currentLocation.coordinate.longitude];
         self.lblLatitude.text = [NSString stringWithFormat:@"%.2f", currentLocation.coordinate.latitude];
-        self.longitude = currentLocation.coordinate.longitude;
-        self.latitude = currentLocation.coordinate.latitude;
+        WeatherService *weatherService = [WeatherService sharedService];
+        
+        weatherService.longitude = currentLocation.coordinate.longitude;
+        weatherService.latitude = currentLocation.coordinate.latitude;
     }
     NSLog(@"Current loсation is %@", currentLocation);
     [self downloadWeather];

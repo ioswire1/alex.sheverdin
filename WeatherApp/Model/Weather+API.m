@@ -17,15 +17,19 @@
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([self class])];
     
-    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"dt" ascending:YES]];
+    //request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"dt" ascending:YES]];
     NSError *error;
     NSArray *results = [context executeFetchRequest:request error:&error];
     
     if (error) {
         return nil;
     }
-    
-    return results.lastObject;
+    for (Weather *weather in results) {
+        NSLog(@"name = %@ %@", weather.name, weather.dt);
+    }
+    Weather *weather = results.lastObject;
+
+    return weather;
 }
     
     
@@ -35,7 +39,8 @@
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([self class])];
 
     NSNumber *dt = [dictionary valueForKey:@"dt"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dt == %@", dt];
+    NSString *name = [dictionary valueForKey:@"name"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dt == %@ AND name == %@"  , dt, name];
     request.predicate = predicate;
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"dt" ascending:YES]];
     NSError *error;
@@ -52,7 +57,8 @@
         weather.dt = dt;
     }
 
-    weather.name = [dictionary valueForKey:@"name"];
+//    weather.name = [dictionary valueForKey:@"name"];
+    weather.name = name;
     NSDictionary *main = [dictionary valueForKey:@"main"];
     
     weather.temp = [main valueForKey:@"temp"];
