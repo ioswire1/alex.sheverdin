@@ -13,6 +13,7 @@
 #import "Forecast+API.h"
 #import "Weather+API.h"
 #import "WeatherService.h"
+#import "CircleView.h"
 
 
 @interface ViewController ()
@@ -22,7 +23,11 @@
 @property (nonatomic, weak) TableViewController *tableViewController;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
+
+@property (weak, nonatomic) IBOutlet CircleView *circleView;
+
 @property (weak, nonatomic) IBOutlet UILabel *lblTemperature;
+@property (weak, nonatomic) IBOutlet UILabel *lblTemperature2;
 @property (weak, nonatomic) IBOutlet UILabel *lblCity;
 @property (weak, nonatomic) IBOutlet UILabel *lblLongitude;
 @property (weak, nonatomic) IBOutlet UILabel *lblLatitude;
@@ -31,6 +36,8 @@
 @property (weak, nonatomic) IBOutlet WeatherView *weatherView;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblUpdateDateTime;
+
+
 @end
 
 @implementation ViewController
@@ -76,7 +83,8 @@
         Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
         
         
-        self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
+        self.lblTemperature.text = self.lblTemperature2.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
+        self.circleView.temperature = [weather.temp floatValue];
         self.lblCity.text = weather.name;
         NSLog(@"Data = %@", weather);
        
