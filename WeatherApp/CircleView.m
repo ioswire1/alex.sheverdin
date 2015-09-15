@@ -27,7 +27,7 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context); // save context
-    
+
     CGRect bounds = self.bounds;
     
     // Find the center of the view
@@ -41,28 +41,29 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     float radius = (MIN(self.bounds.size.width, self.bounds.size.height) / 2.0);
     
 
-    UIBezierPath *path = [[UIBezierPath alloc] init];
+    UIBezierPath *backgroundPath = [[UIBezierPath alloc] init];
     // Add an arc to the path at center, with given radius,
     // from 0 to some radians (part of circle)
     
-    [path addArcWithCenter:center
+    [backgroundPath addArcWithCenter:center
                               radius:radius - lineWidth/2
                           startAngle:DegreesToRadians(self.startAngle)
                             endAngle:DegreesToRadians(self.startAngle + 360)
                            clockwise:YES];
     
-    path.lineWidth = lineWidth;
+    backgroundPath.lineWidth = lineWidth;
      //[[UIColor lightGrayColor] setStroke];
     [self.backLineColor setStroke];
-    [path stroke];
+    [backgroundPath stroke];
   
-    [path removeAllPoints]; // clear path
+    [backgroundPath removeAllPoints]; // clear path
 
 //    self.temperature = 45.0; //for UI testing
     
     CGFloat angle = self.temperature*360/50;
   
     // new path for layer animation
+    UIBezierPath *path = [[UIBezierPath alloc] init];
     [path addArcWithCenter:center
                     radius:radius - lineWidth/2
                 startAngle:DegreesToRadians(self.startAngle)
@@ -101,12 +102,14 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     drawAnimation.removedOnCompletion = YES; // needed?
     // Timing Function for fading start-end
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    
+    drawAnimation.additive = NO;
+    drawAnimation.cumulative = NO;
+
     // Add the animation to the circle
     [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     circle.strokeEnd = 0.0f;
     
-    //    CGContextRestoreGState(context); // restore context
+    //CGContextRestoreGState(context); // restore context
     
 }
 

@@ -65,9 +65,9 @@
     
 }
     
-- (void) showLastWeather {
+- (void) showWeather: (Weather*) weather {
     
-    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
+    //Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
     
     if (weather) {
         self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
@@ -102,28 +102,26 @@
     //[self showLastWeather];
     
     WeatherService *weatherService = [WeatherService sharedService];
-    NSLog(@"One!");
     [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withBlock:^(id result) {
         if ([result isKindOfClass:[NSError class]]) {
             //
         } else
         if ([result isKindOfClass:[NSData class]]) {
-        NSError *error;
-        self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
-                                                              options:0
-                                                                error:&error];
+            NSError *error;
+            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
+                                                                  options:0
+                                                                    error:&error];
             if (!error) {
                  Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+                [self showWeather:weather];
             }
             if (![[self managedObjectContext] save:&error]) {
                 NSLog(@"%@", error);
             }
             NSLog(@"Completed!");
-            [self showLastWeather];
-
-    }
+            //[self showLastWeather];
+        }
     }];
-    NSLog(@"Two!");
 }
 
 
@@ -199,7 +197,7 @@
         weatherService.latitude = currentLocation.coordinate.latitude;
     }
 //    NSLog(@"Current loсation is %@", currentLocation);
-    [self downloadWeather];
+//    [self downloadWeather];
     [self downloadForecast];
 }
 
@@ -225,7 +223,9 @@
     }
     
     [self.locationManager startUpdatingLocation];
-    [self showLastWeather];
+    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
+    [self showWeather:weather];
+    //[self showLastWeather];
 //    [self downloadWeather];
 //    [self downloadForecast];
     // notification for entering app to foreground (instead viewWillAppear)
