@@ -9,10 +9,14 @@
 #import "CircleView.h"
 
 static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.0; }
-static inline double RadiansToDegrees(double angle) { return angle * 180.0 / M_PI; }
 
 @implementation CircleView
 
+
+- (void)setTemperature:(CGFloat)temperature {
+    _temperature = temperature;
+    [self setNeedsDisplay];
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -53,12 +57,17 @@ static inline double RadiansToDegrees(double angle) { return angle * 180.0 / M_P
     [path stroke];
   
     [path removeAllPoints]; // clear path
-    // new path for
+
+//    self.temperature = 45.0; //for UI testing
+    
+    CGFloat angle = self.temperature*360/50;
+  
+    // new path for layer animation
     [path addArcWithCenter:center
                     radius:radius - lineWidth/2
                 startAngle:DegreesToRadians(self.startAngle)
-                  endAngle:DegreesToRadians(self.startAngle + 180)
-                 clockwise:YES];
+                  endAngle:DegreesToRadians(self.startAngle + angle)
+                 clockwise:self.temperature >=0 ? YES : NO];
     
     path.lineWidth = lineWidth;
 
@@ -71,7 +80,8 @@ static inline double RadiansToDegrees(double angle) { return angle * 180.0 / M_P
     
     // Configure the apperence of the circle
     circle.fillColor = [UIColor clearColor].CGColor;
-    circle.strokeColor = [UIColor blueColor].CGColor;
+    UIColor *drawColor = self.temperature >= 0 ? self.positiveLineColor : self.negativeLineColor;
+    circle.strokeColor = drawColor.CGColor;
     circle.lineWidth = lineWidth;
     
     // needed???

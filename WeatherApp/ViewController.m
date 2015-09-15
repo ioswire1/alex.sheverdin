@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 #import "TableViewController.h"
-#import "WeatherView.h"
 #import "AppDelegate.h"
 #import "Forecast+API.h"
 #import "Weather+API.h"
@@ -27,13 +26,15 @@
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblTemperature;
-@property (weak, nonatomic) IBOutlet UILabel *lblTemperature2;
+@property (weak, nonatomic) IBOutlet UILabel *lblTempMinMax;
+@property (weak, nonatomic) IBOutlet UILabel *lblHumidity;
+
+
 @property (weak, nonatomic) IBOutlet UILabel *lblCity;
 @property (weak, nonatomic) IBOutlet UILabel *lblLongitude;
 @property (weak, nonatomic) IBOutlet UILabel *lblLatitude;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
-@property (weak, nonatomic) IBOutlet WeatherView *weatherView;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblUpdateDateTime;
 
@@ -60,34 +61,24 @@
 #pragma mark - Getting Weather & Forecast data
 
 
-- (void) downloadWeather {
+- (void) showLastForecast {
     
-    WeatherService *weatherService = [WeatherService sharedService];
+}
     
-    [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withBlock:^(id result) {
-    if ([result isKindOfClass:[NSError class]]) {
-        //
-    } else
-        if ([result isKindOfClass:[NSData class]]) {
-        NSError *error;
-        self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
-                                                              options:0
-                                                                error:&error];
-         if (!error) {
-             Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
-         }
-        if (![[self managedObjectContext] save:&error]) {
-            NSLog(@"%@", error);
-        }
+- (void) showLastWeather {
+    
+    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
+    
+    if (weather) {
+        self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
+        self.lblTempMinMax.text = [NSString stringWithFormat:@"%dº/%dº", [weather.temp_min intValue], [weather.temp_max intValue]];
+        self.lblHumidity.text = [NSString stringWithFormat:@"%d%%", [weather.humidity intValue]];
         
-        Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
-        
-        
-        self.lblTemperature.text = self.lblTemperature2.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
         self.circleView.temperature = [weather.temp floatValue];
         self.lblCity.text = weather.name;
+        NSLog(@"hi from showLastWeather!");
         NSLog(@"Data = %@", weather);
-       
+        
         // get date and time of last update
         NSTimeInterval timeInterval = [weather.dt doubleValue];
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
@@ -95,12 +86,44 @@
         [dateformatter setLocale:[NSLocale currentLocale]];
         [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
         NSString *dateString=[dateformatter stringFromDate:date];
-        NSLog(@"DateTime: %@", dateString);
+        //NSLog(@"DateTime: %@", dateString);
         self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
-        
         [self.imageWeather setImage:weather.weatherIcon];
+        
+    } else {
+        
+        NSLog(@"No Data!!!");
+    } 
+
+}
+
+- (void) downloadWeather {
+    
+    //[self showLastWeather];
+    
+    WeatherService *weatherService = [WeatherService sharedService];
+    NSLog(@"One!");
+    [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withBlock:^(id result) {
+        if ([result isKindOfClass:[NSError class]]) {
+            //
+        } else
+        if ([result isKindOfClass:[NSData class]]) {
+        NSError *error;
+        self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
+                                                              options:0
+                                                                error:&error];
+            if (!error) {
+                 Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+            }
+            if (![[self managedObjectContext] save:&error]) {
+                NSLog(@"%@", error);
+            }
+            NSLog(@"Completed!");
+            [self showLastWeather];
+
     }
     }];
+    NSLog(@"Two!");
 }
 
 
@@ -175,7 +198,7 @@
         weatherService.longitude = currentLocation.coordinate.longitude;
         weatherService.latitude = currentLocation.coordinate.latitude;
     }
-    NSLog(@"Current loсation is %@", currentLocation);
+//    NSLog(@"Current loсation is %@", currentLocation);
     [self downloadWeather];
     [self downloadForecast];
 }
@@ -194,9 +217,17 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
     self.locationManager.distanceFilter=500;
     
+    //CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    // Check for iOS 8 !
+    if ([self.locationManager respondsToSelector:
+         @selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    
     [self.locationManager startUpdatingLocation];
-    [self downloadWeather];
-    [self downloadForecast];
+    [self showLastWeather];
+//    [self downloadWeather];
+//    [self downloadForecast];
     // notification for entering app to foreground (instead viewWillAppear)
     //!!! where removeObserver to be done?
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -210,7 +241,7 @@
 //!!! what about Layer ?
 //    [self.weatherView.circle removeFromSuperlayer];
 //    self.weatherView.circle = nil;
-    [self.weatherView setNeedsDisplay];
+    [self.circleView setNeedsDisplay];
 }
 
 
@@ -221,7 +252,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.weatherView setNeedsDisplay];
+    [self.circleView setNeedsDisplay];
 }
 
 @end

@@ -16,10 +16,10 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
 
 @interface WeatherService ()
 
-- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
-- (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
-- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
-- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
+//- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
+//- (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
+//- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
+//- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
 
 @end
 
@@ -62,8 +62,10 @@ static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecas
     NSURL *url = [self composeURLWithType:weatherType];
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:url];
     __weak typeof(request) wRequest = request;
+    //sleep(10);
     [request setCompletionBlock:^{
         if (completion) {
+            //sleep(5);
             completion(wRequest.responseData);
         }
     }];
