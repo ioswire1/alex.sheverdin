@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSArray *forecast;
 @property (nonatomic, weak) TableViewController *tableViewController;
 @property (nonatomic, strong) CLLocationManager *locationManager;
-
+@property (nonatomic, strong) CLLocation *currentLocation;
 
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 
@@ -47,8 +47,18 @@
 #pragma mark - 
 
 - (IBAction)refresh:(UIButton *)sender {
-    [self downloadWeather];
-    [self downloadForecast];
+    
+    //!!! Replace UIAlertView with UIAlertController
+
+    if (nil == self.currentLocation) {
+        UIAlertView *errorAlert = [[UIAlertView alloc]
+                                   initWithTitle:@"Error" message:@"Failed to Get Your Location!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [errorAlert show];
+    } else {
+        [self downloadWeather];
+        //[self downloadForecast];
+    }
+
 }
 
 
@@ -66,9 +76,7 @@
 }
     
 - (void) showWeather: (Weather*) weather {
-    
-    //Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
-    
+ 
     if (weather) {
         self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
         self.lblTempMinMax.text = [NSString stringWithFormat:@"%dº/%dº", [weather.temp_min intValue], [weather.temp_max intValue]];
@@ -86,7 +94,7 @@
         [dateformatter setLocale:[NSLocale currentLocale]];
         [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
         NSString *dateString=[dateformatter stringFromDate:date];
-        //NSLog(@"DateTime: %@", dateString);
+        NSLog(@"DateTime: %@", dateString);
         self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
         [self.imageWeather setImage:weather.weatherIcon];
         
@@ -99,35 +107,53 @@
 
 - (void) downloadWeather {
     
-    //[self showLastWeather];
-    
     WeatherService *weatherService = [WeatherService sharedService];
-    [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withBlock:^(id result) {
+    [weatherService getWeatherForLocation:self.currentLocation completion:^(id result) {
+    
         if ([result isKindOfClass:[NSError class]]) {
             //
         } else
-        if ([result isKindOfClass:[NSData class]]) {
-            NSError *error;
-            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
-                                                                  options:0
-                                                                    error:&error];
-            if (!error) {
-                 Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
-                [self showWeather:weather];
+            if ([result isKindOfClass:[NSData class]]) {
+                NSError *error;
+                self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
+                                                                      options:0
+                                                                        error:&error];
+                if (!error) {
+                    Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+                    [self showWeather:weather];
+                }
+                if (![[self managedObjectContext] save:&error]) {
+                    NSLog(@"%@", error);
+                }
+                NSLog(@"Completed!");
             }
-            if (![[self managedObjectContext] save:&error]) {
-                NSLog(@"%@", error);
-            }
-            NSLog(@"Completed!");
-            //[self showLastWeather];
-        }
     }];
+    
+//    [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withCompletionBlock:^(id result) {
+//        if ([result isKindOfClass:[NSError class]]) {
+//            //
+//        } else
+//        if ([result isKindOfClass:[NSData class]]) {
+//            NSError *error;
+//            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
+//                                                                  options:0
+//                                                                    error:&error];
+//            if (!error) {
+//                 Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+//                [self showWeather:weather];
+//            }
+//            if (![[self managedObjectContext] save:&error]) {
+//                NSLog(@"%@", error);
+//            }
+//            NSLog(@"Completed!");
+//        }
+//    }];
 }
 
 
 - (void) downloadForecast {
     WeatherService *weatherService = [WeatherService sharedService];
-    [weatherService downloadWeatherData: ASHURLTypeForecastCoords withBlock:^(id result) {
+    [weatherService getForecastForLocation:self.currentLocation completion:^(id result) {
         if ([result isKindOfClass:[NSError class]]) {
             //
         } else if ([result isKindOfClass:[NSData class]]) {
@@ -158,8 +184,7 @@
 
 
 
-
-#pragma mark - Tranfer data to TableViewController object 
+#pragma mark - Transfer data to TableViewController object
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -186,19 +211,15 @@
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray*)locations {
     
-    CLLocation *currentLocation = [locations lastObject];
+    self.currentLocation = [locations lastObject];
     
-    if (currentLocation != nil) {
-        self.lblLongitude.text = [NSString stringWithFormat:@"%.2f", currentLocation.coordinate.longitude];
-        self.lblLatitude.text = [NSString stringWithFormat:@"%.2f", currentLocation.coordinate.latitude];
-        WeatherService *weatherService = [WeatherService sharedService];
-        
-        weatherService.longitude = currentLocation.coordinate.longitude;
-        weatherService.latitude = currentLocation.coordinate.latitude;
+    if (self.currentLocation != nil) {
+        self.lblLongitude.text = [NSString stringWithFormat:@"%.2f", self.currentLocation.coordinate.longitude];
+        self.lblLatitude.text = [NSString stringWithFormat:@"%.2f", self.currentLocation.coordinate.latitude];
     }
-//    NSLog(@"Current loсation is %@", currentLocation);
-//    [self downloadWeather];
-    [self downloadForecast];
+
+    [self downloadWeather];
+//    [self downloadForecast];
 }
 
 
@@ -208,32 +229,33 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    //!!! Add check for Location Service is On
     // init locationManager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
     self.locationManager.distanceFilter=500;
     
-    //CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    // Check for iOS 8 !
+    //CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus]; //check authorizationStatus
+    
+    // Check for iOS 8 and request user Authorization
     if ([self.locationManager respondsToSelector:
          @selector(requestWhenInUseAuthorization)]) {
         [self.locationManager requestWhenInUseAuthorization];
     }
     
     [self.locationManager startUpdatingLocation];
+    
     Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
     [self showWeather:weather];
+    
     //[self showLastWeather];
-//    [self downloadWeather];
-//    [self downloadForecast];
+
     // notification for entering app to foreground (instead viewWillAppear)
     //!!! where removeObserver to be done?
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appWillEnterForeground)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(appWillEnterForeground)
+//                                                 name:UIApplicationWillEnterForegroundNotification
+//                                               object:nil];
 }
 
 
@@ -241,7 +263,7 @@
 //!!! what about Layer ?
 //    [self.weatherView.circle removeFromSuperlayer];
 //    self.weatherView.circle = nil;
-    [self.circleView setNeedsDisplay];
+//    [self.circleView setNeedsDisplay];
 }
 
 

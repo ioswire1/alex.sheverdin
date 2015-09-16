@@ -69,7 +69,6 @@
     NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",[weatherDic valueForKey:@"icon"]];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
     weather.weatherIcon = image;
-    NSLog(@"ash2 weather2 = %@", weather);
     return weather;
     
 }

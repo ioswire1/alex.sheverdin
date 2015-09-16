@@ -20,11 +20,10 @@ typedef NS_ENUM(NSInteger, ASHWeatherType) {
 
 @interface WeatherService : NSObject
 
-@property (nonatomic) double longitude;
-@property (nonatomic) double latitude;
 
 + (instancetype)sharedService;
-- (void)downloadWeatherData:(ASHWeatherType) weatherType withBlock:(void(^)(id result))completion;
-
+//- (void)downloadWeatherData:(NSURL *) url withCompletionBlock:(void(^)(id result))completion;
+- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
+- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
 
 @end

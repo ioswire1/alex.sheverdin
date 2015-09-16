@@ -24,7 +24,8 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     
     // Drawing code
     self.clearsContextBeforeDrawing = YES;
-    // Drawing code
+
+   
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context); // save context
 
@@ -52,13 +53,12 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
                            clockwise:YES];
     
     backgroundPath.lineWidth = lineWidth;
-     //[[UIColor lightGrayColor] setStroke];
     [self.backLineColor setStroke];
     [backgroundPath stroke];
   
-    [backgroundPath removeAllPoints]; // clear path
+    //[backgroundPath removeAllPoints]; // clear path
 
-//    self.temperature = 45.0; //for UI testing
+    //self.temperature = -45.0; //for UI testing
     
     CGFloat angle = self.temperature*360/50;
   
@@ -83,8 +83,9 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     circle.fillColor = [UIColor clearColor].CGColor;
     UIColor *drawColor = self.temperature >= 0 ? self.positiveLineColor : self.negativeLineColor;
     circle.strokeColor = drawColor.CGColor;
-    circle.lineWidth = lineWidth;
+    circle.lineWidth = lineWidth;    
     
+    //CGContextSaveGState(context); // save context
     // needed???
     [self.layer removeAllAnimations];
     // Add to parent layer
@@ -108,7 +109,6 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     // Add the animation to the circle
     [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     circle.strokeEnd = 0.0f;
-    
     //CGContextRestoreGState(context); // restore context
     
 }
