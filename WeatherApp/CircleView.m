@@ -110,6 +110,7 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     circle.strokeEnd = 0.0f;
     //CGContextRestoreGState(context); // restore context
+    //drawAnimation
     
 }
 

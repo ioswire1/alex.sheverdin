@@ -17,34 +17,40 @@
 
 @interface ViewController ()
 
+//!!! to delete?
 @property (nonatomic, strong) NSDictionary *allWeatherData;
 @property (nonatomic, strong) NSArray *forecast;
+
 @property (nonatomic, weak) TableViewController *tableViewController;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation *currentLocation;
 
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
-
+@property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
+@property (weak, nonatomic) IBOutlet UILabel *lblCity;
 @property (weak, nonatomic) IBOutlet UILabel *lblTemperature;
+
 @property (weak, nonatomic) IBOutlet UILabel *lblTempMinMax;
 @property (weak, nonatomic) IBOutlet UILabel *lblHumidity;
-
-
-@property (weak, nonatomic) IBOutlet UILabel *lblCity;
-@property (weak, nonatomic) IBOutlet UILabel *lblLongitude;
-@property (weak, nonatomic) IBOutlet UILabel *lblLatitude;
-
-@property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
-
 @property (weak, nonatomic) IBOutlet UILabel *lblUpdateDateTime;
 
+//!!! for testing
+@property (weak, nonatomic) IBOutlet UILabel *lblLongitude;
+@property (weak, nonatomic) IBOutlet UILabel *lblLatitude;
 
 @end
 
 @implementation ViewController
 
 
-#pragma mark - 
+#pragma mark -
+
+- (NSManagedObjectContext *)managedObjectContext {
+    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
+}
+
+
+#pragma mark - Showing & refreshing UI
 
 - (IBAction)refresh:(UIButton *)sender {
     
@@ -56,27 +62,26 @@
         [errorAlert show];
     } else {
         [self downloadWeather];
-        //[self downloadForecast];
+        [self downloadForecast];
     }
 
 }
 
-
-- (NSManagedObjectContext *)managedObjectContext {
-    return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
+- (void) showLastWeather {
+    
+    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
+    [self showWeather:weather];
 }
-
-
-// this section needs refactoring
-#pragma mark - Getting Weather & Forecast data
-
 
 - (void) showLastForecast {
     
+    //updating tableView in container controller
+    self.tableViewController.forcast = self.forecast;
+    [self.tableViewController refreshTable];
 }
-    
+
 - (void) showWeather: (Weather*) weather {
- 
+    
     if (weather) {
         self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
         self.lblTempMinMax.text = [NSString stringWithFormat:@"%dº/%dº", [weather.temp_min intValue], [weather.temp_max intValue]];
@@ -101,9 +106,14 @@
     } else {
         
         NSLog(@"No Data!!!");
-    } 
-
+    }
+    
 }
+
+
+// this section needs refactoring
+#pragma mark - Getting Weather & Forecast data
+
 
 - (void) downloadWeather {
     
@@ -173,9 +183,11 @@
                 }
             }
             
+            [self showLastForecast];
+            
             //updating tableView in container controller
-            self.tableViewController.forcast = self.forecast;
-            [self.tableViewController refreshTable];
+//            self.tableViewController.forcast = self.forecast;
+//            [self.tableViewController refreshTable];
         }
         
     }];
@@ -184,7 +196,7 @@
 
 
 
-#pragma mark - Transfer data to TableViewController object
+#pragma mark - Transfer data to Forecast's TableViewController
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -219,7 +231,7 @@
     }
 
     [self downloadWeather];
-//    [self downloadForecast];
+    [self downloadForecast];
 }
 
 
@@ -244,11 +256,9 @@
     }
     
     [self.locationManager startUpdatingLocation];
-    
-    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
-    [self showWeather:weather];
-    
-    //[self showLastWeather];
+  
+    [self showLastWeather];
+    //[self showLastForecast];
 
     // notification for entering app to foreground (instead viewWillAppear)
     //!!! where removeObserver to be done?

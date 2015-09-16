@@ -86,7 +86,7 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
     //NSURL *url = [self composeURLWithType:weatherType];
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:url];
     __weak typeof(request) wRequest = request;
-    //sleep(10);
+    
     [request setCompletionBlock:^{
         if (completion) {
             //sleep(5);

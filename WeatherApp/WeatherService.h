@@ -10,16 +10,15 @@
 @import CoreLocation;
 
 
-typedef NS_ENUM(NSInteger, ASHWeatherType) {
-    ASHURLTypeWeatherCoords,
-    ASHURLTypeForecastCoords,
-    ASHURLTypeWeatherCityName,
-    ASHURLTypeForecastCityName
-};
+//typedef NS_ENUM(NSInteger, ASHWeatherType) {
+//    ASHURLTypeWeatherCoords,
+//    ASHURLTypeForecastCoords,
+//    ASHURLTypeWeatherCityName,
+//    ASHURLTypeForecastCityName
+//};
 
 
 @interface WeatherService : NSObject
-
 
 + (instancetype)sharedService;
 //- (void)downloadWeatherData:(NSURL *) url withCompletionBlock:(void(^)(id result))completion;
