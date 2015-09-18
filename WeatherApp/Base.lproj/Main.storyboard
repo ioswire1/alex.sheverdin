@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Huc-6F-FjV">
-                                <rect key="frame" x="0.0" y="240" width="320" height="328"/>
+                                <rect key="frame" x="0.0" y="259" width="320" height="309"/>
                                 <connections>
                                     <segue destination="WYZ-KO-gYY" kind="embed" identifier="ToTable" id="R0e-zI-W03"/>
                                 </connections>
@@ -53,41 +53,6 @@
                                     <action selector="refresh:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="xx8-XS-09a"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j0s-XJ-kjB" customClass="CircleView">
-                                <rect key="frame" x="36" y="142" width="100" height="100"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="22" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uph-J6-RoP">
-                                        <rect key="frame" x="23" y="28" width="54" height="44"/>
-                                        <fontDescription key="fontDescription" name="Baskerville-Bold" family="Baskerville" pointSize="36"/>
-                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="centerY" secondItem="uph-J6-RoP" secondAttribute="centerY" id="ICf-KI-GOX"/>
-                                    <constraint firstAttribute="width" constant="100" id="dTT-DL-aKP"/>
-                                    <constraint firstAttribute="centerX" secondItem="uph-J6-RoP" secondAttribute="centerX" id="lOU-Lz-usN"/>
-                                    <constraint firstAttribute="height" constant="100" id="u6x-i2-TlJ"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="backLineColor">
-                                        <color key="value" red="0.91442432931728579" green="0.90396166584500348" blue="0.96224459734829992" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="startAngle">
-                                        <real key="value" value="90"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
-                                        <real key="value" value="25"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="positiveLineColor">
-                                        <color key="value" red="0.8232323232323232" green="0.30838328899379963" blue="0.14613897881286114" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="negativeLineColor">
-                                        <color key="value" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Md9-54-IxA">
                                 <rect key="frame" x="252" y="167" width="68" height="24"/>
                                 <fontDescription key="fontDescription" name="Baskerville-SemiBold" family="Baskerville" pointSize="20"/>
@@ -118,14 +83,62 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j0s-XJ-kjB" customClass="CircleView">
+                                <rect key="frame" x="36" y="143" width="100" height="100"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uph-J6-RoP">
+                                        <rect key="frame" x="23" y="28" width="54" height="44"/>
+                                        <fontDescription key="fontDescription" name="Baskerville-Bold" family="Baskerville" pointSize="36"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="backLineColor">
+                                        <color key="value" red="0.91442432931728579" green="0.90396166584500348" blue="0.96224459734829992" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="startAngle">
+                                        <real key="value" value="90"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="positiveLineColor">
+                                        <color key="value" red="0.8232323232323232" green="0.30838328899379963" blue="0.14613897881286114" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="negativeLineColor">
+                                        <color key="value" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label hidden="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Failed to get location!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRG-ZV-Lym">
+                                <rect key="frame" x="-162" y="64" width="320" height="511"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Baskerville-SemiBoldItalic" family="Baskerville" pointSize="24"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Data download error" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BJW-L7-njU">
+                                <rect key="frame" x="169" y="226" width="137" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="MRG-ZV-Lym" secondAttribute="trailing" id="fKa-Bb-Pgn"/>
+                            <constraint firstItem="MRG-ZV-Lym" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="xjF-qv-bO1"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Weather" id="iJY-df-PRX"/>
                     <connections>
                         <outlet property="circleView" destination="j0s-XJ-kjB" id="Oc3-o3-OoO"/>
                         <outlet property="imageWeather" destination="rJt-Zs-6q1" id="VVF-DI-dW4"/>
                         <outlet property="lblCity" destination="XIw-r8-zYW" id="bWV-FK-uJ2"/>
+                        <outlet property="lblFailedConnection" destination="BJW-L7-njU" id="n55-hn-UHA"/>
+                        <outlet property="lblFailedLocation" destination="MRG-ZV-Lym" id="ohF-pF-rZT"/>
                         <outlet property="lblHumidity" destination="Md9-54-IxA" id="F6O-vL-YFy"/>
                         <outlet property="lblLatitude" destination="cu9-LR-jRZ" id="xqo-ym-eV3"/>
                         <outlet property="lblLongitude" destination="iep-E4-YZX" id="whh-Ps-mF6"/>
@@ -143,7 +156,7 @@
             <objects>
                 <tableViewController id="WYZ-KO-gYY" customClass="TableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="328" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Uj4-eZ-CUg">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="328"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="309"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>

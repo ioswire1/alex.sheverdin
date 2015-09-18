@@ -25,6 +25,9 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation *currentLocation;
 
+@property (weak, nonatomic) IBOutlet UILabel *lblFailedLocation;
+@property (weak, nonatomic) IBOutlet UILabel *lblFailedConnection;
+
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
 @property (weak, nonatomic) IBOutlet UILabel *lblCity;
@@ -54,7 +57,7 @@
 
 - (IBAction)refresh:(UIButton *)sender {
     
-    //!!! Replace UIAlertView with UIAlertController
+    //TODO: Replace UIAlertView with UIAlertController
 
     if (nil == self.currentLocation) {
         UIAlertView *errorAlert = [[UIAlertView alloc]
@@ -64,7 +67,7 @@
         [self downloadWeather];
         [self downloadForecast];
     }
-
+    //[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 - (void) showLastWeather {
@@ -118,19 +121,22 @@
 - (void) downloadWeather {
     
     WeatherService *weatherService = [WeatherService sharedService];
-    [weatherService getWeatherForLocation:self.currentLocation completion:^(id result) {
+    [weatherService getWeatherForLocation:self.currentLocation completion:^(NSURLResponse * response, NSData * result,                               NSError * error) {
     
         if ([result isKindOfClass:[NSError class]]) {
-            //
+            self.lblFailedConnection.hidden = NO;
         } else
             if ([result isKindOfClass:[NSData class]]) {
-                NSError *error;
+                
                 self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
                                                                       options:0
                                                                         error:&error];
                 if (!error) {
                     Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+                    self.lblFailedConnection.hidden = YES;
                     [self showWeather:weather];
+                } else {
+                    self.lblFailedConnection.hidden = NO;
                 }
                 if (![[self managedObjectContext] save:&error]) {
                     NSLog(@"%@", error);
@@ -139,27 +145,31 @@
             }
     }];
     
-//    [weatherService downloadWeatherData:ASHURLTypeWeatherCoords withCompletionBlock:^(id result) {
-//        if ([result isKindOfClass:[NSError class]]) {
-//            //
-//        } else
+    
+    
+//    if ([result isKindOfClass:[NSError class]]) {
+//        self.lblFailedConnection.hidden = NO;
+//    } else
 //        if ([result isKindOfClass:[NSData class]]) {
 //            NSError *error;
 //            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
 //                                                                  options:0
 //                                                                    error:&error];
 //            if (!error) {
-//                 Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+//                Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
+//                self.lblFailedConnection.hidden = YES;
 //                [self showWeather:weather];
+//            } else {
+//                self.lblFailedConnection.hidden = NO;
 //            }
 //            if (![[self managedObjectContext] save:&error]) {
 //                NSLog(@"%@", error);
 //            }
 //            NSLog(@"Completed!");
 //        }
-//    }];
-}
+//}];
 
+}
 
 - (void) downloadForecast {
     WeatherService *weatherService = [WeatherService sharedService];
@@ -215,9 +225,10 @@
 {
     NSLog(@"Qwerty didFailWithError: %@", error);
     //!!! Replace UIAlertView with UIAlertController
-    UIAlertView *errorAlert = [[UIAlertView alloc]
-                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [errorAlert show];
+//    UIAlertView *errorAlert = [[UIAlertView alloc]
+//                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//    [errorAlert show];
+        self.lblFailedLocation.hidden = NO;
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -229,10 +240,10 @@
         self.lblLongitude.text = [NSString stringWithFormat:@"%.2f", self.currentLocation.coordinate.longitude];
         self.lblLatitude.text = [NSString stringWithFormat:@"%.2f", self.currentLocation.coordinate.latitude];
     }
-
+    self.lblFailedLocation.hidden = YES;
     [self downloadWeather];
     [self downloadForecast];
-}
+    }
 
 
 #pragma mark - Lifecycle
@@ -244,8 +255,7 @@
     // init locationManager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
-    self.locationManager.distanceFilter=500;
+
     
     //CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus]; //check authorizationStatus
     
@@ -254,10 +264,12 @@
          @selector(requestWhenInUseAuthorization)]) {
         [self.locationManager requestWhenInUseAuthorization];
     }
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+    self.locationManager.distanceFilter=500;
     
     [self.locationManager startUpdatingLocation];
   
-    [self showLastWeather];
+    //[self showLastWeather];
     //[self showLastForecast];
 
     // notification for entering app to foreground (instead viewWillAppear)

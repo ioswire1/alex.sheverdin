@@ -87,7 +87,10 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     
     //CGContextSaveGState(context); // save context
     // needed???
-    [self.layer removeAllAnimations];
+    for (CALayer *layer in [self.layer sublayers]) {
+        if ([layer isKindOfClass:[CAShapeLayer class]])
+            [layer removeFromSuperlayer];
+    }
     // Add to parent layer
     [self.layer addSublayer:circle];
     
