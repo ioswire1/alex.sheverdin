@@ -13,9 +13,10 @@
 @interface WeatherService : NSObject
 
 + (instancetype)sharedService;
-- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(NSURLResponse * response, NSData * result,                               NSError * error))completion;
-- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(id result))completion;
-//- (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
-//- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(id result))completion;
+- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
+- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
+- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
+- (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
+
 
 @end

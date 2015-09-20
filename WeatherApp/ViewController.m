@@ -67,7 +67,7 @@
         [self downloadWeather];
         [self downloadForecast];
     }
-    //[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 - (void) showLastWeather {
@@ -121,71 +121,36 @@
 - (void) downloadWeather {
     
     WeatherService *weatherService = [WeatherService sharedService];
-    [weatherService getWeatherForLocation:self.currentLocation completion:^(NSURLResponse * response, NSData * result,                               NSError * error) {
+    [weatherService getWeatherForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
     
-        if ([result isKindOfClass:[NSError class]]) {
+        if (!success) {
+            NSLog(@"Could not get weather data! %@ %@", error, [error localizedDescription]);
             self.lblFailedConnection.hidden = NO;
-        } else
-            if ([result isKindOfClass:[NSData class]]) {
-                
-                self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
-                                                                      options:0
-                                                                        error:&error];
-                if (!error) {
-                    Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
-                    self.lblFailedConnection.hidden = YES;
-                    [self showWeather:weather];
-                } else {
-                    self.lblFailedConnection.hidden = NO;
-                }
-                if (![[self managedObjectContext] save:&error]) {
-                    NSLog(@"%@", error);
-                }
-                NSLog(@"Completed!");
+        } else {
+            Weather *weather = [Weather weatherWithDictionary:dictionary inContext:[self managedObjectContext]];
+            self.lblFailedConnection.hidden = YES;
+            [self showWeather:weather];
+            if (![[self managedObjectContext] save:&error]) {
+                NSLog(@"%@", error);
             }
+        }
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
     
-    
-    
-//    if ([result isKindOfClass:[NSError class]]) {
-//        self.lblFailedConnection.hidden = NO;
-//    } else
-//        if ([result isKindOfClass:[NSData class]]) {
-//            NSError *error;
-//            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result
-//                                                                  options:0
-//                                                                    error:&error];
-//            if (!error) {
-//                Weather *weather = [Weather weatherWithDictionary:self.allWeatherData inContext:[self managedObjectContext]];
-//                self.lblFailedConnection.hidden = YES;
-//                [self showWeather:weather];
-//            } else {
-//                self.lblFailedConnection.hidden = NO;
-//            }
-//            if (![[self managedObjectContext] save:&error]) {
-//                NSLog(@"%@", error);
-//            }
-//            NSLog(@"Completed!");
-//        }
-//}];
-
 }
 
 - (void) downloadForecast {
     WeatherService *weatherService = [WeatherService sharedService];
-    [weatherService getForecastForLocation:self.currentLocation completion:^(id result) {
-        if ([result isKindOfClass:[NSError class]]) {
-            //
-        } else if ([result isKindOfClass:[NSData class]]) {
-            NSError *error;
-            self.allWeatherData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&error];
+    [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
 
-           if (!error) {
-               
-                self.forecast = [self.allWeatherData valueForKey:@"list"];
+           if (!success) {
+                NSLog(@"Could not get forecast data %@ %@", error, [error localizedDescription]);
+           } else {
+        
+                self.forecast = [dictionary valueForKey:@"list"];
 
-                for (NSDictionary *dictionary in self.forecast) {
-                    [Forecast forecastWithDictionary:dictionary inContext:[self managedObjectContext]];
+                for (NSDictionary *currentDictionary in self.forecast) {
+                    [Forecast forecastWithDictionary:currentDictionary inContext:[self managedObjectContext]];
                 }
                 
                 if (![[self managedObjectContext] save:&error]) {
@@ -198,7 +163,7 @@
             //updating tableView in container controller
 //            self.tableViewController.forcast = self.forecast;
 //            [self.tableViewController refreshTable];
-        }
+      
         
     }];
 
