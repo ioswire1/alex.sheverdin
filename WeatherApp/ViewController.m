@@ -134,6 +134,7 @@
                 NSLog(@"%@", error);
             }
         }
+//        sleep(5);
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
     
