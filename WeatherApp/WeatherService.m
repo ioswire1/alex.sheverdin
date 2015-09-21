@@ -16,6 +16,37 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 //static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecast?lat=50&lon=36.25&units=metric";
 //static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecast?q=kharkiv&units=metric";
 
+@interface NSDictionary (HTTPGETParameters)
+
+- (NSString *)GETParameters; // return a string in format ?key1=value1&key2=value2&...
+
+@end
+
+@implementation NSDictionary (HTTPGETParameters)
+
+- (NSString *)GETParameters {
+    
+    NSString *resultString = [NSString string];
+    
+    NSMutableArray *array = [NSMutableArray array];
+    
+    for (id key in [self allKeys]) {
+        NSString *string = [NSString stringWithFormat:@"%@=%@", key, [self objectForKey:key]];
+        [array addObject:string];
+    }
+    
+    for (int i=0; i<array.count; i++) {
+        NSString * sign;
+        if (i==0) sign = @"?";
+        else sign = @"&";
+        resultString = [[resultString stringByAppendingString:sign] stringByAppendingString:array[i]];
+    }
+    return resultString;
+}
+
+@end
+
+
 
 @implementation WeatherService
 
@@ -30,42 +61,27 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 }
 
 
-- (void)getWeatherForLocationOld:(CLLocation *)location completion:(void (^)(BOOL success,
-                                                                          NSDictionary * dictionary,
-                                                                          NSError * error))completion {
-
-    double longitude = location.coordinate.longitude;
-    double latitude = location.coordinate.latitude;
+- (void)getWeatherForLocationOld:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
     
-    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=metric", latitude, longitude];
-    
+    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=metric", location.coordinate.latitude, location.coordinate.longitude];
     [self downloadData:[NSURL URLWithString:urlString] withCompletionBlock:completion];
-    
 }
 
 
 - (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
     
-    double longitude = location.coordinate.longitude;
-    double latitude = location.coordinate.latitude;
-    
-    NSDictionary *params = @{@"lat": @(latitude),
-                             @"lon": @(longitude),
+    NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
+                             @"lon": @(location.coordinate.longitude),
                              @"units": @"metric"};
-    
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
 
 - (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
 
-    double longitude = location.coordinate.longitude;
-    double latitude = location.coordinate.latitude;
-    
-    NSDictionary *params = @{@"lat": @(latitude),
-                             @"lon": @(longitude),
+    NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
+                             @"lon": @(location.coordinate.longitude),
                              @"units": @"metric"};
-    
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
@@ -83,35 +99,19 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
     
     NSDictionary *params = @{@"q": cityName,
                              @"units": @"metric"};
-    
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
 
 - (void)getDataAtPath:(NSString *)path params:(NSDictionary *)params completion:(void(^)(BOOL success, NSDictionary * dictionary, NSError * error))completion {
     
-    NSString *urlString = [kBaseWeatherURL stringByAppendingPathComponent:path];
-    
-    NSMutableArray *array = [NSMutableArray array];
-    
-    for (id key in [params allKeys]) {
-        NSString *string = [NSString stringWithFormat:@"%@=%@", key, [params objectForKey:key]];
-        [array addObject:string];
-    }
-
-    for (int i=0; i<array.count; i++) {
-        NSString * sign;
-        if (i==0) sign = @"?";
-        else sign = @"&";
-        urlString = [[urlString stringByAppendingString:sign] stringByAppendingString:array[i]];
-    }
-    
+    NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params GETParameters]];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        // Check to make sure there are no errors
+        // Check for errors
         if (error) {
-            NSLog(@"Error in connection: %@ %@", error, [error localizedDescription]);
+            NSLog(@"Connection error: %@ %@", error, [error localizedDescription]);
             completion(NO, nil, error);
         } else if (!response) {
             completion(NO, nil, error);
@@ -123,6 +123,10 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
                                                                            error:&error];
             if (!error)
                 completion(YES, weatherData, nil);
+            else {
+                NSLog(@"JSONSerialization error: %@ %@", error, [error localizedDescription]);
+                completion(NO, nil, error);
+            }
         }
     }];
 }
@@ -132,7 +136,7 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
     
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        // Check to make sure there are no errors
+
         if (error) {
             NSLog(@"Error in connection: %@ %@", error, [error localizedDescription]);
             completion(NO, nil, error);
@@ -142,8 +146,8 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
             completion(NO, nil, error);
         } else {
             NSDictionary * weatherData = [NSJSONSerialization JSONObjectWithData:data
-                                                                            options:0
-                                                                              error:&error];
+                                                                         options:0
+                                                                           error:&error];
             if (!error)
                 completion(YES, weatherData, nil);
         }
