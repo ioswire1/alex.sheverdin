@@ -11,10 +11,6 @@
 
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
 
-//static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?lat=50&lon=36.25&units=metric";
-//static NSString  *urlWeather = @"http://api.openweathermap.org/data/2.5/weather?q=kharkiv&units=metric";
-//static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecast?lat=50&lon=36.25&units=metric";
-//static NSString  *urlForecast = @"http://api.openweathermap.org/data/2.5/forecast?q=kharkiv&units=metric";
 
 #pragma mark - Category NSDictionary (HTTPGETParameters)
 
@@ -29,14 +25,12 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 - (NSString *)GETParameters {
     
     NSString *resultString = [NSString string];
-    
     NSMutableArray *array = [NSMutableArray array];
     
     for (id key in [self allKeys]) {
         NSString *string = [NSString stringWithFormat:@"%@=%@", key, [self objectForKey:key]];
         [array addObject:string];
     }
-    
     for (int i=0; i<array.count; i++) {
         NSString * sign;
         if (i==0) sign = @"?";
@@ -74,15 +68,11 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 - (NSOperationQueue *)serviceQueue {
     if (!_serviceQueue) {
         _serviceQueue = [[NSOperationQueue alloc] init];
+//TODO: is it necessary? setMaxConcurrentOperationCount = ?
+        [_serviceQueue setMaxConcurrentOperationCount:2];
+        [_serviceQueue setName:@"com.wire.serviceQueue"];
     }
     return  _serviceQueue;
-}
-
-
-- (void)getWeatherForLocationOld:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=metric", location.coordinate.latitude, location.coordinate.longitude];
-    [self downloadData:[NSURL URLWithString:urlString] withCompletionBlock:completion];
 }
 
 
@@ -126,66 +116,41 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
     NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params GETParameters]];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
-    
-//    dispatch_async(self.weatherQueue, ^{      
         
-        [NSURLConnection sendAsynchronousRequest:request queue:self.serviceQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            
-            // sleep(5); // for testing
-            
-            // Check for errors
-            if (error) {
-                NSLog(@"Connection error: %@ %@", error, [error localizedDescription]);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(NO, nil, error);
-                });
-                
-            } else if (!data) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(NO, nil, error);
-                });
-            } else {
-                NSDictionary * weatherData = [NSJSONSerialization JSONObjectWithData:data
-                                                                             options:0
-                                                                               error:&error];
-                if (!error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(YES, weatherData, nil);
-                    });
-                }
-                else {
-                    NSLog(@"JSONSerialization error: %@ %@", error, [error localizedDescription]);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(NO, nil, error);
-                    });
-                }
-            }
-        }];
-        
-//    });
-}
-
-
-- (void)downloadData:(NSURL *) url withCompletionBlock:(void(^)(BOOL success, NSDictionary * dictionary, NSError * error))completion {
-    
-    NSURLRequest* request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-
+    [NSURLConnection sendAsynchronousRequest:request queue:self.serviceQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        // Check for errors
         if (error) {
-            NSLog(@"Error in connection: %@ %@", error, [error localizedDescription]);
-            completion(NO, nil, error);
-        } else if (!response) {
-            completion(NO, nil, error);
+            //NSLog(@"Connection error: %@ %@", error, [error localizedDescription]);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(NO, nil, error);
+            });
+            
         } else if (!data) {
-            completion(NO, nil, error);
+            NSError *error = [NSError errorWithDomain:@"com.WeatherService.Network"
+                                                 code:9999
+                                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Ther is no data get from server!", nil)}];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(NO, nil, error);
+            });
         } else {
             NSDictionary * weatherData = [NSJSONSerialization JSONObjectWithData:data
                                                                          options:0
                                                                            error:&error];
-            if (!error)
-                completion(YES, weatherData, nil);
+            if (!error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(YES, weatherData, nil);
+                });
+            }
+            else {
+                //NSLog(@"JSONSerialization error: %@ %@", error, [error localizedDescription]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(NO, nil, error);
+                });
+            }
         }
     }];
+
 }
+
 
 @end

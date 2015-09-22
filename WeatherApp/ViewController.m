@@ -92,8 +92,8 @@
         
         self.circleView.temperature = [weather.temp floatValue];
         self.lblCity.text = weather.name;
-        NSLog(@"hi from showLastWeather!");
-        NSLog(@"Data = %@", weather);
+        //NSLog(@"hi from showLastWeather!");
+        //NSLog(@"Data = %@", weather);
         
         // get date and time of last update
         NSTimeInterval timeInterval = [weather.dt doubleValue];
@@ -102,13 +102,13 @@
         [dateformatter setLocale:[NSLocale currentLocale]];
         [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
         NSString *dateString=[dateformatter stringFromDate:date];
-        NSLog(@"DateTime: %@", dateString);
+        //NSLog(@"DateTime: %@", dateString);
         self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
         [self.imageWeather setImage:weather.weatherIcon];
         
     } else {
         
-        NSLog(@"No Data!!!");
+        //NSLog(@"No Data!!!");
     }
     
 }
@@ -124,14 +124,14 @@
     [weatherService getWeatherForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
     
         if (!success) {
-            NSLog(@"Could not get weather data! %@ %@", error, [error localizedDescription]);
+            //NSLog(@"Could not get weather data! %@ %@", error, [error localizedDescription]);
             self.lblFailedConnection.hidden = NO;
         } else {
             Weather *weather = [Weather weatherWithDictionary:dictionary inContext:[self managedObjectContext]];
             self.lblFailedConnection.hidden = YES;
             [self showWeather:weather];
             if (![[self managedObjectContext] save:&error]) {
-                NSLog(@"%@", error);
+                //NSLog(@"%@", error);
             }
         }
 //        sleep(5);
@@ -145,7 +145,7 @@
     [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
 
            if (!success) {
-                NSLog(@"Could not get forecast data %@ %@", error, [error localizedDescription]);
+                //NSLog(@"Could not get forecast data %@ %@", error, [error localizedDescription]);
            } else {
         
                 self.forecast = [dictionary valueForKey:@"list"];
@@ -155,7 +155,7 @@
                 }
                 
                 if (![[self managedObjectContext] save:&error]) {
-                    NSLog(@"%@", error);
+                    //NSLog(@"%@", error);
                 }
             }
             
@@ -189,7 +189,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"Qwerty didFailWithError: %@", error);
+    NSLog(@"Location didFailWithError: %@", error);
     //!!! Replace UIAlertView with UIAlertController
 //    UIAlertView *errorAlert = [[UIAlertView alloc]
 //                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

@@ -23,9 +23,9 @@
     if (error) {
         return nil;
     }
-    for (Weather *weather in results) {
-        NSLog(@"name = %@ %@", weather.name, weather.dt);
-    }
+//    for (Weather *weather in results) {
+//        NSLog(@"name = %@ %@", weather.name, weather.dt);
+//    }
 
     return results.lastObject;
 }
@@ -46,9 +46,9 @@
     if (error) {
         return nil;
     }
-    NSLog(@"ash results = %@", results);
+//    NSLog(@"ash results = %@", results);
     Weather *weather = results.firstObject;
-    NSLog(@"ash weather = %@", weather);
+//    NSLog(@"ash weather = %@", weather);
     if (!weather) {
         weather = [NSEntityDescription insertNewObjectForEntityForName:@"Weather"
                                                  inManagedObjectContext:context];
