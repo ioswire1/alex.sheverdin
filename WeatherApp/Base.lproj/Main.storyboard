@@ -140,8 +140,6 @@
                         <outlet property="lblFailedConnection" destination="BJW-L7-njU" id="n55-hn-UHA"/>
                         <outlet property="lblFailedLocation" destination="MRG-ZV-Lym" id="ohF-pF-rZT"/>
                         <outlet property="lblHumidity" destination="Md9-54-IxA" id="F6O-vL-YFy"/>
-                        <outlet property="lblLatitude" destination="cu9-LR-jRZ" id="xqo-ym-eV3"/>
-                        <outlet property="lblLongitude" destination="iep-E4-YZX" id="whh-Ps-mF6"/>
                         <outlet property="lblTempMinMax" destination="Oy5-XH-cTR" id="rUG-Lg-y8T"/>
                         <outlet property="lblTemperature" destination="uph-J6-RoP" id="eGg-Tn-FMP"/>
                         <outlet property="lblUpdateDateTime" destination="4WN-Wy-qPs" id="G8M-8W-7Md"/>

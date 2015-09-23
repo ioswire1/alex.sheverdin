@@ -22,8 +22,6 @@
 @property (nonatomic, strong) NSArray *forecast;
 
 @property (nonatomic, weak) TableViewController *tableViewController;
-@property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic, strong) CLLocation *currentLocation;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblFailedLocation;
 @property (weak, nonatomic) IBOutlet UILabel *lblFailedConnection;
@@ -32,34 +30,31 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
 @property (weak, nonatomic) IBOutlet UILabel *lblCity;
 @property (weak, nonatomic) IBOutlet UILabel *lblTemperature;
-
 @property (weak, nonatomic) IBOutlet UILabel *lblTempMinMax;
 @property (weak, nonatomic) IBOutlet UILabel *lblHumidity;
 @property (weak, nonatomic) IBOutlet UILabel *lblUpdateDateTime;
-
-//!!! for testing
-@property (weak, nonatomic) IBOutlet UILabel *lblLongitude;
-@property (weak, nonatomic) IBOutlet UILabel *lblLatitude;
 
 @end
 
 @implementation ViewController
 
 
-#pragma mark -
+#pragma mark - access to appDelegate methods
 
 - (NSManagedObjectContext *)managedObjectContext {
     return [(AppDelegate *)[UIApplication sharedApplication].delegate managedObjectContext];
 }
 
+- (CLLocation *)currentLocation {
+    return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
+}
 
 #pragma mark - Showing & refreshing UI
 
 - (IBAction)refresh:(UIButton *)sender {
     
     //TODO: Replace UIAlertView with UIAlertController
-
-    if (nil == self.currentLocation) {
+    if (nil == [self currentLocation]) {
         UIAlertView *errorAlert = [[UIAlertView alloc]
                                    initWithTitle:@"Error" message:@"Failed to Get Your Location!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [errorAlert show];
@@ -71,58 +66,44 @@
 }
 
 - (void) showLastWeather {
-    
-    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]] ;
-    [self showWeather:weather];
+    Weather *weather = [Weather lastWeatherInContext:[self managedObjectContext]];
+    if (weather) [self showWeather:weather];
 }
 
-- (void) showLastForecast {
-    
-    //updating tableView in container controller
+- (void) showLastForecast { //updating tableView in container controller
     self.tableViewController.forcast = self.forecast;
     [self.tableViewController refreshTable];
 }
 
 - (void) showWeather: (Weather*) weather {
+    self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
+    self.lblTempMinMax.text = [NSString stringWithFormat:@"%dº/%dº", [weather.temp_min intValue], [weather.temp_max intValue]];
+    self.lblHumidity.text = [NSString stringWithFormat:@"%d%%", [weather.humidity intValue]];
     
-    if (weather) {
-        self.lblTemperature.text = [NSString stringWithFormat:@"%dº", [weather.temp intValue]];
-        self.lblTempMinMax.text = [NSString stringWithFormat:@"%dº/%dº", [weather.temp_min intValue], [weather.temp_max intValue]];
-        self.lblHumidity.text = [NSString stringWithFormat:@"%d%%", [weather.humidity intValue]];
-        
-        self.circleView.temperature = [weather.temp floatValue];
-        self.lblCity.text = weather.name;
-        //NSLog(@"hi from showLastWeather!");
-        //NSLog(@"Data = %@", weather);
-        
-        // get date and time of last update
-        NSTimeInterval timeInterval = [weather.dt doubleValue];
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
-        NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
-        [dateformatter setLocale:[NSLocale currentLocale]];
-        [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
-        NSString *dateString=[dateformatter stringFromDate:date];
-        //NSLog(@"DateTime: %@", dateString);
-        self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
-        [self.imageWeather setImage:weather.weatherIcon];
-        
-    } else {
-        
-        //NSLog(@"No Data!!!");
-    }
+    self.circleView.temperature = [weather.temp floatValue];
+    self.lblCity.text = weather.name;
+    //NSLog(@"hi from showLastWeather!");
+    //NSLog(@"Data = %@", weather);
     
+    // get date and time of last update
+    NSTimeInterval timeInterval = [weather.dt doubleValue];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+    [dateformatter setLocale:[NSLocale currentLocale]];
+    [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
+    NSString *dateString=[dateformatter stringFromDate:date];
+    //NSLog(@"DateTime: %@", dateString);
+    self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
+    [self.imageWeather setImage:weather.weatherIcon];
 }
 
 
 // this section needs refactoring
 #pragma mark - Getting Weather & Forecast data
 
-
 - (void) downloadWeather {
-    
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getWeatherForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
-    
         if (!success) {
             //NSLog(@"Could not get weather data! %@ %@", error, [error localizedDescription]);
             self.lblFailedConnection.hidden = NO;
@@ -137,45 +118,33 @@
 //        sleep(5);
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
-    
 }
 
 - (void) downloadForecast {
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
-
            if (!success) {
                 //NSLog(@"Could not get forecast data %@ %@", error, [error localizedDescription]);
            } else {
-        
                 self.forecast = [dictionary valueForKey:@"list"];
-
                 for (NSDictionary *currentDictionary in self.forecast) {
                     [Forecast forecastWithDictionary:currentDictionary inContext:[self managedObjectContext]];
                 }
-                
                 if (![[self managedObjectContext] save:&error]) {
                     //NSLog(@"%@", error);
                 }
             }
-            
             [self showLastForecast];
-            
             //updating tableView in container controller
 //            self.tableViewController.forcast = self.forecast;
 //            [self.tableViewController refreshTable];
-      
-        
     }];
-
 }
-
 
 
 #pragma mark - Transfer data to Forecast's TableViewController
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
     if ([segue.identifier isEqualToString:@"ToTable"]) {
         if ([segue.destinationViewController isKindOfClass:[TableViewController class]]) {
             self.tableViewController = (TableViewController *)segue.destinationViewController;
@@ -185,68 +154,21 @@
 }
 
 
-#pragma mark - CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"Location didFailWithError: %@", error);
-    //!!! Replace UIAlertView with UIAlertController
-//    UIAlertView *errorAlert = [[UIAlertView alloc]
-//                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//    [errorAlert show];
-        self.lblFailedLocation.hidden = NO;
-}
-
-- (void)locationManager:(CLLocationManager *)manager
-     didUpdateLocations:(NSArray*)locations {
-    
-//    [[Weather service] getWeatherDataForLocation:locations.lastObject completion:^(BOOL success, NSDictionary *data, NSError *error){
-//        if (success) {
-//            [Weather weatherWithDictionary:data];
-//        } else {
-//            
-//        }
-//    }];
-    
-    
-    
-    self.currentLocation = [locations lastObject];
-    
-    if (self.currentLocation != nil) {
-        self.lblLongitude.text = [NSString stringWithFormat:@"%.2f", self.currentLocation.coordinate.longitude];
-        self.lblLatitude.text = [NSString stringWithFormat:@"%.2f", self.currentLocation.coordinate.latitude];
-    }
-    self.lblFailedLocation.hidden = YES;
-    [self downloadWeather];
-    [self downloadForecast];
-    }
-
-
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    // init locationManager
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-
-    
-    //CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus]; //check authorizationStatus
-    
-    // Check for iOS 8 and request user Authorization
-    if ([self.locationManager respondsToSelector:
-         @selector(requestWhenInUseAuthorization)]) {
-        [self.locationManager requestWhenInUseAuthorization];
-    }
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
-    self.locationManager.distanceFilter=500;
-    
-    [self.locationManager startUpdatingLocation];
-  
+    [self showLastWeather];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:@"didUpdateLocationsNotification" object:nil];
 }
 
+- (void)didReceiveNotification:(NSNotification *)notification {
+    if ([notification.name isEqualToString:@"didUpdateLocationsNotification"]) {
+        [self downloadWeather];
+        [self downloadForecast];
+    }
+}
 
 - (void)appWillEnterForeground{ //Application will enter foreground.
 //!!! what about Layer ?
@@ -264,7 +186,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.circleView setNeedsDisplay];
-    
 }
 
 @end
