@@ -10,6 +10,8 @@
 
 @interface AppDelegate ()
 
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
 @end
 
 @implementation AppDelegate
@@ -17,6 +19,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    // init locationManager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
+    //CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus]; //check authorizationStatus
+    
+    // Check for iOS 8 and request user Authorization
+    if ([self.locationManager respondsToSelector:
+         @selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+    self.locationManager.distanceFilter=500;
+    [self.locationManager startUpdatingLocation];
     return YES;
 }
 
@@ -121,4 +137,32 @@
         }
     }
 }
+
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"Location didFailWithError: %@", error);
+    //TODO: Replace UIAlertView with UIAlertController
+        UIAlertView *errorAlert = [[UIAlertView alloc]
+                                   initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [errorAlert show];
+    
+    //self.lblFailedLocation.hidden = NO;
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray*)locations {
+    self.currentLocation = [locations lastObject];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"didUpdateLocationsNotification" object:nil];
+    
+//    self.lblFailedLocation.hidden = YES;
+    
+//    [self downloadWeather];
+//    [self downloadForecast];
+//    NSLog(@"super = %@",[self window].superview);
+//    NSLog(@"root = %@",[self window].rootViewController.childViewControllers[0]);
+}
+
 @end
