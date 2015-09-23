@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* WeatherService.m */; };
+		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
 		0F1A5ED7BD568258AE9ABAD7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855FBCBEE01F83EF1845821 /* libPods.a */; };
 		CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B8AEB1B77F5AE00716155 /* TableViewController.m */; };
@@ -39,8 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		04B3E0831B7E0B030010BE5E /* WeatherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherService.h; sourceTree = "<group>"; };
-		04B3E0841B7E0B030010BE5E /* WeatherService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherService.m; sourceTree = "<group>"; };
+		04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMap.h; sourceTree = "<group>"; };
+		04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWeatherMap.m; sourceTree = "<group>"; };
 		04FE0E171BA6D2D1005B061F /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		04FE0E181BA6D2D1005B061F /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		248880C98D2A720CAED18737 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -148,8 +148,8 @@
 				04FE0E181BA6D2D1005B061F /* CircleView.m */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
-				04B3E0831B7E0B030010BE5E /* WeatherService.h */,
-				04B3E0841B7E0B030010BE5E /* WeatherService.m */,
+				04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */,
+				04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */,
 				CE69C1EA1B77954E005CC71D /* Supporting Files */,
 			);
 			path = WeatherApp;
@@ -345,7 +345,7 @@
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,
 				CE93C4811B8277130098BA9B /* Forecast.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
-				04B3E0851B7E0B030010BE5E /* WeatherService.m in Sources */,
+				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
 				CE93C4341B8103FD0098BA9B /* WeatherApp.xcdatamodeld in Sources */,
 				CE93C4711B822B5D0098BA9B /* NSManagedObject+ActiveRecord.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,

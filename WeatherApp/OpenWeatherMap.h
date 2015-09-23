@@ -10,13 +10,12 @@
 @import CoreLocation;
 
 
-@interface WeatherService : NSObject
+@interface OpenWeatherMap : NSObject
 
-+ (instancetype)sharedService;
++ (instancetype)service;
 - (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
 - (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
 - (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
 - (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
-
 
 @end

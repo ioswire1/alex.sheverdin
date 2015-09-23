@@ -6,10 +6,11 @@
 //  Copyright (c) 2015 Alex Sheverdin. All rights reserved.
 //
 
-#import "WeatherService.h"
+#import "OpenWeatherMap.h"
 #import "ASIHTTPRequest.h"
 
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
+static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 
 
 #pragma mark - Category NSDictionary (HTTPGETParameters)
@@ -23,7 +24,6 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 @implementation NSDictionary (HTTPGETParameters)
 
 - (NSString *)GETParameters {
-    
     NSString *resultString = [NSString string];
     NSMutableArray *array = [NSMutableArray array];
     
@@ -45,17 +45,17 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 
 #pragma mark - WeatherService
 
-@interface WeatherService()
+@interface OpenWeatherMap()
 
 @property (nonatomic, strong) NSOperationQueue* serviceQueue;
 
 @end
 
 
-@implementation WeatherService
+@implementation OpenWeatherMap
 
 
-+ (instancetype)sharedService {
++ (instancetype)service {
     static dispatch_once_t once;
     static id sharedInstance;
     dispatch_once(&once, ^{
@@ -66,69 +66,76 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
 
 
 - (NSOperationQueue *)serviceQueue {
-    if (!_serviceQueue) {
-        _serviceQueue = [[NSOperationQueue alloc] init];
-//TODO: is it necessary? setMaxConcurrentOperationCount = ?
-        [_serviceQueue setMaxConcurrentOperationCount:2];
-        [_serviceQueue setName:@"com.wire.serviceQueue"];
-    }
+        if (!_serviceQueue) {
+            _serviceQueue = [[NSOperationQueue alloc] init];
+    //TODO: is it necessary? setMaxConcurrentOperationCount = ?
+            [_serviceQueue setMaxConcurrentOperationCount:2];
+            [_serviceQueue setName:kWeatherDomain];
+        }
     return  _serviceQueue;
 }
 
-
 - (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
-    
     NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
                              @"lon": @(location.coordinate.longitude),
                              @"units": @"metric"};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
-
 
 - (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
-
     NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
                              @"lon": @(location.coordinate.longitude),
                              @"units": @"metric"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
-
 - (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
-  
     NSDictionary *params = @{@"q": cityName,
                              @"units": @"metric"};
-    
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
-
 - (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
-    
     NSDictionary *params = @{@"q": cityName,
                              @"units": @"metric"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
-
-- (void)getDataAtPath:(NSString *)path params:(NSDictionary *)params completion:(void(^)(BOOL success, NSDictionary * dictionary, NSError * error))completion {
+- (void)getDataAtPath:(NSString *)path params:(NSDictionary *)params completion:(void(^)(BOOL, NSDictionary *, NSError *))completion {
     
     NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params GETParameters]];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
-        
     [NSURLConnection sendAsynchronousRequest:request queue:self.serviceQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        // Check for errors
+        
+//        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+//            NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+//            //switch (((NSHTTPURLResponse *)response).statusCode) {
+//            switch (statusCode) {
+//                case 200:
+//                    
+//                    break;
+//                
+//                default:
+//                    break;
+//            }
+//            
+//        } else {
+//            // handle error
+//        }
+        
         if (error) {
-            //NSLog(@"Connection error: %@ %@", error, [error localizedDescription]);
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(NO, nil, error);
             });
-            
+        } else if (!response) {
+            error = [NSError errorWithDomain:kWeatherDomain
+                                        code:9998
+                                    userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Ther is no response from server!", nil)}];
         } else if (!data) {
-            NSError *error = [NSError errorWithDomain:@"com.WeatherService.Network"
+            error = [NSError errorWithDomain:kWeatherDomain
                                                  code:9999
-                                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Ther is no data get from server!", nil)}];
+                                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Ther is no data returned from server!", nil)}];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(NO, nil, error);
             });
@@ -136,21 +143,18 @@ static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.
             NSDictionary * weatherData = [NSJSONSerialization JSONObjectWithData:data
                                                                          options:0
                                                                            error:&error];
-            if (!error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(YES, weatherData, nil);
-                });
-            }
-            else {
-                //NSLog(@"JSONSerialization error: %@ %@", error, [error localizedDescription]);
+            if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(NO, nil, error);
                 });
             }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(YES, weatherData, nil);
+                });
+            }
         }
     }];
-
 }
-
 
 @end

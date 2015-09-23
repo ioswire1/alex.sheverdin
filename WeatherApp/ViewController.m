@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "Forecast+API.h"
 #import "Weather+API.h"
-#import "WeatherService.h"
+#import "OpenWeatherMap.h"
 #import "CircleView.h"
 
 
@@ -120,7 +120,7 @@
 
 - (void) downloadWeather {
     
-    WeatherService *weatherService = [WeatherService sharedService];
+    OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getWeatherForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
     
         if (!success) {
@@ -141,7 +141,7 @@
 }
 
 - (void) downloadForecast {
-    WeatherService *weatherService = [WeatherService sharedService];
+    OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
 
            if (!success) {
@@ -200,6 +200,16 @@
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray*)locations {
     
+//    [[Weather service] getWeatherDataForLocation:locations.lastObject completion:^(BOOL success, NSDictionary *data, NSError *error){
+//        if (success) {
+//            [Weather weatherWithDictionary:data];
+//        } else {
+//            
+//        }
+//    }];
+    
+    
+    
     self.currentLocation = [locations lastObject];
     
     if (self.currentLocation != nil) {
@@ -235,15 +245,6 @@
     
     [self.locationManager startUpdatingLocation];
   
-    //[self showLastWeather];
-    //[self showLastForecast];
-
-    // notification for entering app to foreground (instead viewWillAppear)
-    //!!! where removeObserver to be done?
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(appWillEnterForeground)
-//                                                 name:UIApplicationWillEnterForegroundNotification
-//                                               object:nil];
 }
 
 
@@ -263,6 +264,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.circleView setNeedsDisplay];
+    
 }
 
 @end
