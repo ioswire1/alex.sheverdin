@@ -10,8 +10,8 @@
 
 @interface TableViewController : UITableViewController
 
-@property (nonatomic, strong) NSArray *forcast;
+@property (nonatomic, strong) NSArray *forecast;
 
-- (void) refreshTable;
+- (void) downloadForecast;
 
 @end

@@ -7,32 +7,38 @@
 //
 
 #import "TableViewController.h"
+#import "AppDelegate.h"
 #import "NSManagedObject+ActiveRecord.h"
 #import "Forecast+API.h"
+#import "OpenWeatherMap.h"
 
-@interface TableViewController () <NSFetchedResultsControllerDelegate>
+@interface TableViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResults;
 
-
 @end
+
 
 @implementation TableViewController
 
-
-- (void)refreshTable {
-    
-    [self.tableView reloadData];
+- (CLLocation *)currentLocation {
+    return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
 }
 
+- (void) downloadForecast {
+    OpenWeatherMap *weatherService = [OpenWeatherMap service];
+    [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
+        if (!success) {
+            //NSLog(@"Could not get forecast data %@ %@", error, [error localizedDescription]);
+        } else {
+            self.forecast = dictionary[@"list"];
+            [self.tableView reloadData];
+        }
+    }];
+}
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
-    
-    self.fetchedResults = [Forecast fetchAllSortedBy:@"dt_txt" ascending:YES withPredicate:nil groupBy:nil];
-    self.fetchedResults.delegate = self;
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -40,121 +46,41 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 
-#pragma mark - UIFetchedResultsController Delegate
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView beginUpdates];
-}
-
-
-- (void)controller:(NSFetchedResultsController *)controller
-
-   didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath
-     forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath
-{
-    switch (type) {
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationFade)];
-            break;
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:(UITableViewRowAnimationFade)];
-            break;
-        case NSFetchedResultsChangeMove:
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationFade)];
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:(UITableViewRowAnimationFade)];
-            break;
-        case NSFetchedResultsChangeUpdate:
-            [self configurateCell:[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-            break;
-        default:
-            break;
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    
-    [self.tableView endUpdates];
-}
-
-- (void)configurateCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    
-    Forecast *forecast = [self.fetchedResults objectAtIndexPath:indexPath];
-    cell.textLabel.text = [NSString stringWithFormat:@"%dºC", [forecast.temp intValue]];
-    NSRange range = NSMakeRange(0, 16);
-    cell.detailTextLabel.text = [forecast.dt_txt substringWithRange: range];
-    
-}
-
-
-
 #pragma mark - Table view data source
 
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-    return [[self.fetchedResults sections] count];
+    // Return the number of sections.
+    return 1;
 }
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    id  sectionInfo = [[self.fetchedResults sections] objectAtIndex:section];
-    return [sectionInfo numberOfObjects];
+    // Return the number of rows in the section.
+    return [self.forecast count];
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //static NSString *cellIdentifier = @"Cell Forecast";
-    //UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                               reuseIdentifier:@"Cell Forecast"];
-
-    [self configurateCell:cell atIndexPath:indexPath];
+                           reuseIdentifier:@"Cell Forecast"];
+    
+    NSDictionary *dict = self.forecast[indexPath.row];
+    NSDictionary *main = [dict valueForKey:@"main"];
+    NSString *temp = [NSString stringWithFormat:@"%dº", [[main valueForKey:@"temp"] intValue]];
+    NSArray *weatherTmp = [dict valueForKey:@"weather"];
+    NSDictionary *weather = [weatherTmp firstObject];
+    NSString *clouds = [weather valueForKey:@"description"];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@   -   %@", temp, clouds];
+    NSRange range = NSMakeRange(0, 16);
+    cell.detailTextLabel.text = [[dict valueForKey:@"dt_txt"] substringWithRange: range];
+  
     return cell;
 }
-
-
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    // Return the number of sections.
-//    return 1;
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    // Return the number of rows in the section.
-//    return [self.forcast count];
-//}
-//
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-//                           reuseIdentifier:@"Cell Forecast"];
-//    
-//    // Set the text on the cell with the description of the item
-//    // that is at the nth index of items, where n = row this cell
-//    // will appear in on the tableview
-//    
-//    NSDictionary *dict = self.forcast[indexPath.row];
-//    NSDictionary *main = [dict valueForKey:@"main"];
-//    NSString *temp = [NSString stringWithFormat:@"%dº", [[main valueForKey:@"temp"] intValue]];
-//    NSArray *weatherTmp = [dict valueForKey:@"weather"];
-//    NSDictionary *weather = [weatherTmp firstObject];
-//    NSString *clouds = [weather valueForKey:@"description"];
-//    
-//    cell.textLabel.text = [NSString stringWithFormat:@"%@   -   %@", temp, clouds];
-//    NSRange range = NSMakeRange(0, 16);
-//    cell.detailTextLabel.text = [[dict valueForKey:@"dt_txt"] substringWithRange: range];
-//  
-//    return cell;
-//}
 
 
 /*

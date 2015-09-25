@@ -108,22 +108,6 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:self.serviceQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
-//        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-//            NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
-//            //switch (((NSHTTPURLResponse *)response).statusCode) {
-//            switch (statusCode) {
-//                case 200:
-//                    
-//                    break;
-//                
-//                default:
-//                    break;
-//            }
-//            
-//        } else {
-//            // handle error
-//        }
-        
         if (error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(NO, nil, error);
