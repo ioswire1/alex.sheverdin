@@ -9,7 +9,6 @@
 #import "ViewController.h"
 #import "TableViewController.h"
 #import "AppDelegate.h"
-#import "Forecast+API.h"
 #import "Weather+API.h"
 #import "OpenWeatherMap.h"
 #import "CircleView.h"

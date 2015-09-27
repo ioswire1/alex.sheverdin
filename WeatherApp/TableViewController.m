@@ -8,8 +8,6 @@
 
 #import "TableViewController.h"
 #import "AppDelegate.h"
-#import "NSManagedObject+ActiveRecord.h"
-#import "Forecast+API.h"
 #import "OpenWeatherMap.h"
 
 @interface TableViewController ()

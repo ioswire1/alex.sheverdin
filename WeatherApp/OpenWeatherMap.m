@@ -68,8 +68,8 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 - (NSOperationQueue *)serviceQueue {
         if (!_serviceQueue) {
             _serviceQueue = [[NSOperationQueue alloc] init];
-    //TODO: is it necessary? setMaxConcurrentOperationCount = ?
-            [_serviceQueue setMaxConcurrentOperationCount:2];
+            //TODO: to implement init  ;
+            [_serviceQueue setMaxConcurrentOperationCount:2]; //is it necessary?  - setMaxConcurrentOperationCount = ?
             [_serviceQueue setName:kWeatherDomain];
         }
     return  _serviceQueue;
