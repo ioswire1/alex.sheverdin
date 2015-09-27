@@ -48,12 +48,10 @@
 #pragma mark - Showing & refreshing UI
 
 - (IBAction)refresh:(UIButton *)sender {
-    //TODO: Replace UIAlertView with UIAlertController
-    if (nil == [self currentLocation]) {
-        UIAlertView *errorAlert = [[UIAlertView alloc]
-                                   initWithTitle:@"Error" message:@"Failed to Get Your Location!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [errorAlert show];
+    if ((0 == [self currentLocation].coordinate.latitude) && (0 == [self currentLocation].coordinate.longitude)) {
+        self.lblFailedLocation.hidden = NO;
     } else {
+        self.lblFailedLocation.hidden = YES;
         [self downloadWeather];
         [self.tableViewController downloadForecast];
     }
