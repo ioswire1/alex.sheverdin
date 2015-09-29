@@ -9,13 +9,15 @@
 @import Foundation;
 @import CoreLocation;
 
+typedef void (^GetWeatherCompletion)(BOOL success, NSDictionary * __nullable dictionary, NSError * __nullable error);
 
 @interface OpenWeatherMap : NSObject
 
-+ (instancetype)service;
-- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
-- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
-- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
-- (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(BOOL success, NSDictionary * dictionary, NSError * error))completion;
++ (nonnull instancetype)service;
+
+- (void)getWeatherForLocation:(CLLocation * __nullable)location completion:(GetWeatherCompletion __nullable) completion;
+- (void)getForecastForLocation:(CLLocation * __nullable)location completion:(GetWeatherCompletion __nullable)completion;
+- (void)getWeatherForCityName:(NSString * __nullable)cityName completion:(GetWeatherCompletion __nullable)completion;
+- (void)getForecastForCityName:(NSString * __nullable)cityName completion:(GetWeatherCompletion __nullable)completion;
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "CircleView.h"
-#import "CircleViewLayer.h"
 
 static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.0; }
 
@@ -57,7 +56,7 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     drawAnimation.duration            = 2.0;
     drawAnimation.repeatCount         = 1;
     drawAnimation.autoreverses = NO;
-    drawAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
+    drawAnimation.fromValue = @(0.0f);
     drawAnimation.toValue   = [NSNumber numberWithFloat:1.0f];
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     [self.circleLayer addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
@@ -73,6 +72,9 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     colorAnimation.fromValue = (__bridge id)(startColor.CGColor);
     colorAnimation.toValue   = (__bridge id)(endColor.CGColor);
     colorAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    
+    
+    
     [self.circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
 }
 

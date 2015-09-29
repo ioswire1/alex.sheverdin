@@ -10,32 +10,26 @@
 #import <UIKit/UIKit.h>
 
 @implementation ImageTransformer
-+ (Class)transformedValueClass
-{
+
++ (Class)transformedValueClass {
     return [NSData class];
 }
 
-+ (BOOL)allowsReverseTransformation
-{
++ (BOOL)allowsReverseTransformation {
     return YES;
 }
 
-- (id)transformedValue:(id)value
-{
+- (id)transformedValue:(id)value {
     if (!value) {
         return nil;
     }
-    
     if ([value isKindOfClass:[NSData class]]) {
         return value;
     }
-    
     return UIImagePNGRepresentation(value);
 }
 
-- (id)reverseTransformedValue:(id)value
-{
-    
+- (id)reverseTransformedValue:(id)value {
     return [UIImage imageWithData:value];
 }
 

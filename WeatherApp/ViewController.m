@@ -16,11 +16,6 @@
 
 @interface ViewController ()
 
-@property (nonatomic, weak) TableViewController *tableViewController;
-
-@property (weak, nonatomic) IBOutlet UILabel *lblFailedLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lblFailedConnection;
-
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageWeather;
 @property (weak, nonatomic) IBOutlet UILabel *lblCity;
@@ -28,6 +23,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblTempMinMax;
 @property (weak, nonatomic) IBOutlet UILabel *lblHumidity;
 @property (weak, nonatomic) IBOutlet UILabel *lblUpdateDateTime;
+
+@property (weak, nonatomic) IBOutlet UILabel *lblFailedLocation;
+@property (weak, nonatomic) IBOutlet UILabel *lblFailedConnection;
 
 @end
 
@@ -52,9 +50,7 @@
     } else {
         self.lblFailedLocation.hidden = YES;
         [self downloadWeather];
-        [self.tableViewController downloadForecast];
     }
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 - (void) showLastWeather {
@@ -68,14 +64,13 @@
     self.lblHumidity.text = [NSString stringWithFormat:@"%d%%", [weather.humidity intValue]];
     self.circleView.temperature = [weather.temp floatValue];
     self.lblCity.text = weather.name;
-    // get date and time of last update
+
     NSTimeInterval timeInterval = [weather.dt doubleValue];
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
     [dateformatter setLocale:[NSLocale currentLocale]];
     [dateformatter setDateFormat:@"dd.MM.yy HH:mm"];
     NSString *dateString=[dateformatter stringFromDate:date];
-    //NSLog(@"DateTime: %@", dateString);
     self.lblUpdateDateTime.text = [@"Get at " stringByAppendingString:dateString];
     [self.imageWeather setImage:weather.weatherIcon];
 }
@@ -85,8 +80,8 @@
 - (void) downloadWeather {
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getWeatherForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
+        
         if (!success) {
-            //NSLog(@"Could not get weather data! %@ %@", error, [error localizedDescription]);
             self.lblFailedConnection.hidden = NO;
         } else {
             Weather *weather = [Weather weatherWithDictionary:dictionary inContext:[self managedObjectContext]];
@@ -96,40 +91,23 @@
                 //NSLog(@"%@", error);
             }
         }
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
 }
 
-#pragma mark - Transfer data to Forecast's TableViewController
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"ToTable"]) {
-        if ([segue.destinationViewController isKindOfClass:[TableViewController class]]) {
-            self.tableViewController = (TableViewController *)segue.destinationViewController;
-        }
-    }
-}
 
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self showLastWeather];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:@"didUpdateLocationsNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:kDidUpdateLocationsNotification object:nil];
 }
 
 - (void)didReceiveNotification:(NSNotification *)notification {
-    if ([notification.name isEqualToString:@"didUpdateLocationsNotification"]) {
         [self downloadWeather];
-        [self.tableViewController downloadForecast];
-    }
 }
 
-- (void)appWillEnterForeground{ //Application will enter foreground.
-//!!! what about Layer ?
-//    [self.weatherView.circle removeFromSuperlayer];
-//    self.weatherView.circle = nil;
-//    [self.circleView setNeedsDisplay];
+- (void)appWillEnterForeground{
+    //Application will enter foreground.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -139,7 +117,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.circleView setNeedsDisplay];
+    [self showLastWeather];
 }
 
 @end

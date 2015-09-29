@@ -12,7 +12,6 @@
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
 static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 
-
 #pragma mark - Category NSDictionary (HTTPGETParameters)
 
 @interface NSDictionary (HTTPGETParameters)
@@ -25,7 +24,7 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 
 - (NSString *)GETParameters {
     NSString *resultString = [NSString string];
-    NSMutableArray *array = [NSMutableArray array];
+    NSMutableArray<NSString *> *array = [NSMutableArray array];
     
     for (id key in [self allKeys]) {
         NSString *string = [NSString stringWithFormat:@"%@=%@", key, [self objectForKey:key]];
@@ -55,7 +54,7 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 @implementation OpenWeatherMap
 
 
-+ (instancetype)service {
++ (nonnull instancetype)service {
     static dispatch_once_t once;
     static id sharedInstance;
     dispatch_once(&once, ^{
@@ -65,7 +64,7 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 }
 
 
-- (NSOperationQueue *)serviceQueue {
+- (nonnull NSOperationQueue *)serviceQueue {
         if (!_serviceQueue) {
             _serviceQueue = [[NSOperationQueue alloc] init];
             //TODO: to implement init  ;
@@ -75,34 +74,34 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
     return  _serviceQueue;
 }
 
-- (void)getWeatherForLocation:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
+- (void)getWeatherForLocation:(CLLocation *)location completion:(GetWeatherCompletion)completion{
     NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
                              @"lon": @(location.coordinate.longitude),
                              @"units": @"metric"};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
-- (void)getForecastForLocation:(CLLocation *)location completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
+- (void)getForecastForLocation:(CLLocation *)location completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
                              @"lon": @(location.coordinate.longitude),
                              @"units": @"metric"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
-- (void)getWeatherForCityName:(NSString *)cityName completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
+- (void)getWeatherForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"q": cityName,
                              @"units": @"metric"};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
-- (void)getForecastForCityName:(NSString *)cityName completion:(void (^)(BOOL, NSDictionary *, NSError *))completion {
+- (void)getForecastForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"q": cityName,
                              @"units": @"metric"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
-- (void)getDataAtPath:(NSString *)path params:(NSDictionary *)params completion:(void(^)(BOOL, NSDictionary *, NSError *))completion {
-    
+- (void)getDataAtPath:(NSString *)path params:(nullable NSDictionary *)params completion:(GetWeatherCompletion) completion {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params GETParameters]];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
@@ -138,6 +137,7 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
                 });
             }
         }
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
 }
 

@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import <CoreLocation/CoreLocation.h>
 
+static NSString *const kDidUpdateLocationsNotification = @"didUpdateLocationsNotification";
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

@@ -23,12 +23,27 @@
     return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
 }
 
+- (IBAction)refreshForecast:(UIRefreshControl *)sender {
+    [self downloadForecast];
+}
+
 - (void) downloadForecast {
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
+        [self.refreshControl endRefreshing];
+        
         if (!success) {
-            //NSLog(@"Could not get forecast data %@ %@", error, [error localizedDescription]);
+            UILabel *faultLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+            faultLabel.text = @"Can't get forecast data!";
+            faultLabel.textAlignment = NSTextAlignmentCenter;
+            [faultLabel sizeToFit];
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;;
+            self.tableView.backgroundView = faultLabel;
+            self.forecast = nil;
+            [self.tableView reloadData];
         } else {
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;;
+            self.tableView.backgroundView = nil;
             self.forecast = dictionary[@"list"];
             [self.tableView reloadData];
         }
@@ -37,11 +52,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:kDidUpdateLocationsNotification object:nil];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)didReceiveNotification:(NSNotification *)notification {
+    [self downloadForecast];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self downloadForecast];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,9 +89,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                           reuseIdentifier:@"Cell Forecast"];
-    
+                       reuseIdentifier:@"Cell Forecast"];
     NSDictionary *dict = self.forecast[indexPath.row];
+
     NSDictionary *main = [dict valueForKey:@"main"];
     NSString *temp = [NSString stringWithFormat:@"%dº", [[main valueForKey:@"temp"] intValue]];
     NSArray *weatherTmp = [dict valueForKey:@"weather"];
@@ -76,10 +101,8 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@   -   %@", temp, clouds];
     NSRange range = NSMakeRange(0, 16);
     cell.detailTextLabel.text = [[dict valueForKey:@"dt_txt"] substringWithRange: range];
-  
     return cell;
 }
-
 
 /*
 // Override to support conditional editing of the table view.

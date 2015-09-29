@@ -107,13 +107,11 @@
     return _persistentStoreCoordinator;
 }
 
-
 - (NSManagedObjectContext *)managedObjectContext {
     // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
-    
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (!coordinator) {
         return nil;
@@ -144,10 +142,26 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"Location didFailWithError: %@", error);
-    //TODO: Replace UIAlertView with UIAlertController
-        UIAlertView *errorAlert = [[UIAlertView alloc]
-                                   initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [errorAlert show];
+    if ([error code] == kCLErrorLocationUnknown)
+        return;
+    
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:NSLocalizedString(@"Getting Location Error", nil)
+                                message:[error localizedDescription]
+                                preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+
+    if ([error code] == kCLErrorDenied) {
+        alert.message = NSLocalizedString(@"Turn Location Service ON!", nil);
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+
+        }]];
+    }
+    
+    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    
     
     //self.lblFailedLocation.hidden = NO;
 }
@@ -155,14 +169,7 @@
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray*)locations {
     self.currentLocation = [locations lastObject];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didUpdateLocationsNotification" object:nil];
-    
-//    self.lblFailedLocation.hidden = YES;
-    
-//    [self downloadWeather];
-//    [self downloadForecast];
-//    NSLog(@"super = %@",[self window].superview);
-//    NSLog(@"root = %@",[self window].rootViewController.childViewControllers[0]);
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidUpdateLocationsNotification object:nil];
 }
 
 @end
