@@ -100,10 +100,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:kDidUpdateLocationsNotification object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self
+//                                            selector:@selector(appDidBecomeActive)
+//                                                name:UIApplicationDidBecomeActiveNotification
+//                                              object:nil];
 }
 
 - (void)didReceiveNotification:(NSNotification *)notification {
-        [self downloadWeather];
+    self.lblFailedLocation.hidden = YES;
+    [self downloadWeather];
 }
 
 - (void)appWillEnterForeground{
