@@ -74,16 +74,16 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
     return  _serviceQueue;
 }
 
-- (void)getWeatherForLocation:(CLLocation *)location completion:(GetWeatherCompletion)completion{
-    NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
-                             @"lon": @(location.coordinate.longitude),
+- (void)getWeatherForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion)completion{
+    NSDictionary *params = @{@"lat": @(coordinate.latitude),
+                             @"lon": @(coordinate.longitude),
                              @"units": @"metric"};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
-- (void)getForecastForLocation:(CLLocation *)location completion:(GetWeatherCompletion) completion {
-    NSDictionary *params = @{@"lat": @(location.coordinate.latitude),
-                             @"lon": @(location.coordinate.longitude),
+- (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion) completion {
+    NSDictionary *params = @{@"lat": @(coordinate.latitude),
+                             @"lon": @(coordinate.longitude),
                              @"units": @"metric"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
@@ -109,18 +109,7 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
         
         if (error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(NO, nil, error);
-            });
-        } else if (!response) {
-            error = [NSError errorWithDomain:kWeatherDomain
-                                        code:9998
-                                    userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Ther is no response from server!", nil)}];
-        } else if (!data) {
-            error = [NSError errorWithDomain:kWeatherDomain
-                                                 code:9999
-                                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Ther is no data returned from server!", nil)}];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(NO, nil, error);
+                completion(nil, error);
             });
         } else {
             NSDictionary * weatherData = [NSJSONSerialization JSONObjectWithData:data
@@ -128,12 +117,12 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
                                                                            error:&error];
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(NO, nil, error);
+                    completion(nil, error);
                 });
             }
             else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(YES, weatherData, nil);
+                    completion(weatherData, nil);
                 });
             }
         }

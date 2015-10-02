@@ -29,10 +29,11 @@
 
 - (void) downloadForecast {
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
-    [weatherService getForecastForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
+    [weatherService getForecastForLocation:self.currentLocation.coordinate completion:^(NSDictionary * dictionary, NSError * error) {
+        
         [self.refreshControl endRefreshing];
         
-        if (!success) {
+        if (error) {
             UILabel *faultLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
             faultLabel.text = @"Can't get forecast data!";
             faultLabel.textAlignment = NSTextAlignmentCenter;
@@ -52,7 +53,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:kDidUpdateLocationsNotification object:nil];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -60,13 +60,27 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)didReceiveNotification:(NSNotification *)notification {
+- (void)didReceiveUpdateLocationsNotification:(NSNotification *)notification {
+    [self downloadForecast];
+}
+
+- (void)appDidBecomeActive {
     [self downloadForecast];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self downloadForecast];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveUpdateLocationsNotification:) name:kDidUpdateLocationsNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(appDidBecomeActive)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,16 +105,13 @@
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                        reuseIdentifier:@"Cell Forecast"];
     NSDictionary *dict = self.forecast[indexPath.row];
-
-    NSDictionary *main = [dict valueForKey:@"main"];
-    NSString *temp = [NSString stringWithFormat:@"%dº", [[main valueForKey:@"temp"] intValue]];
-    NSArray *weatherTmp = [dict valueForKey:@"weather"];
-    NSDictionary *weather = [weatherTmp firstObject];
-    NSString *clouds = [weather valueForKey:@"description"];
+    NSString *temp = [NSString stringWithFormat:@"%dº", [[dict[@"main"] valueForKey:@"temp"] intValue]];
+    NSDictionary *weather = [dict[@"weather"] firstObject];
+    NSString *clouds = weather[@"description"];
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@   -   %@", temp, clouds];
-    NSRange range = NSMakeRange(0, 16);
-    cell.detailTextLabel.text = [[dict valueForKey:@"dt_txt"] substringWithRange: range];
+    NSRange range = NSMakeRange(5, 11);
+    cell.detailTextLabel.text = [dict[@"dt_txt"] substringWithRange: range];
     return cell;
 }
 

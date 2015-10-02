@@ -79,9 +79,9 @@
 
 - (void) downloadWeather {
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
-    [weatherService getWeatherForLocation:self.currentLocation completion:^(BOOL success, NSDictionary * dictionary, NSError * error) {
+    [weatherService getWeatherForLocation:self.currentLocation.coordinate completion:^(NSDictionary * dictionary, NSError * error) {
         
-        if (!success) {
+        if (error) {
             self.lblFailedConnection.hidden = NO;
         } else {
             Weather *weather = [Weather weatherWithDictionary:dictionary inContext:[self managedObjectContext]];
@@ -99,15 +99,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:kDidUpdateLocationsNotification object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self
-//                                            selector:@selector(appDidBecomeActive)
-//                                                name:UIApplicationDidBecomeActiveNotification
-//                                              object:nil];
 }
 
-- (void)didReceiveNotification:(NSNotification *)notification {
+- (void)didReceiveUpdateLocationsNotification:(NSNotification *)notification {
     self.lblFailedLocation.hidden = YES;
+    [self downloadWeather];
+}
+
+- (void)appDidBecomeActive {
     [self downloadWeather];
 }
 
@@ -120,9 +119,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveUpdateLocationsNotification:) name:kDidUpdateLocationsNotification object:nil];
+
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                                selector:@selector(appDidBecomeActive)
+                                                    name:UIApplicationDidBecomeActiveNotification
+                                                  object:nil];
     [self showLastWeather];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

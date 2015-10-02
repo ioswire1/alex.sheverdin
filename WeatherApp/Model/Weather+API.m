@@ -55,18 +55,18 @@
         weather.dt = dt;
     }
     weather.name = name;
-    NSDictionary *main = [dictionary valueForKey:@"main"];
+    NSDictionary *main = dictionary[@"main"];
     
-    weather.temp = [main valueForKey:@"temp"];
-    weather.temp_min = [main valueForKey:@"temp_min"];
-    weather.temp_max = [main valueForKey:@"temp_max"];
-    weather.humidity = [main valueForKey:@"humidity"];
-    NSDictionary *weatherDic = [[dictionary valueForKey:@"weather"] firstObject];
-    weather.weatherDescription = [weatherDic valueForKey:@"description"];
+    weather.temp = main[@"temp"];
+    weather.temp_min = main[@"temp_min"];
+    weather.temp_max = main[@"temp_max"];
+    weather.humidity = main[@"humidity"];
+    NSDictionary *weatherDic = [dictionary[@"weather"] firstObject];
+    weather.weatherDescription = weatherDic[@"description"];
     //weather.weatherIcon = [weatherDic valueForKey:@"icon"];
     
     //write icon
-    NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",[weatherDic valueForKey:@"icon"]];
+    NSString *urlOfImage = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png", weatherDic[@"icon"]];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlOfImage]]];
     weather.weatherIcon = image;
     return weather;

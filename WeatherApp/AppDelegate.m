@@ -154,14 +154,12 @@
     if ([error code] == kCLErrorDenied) {
         alert.message = NSLocalizedString(@"Turn Location Service ON!", nil);
         [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        
+            
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-
         }]];
     }
     
     [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-    
     
     //self.lblFailedLocation.hidden = NO;
 }
