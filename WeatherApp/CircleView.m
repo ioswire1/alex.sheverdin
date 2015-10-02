@@ -9,6 +9,7 @@
 #import "CircleView.h"
 
 static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.0; }
+static double temperatureMax = 50.0;
 
 #define RGBA(r, g, b, a) [UIColor colorWithRed:(float)r / 255.0 green:(float)g / 255.0 blue:(float)b / 255.0 alpha:a]
 
@@ -29,8 +30,6 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     else {
         return @[(id)RGBA(3,193,190,1).CGColor, (id)RGBA(1,140,226,1).CGColor, (id)RGBA(8,106,221,1).CGColor, (id)RGBA(20,74,200,1).CGColor, (id)RGBA(28,47,82,1).CGColor];
     }
-
-
 }
 
 - (CAShapeLayer *)circleLayer {
@@ -47,9 +46,13 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     return  _backLayer;
 }
 
-- (void)setTemperature:(CGFloat)temperature {
+- (void)setTemperature:(double)temperature {
+    //temperature = -25.0; //for UI testing
+    if (temperature > temperatureMax)
+        temperature = temperatureMax;
+    if (temperature < -temperatureMax)
+        temperature = -temperatureMax;
     _temperature = temperature;
-    //_temperature = -45.0; //for UI testing
     
     CGRect bounds = self.bounds;
     CGPoint center;
@@ -61,9 +64,9 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     //create background layer
     UIBezierPath *backgroundPath = [[UIBezierPath alloc] init];
     [backgroundPath addArcWithCenter:center
-                              radius:radius - self.lineWidth/2
-                          startAngle:DegreesToRadians(0)
-                            endAngle:DegreesToRadians(360)
+                              radius:radius - self.lineWidth / 2
+                          startAngle:0
+                            endAngle:2 * M_PI
                            clockwise:YES];
     self.backLayer.path = backgroundPath.CGPath;
     self.backLayer.position = bounds.origin;
@@ -74,20 +77,19 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
   
     //create animation layer
     UIBezierPath *path = [[UIBezierPath alloc] init];
-    CGFloat angle = self.temperature*360/50;
+    CGFloat angle = self.temperature * 360 / 50;
     [path addArcWithCenter:center
-                    radius:radius - self.lineWidth/2
+                    radius:radius - self.lineWidth / 2
                 startAngle:DegreesToRadians(self.startAngle)
                   endAngle:DegreesToRadians(self.startAngle + angle)
-                 clockwise:self.temperature >=0 ? YES : NO];
+                 clockwise:self.temperature >= 0];
     path.lineWidth = self.lineWidth;
     self.circleLayer.path = path.CGPath;
     self.circleLayer.position = bounds.origin;
     self.circleLayer.fillColor = [UIColor clearColor].CGColor;
     self.circleLayer.lineWidth = self.lineWidth;
     [self.layer addSublayer:self.circleLayer];
-    
-    self.circleLayer.strokeColor = (__bridge CGColorRef _Nullable)([[self colors] lastObject]);
+
     CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     drawAnimation.duration  = 2.0;
     drawAnimation.fromValue = @(0.0f);
@@ -99,6 +101,11 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     colorAnimation.duration = 2.0;
     colorAnimation.values   = [self colors];
     colorAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    colorAnimation.fillMode = kCAFillModeForwards;
+    colorAnimation.removedOnCompletion = NO;
+    CGFloat koef = fabs(temperatureMax / _temperature);
+    NSArray *times = @[@(0.0f * koef), @(0.25f * koef), @(0.5f * koef), @(0.75 * koef), @(1.0f * koef)];
+    [colorAnimation setKeyTimes:times];
     [self.circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
 }
 
