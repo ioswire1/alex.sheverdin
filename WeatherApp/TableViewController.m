@@ -28,6 +28,8 @@
 }
 
 - (void) downloadForecast {
+    if ((0 == [self currentLocation].coordinate.latitude) && (0 == [self currentLocation].coordinate.longitude))
+        return;
     OpenWeatherMap *weatherService = [OpenWeatherMap service];
     [weatherService getForecastForLocation:self.currentLocation.coordinate completion:^(NSDictionary * dictionary, NSError * error) {
         
