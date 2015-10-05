@@ -13,9 +13,11 @@ IB_DESIGNABLE
 
 @property (nonatomic) double temperature;
 
-@property (nonatomic) IBInspectable CGFloat startAngle;
-@property (nonatomic) IBInspectable CGFloat lineWidth;
+@property (nonatomic) IBInspectable double initAngle;
+@property (nonatomic) IBInspectable double lineWidth;
+@property (nonatomic) IBInspectable double duration;
 @property (nonatomic, strong) IBInspectable UIColor *backLineColor;
+
 
 @end
 

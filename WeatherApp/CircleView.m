@@ -48,6 +48,7 @@ static double temperatureMax = 50.0;
 
 - (void)setTemperature:(double)temperature {
     //temperature = -25.0; //for UI testing
+    double prevTemperature = _temperature;
     if (temperature > temperatureMax)
         temperature = temperatureMax;
     if (temperature < -temperatureMax)
@@ -77,12 +78,15 @@ static double temperatureMax = 50.0;
   
     //create animation layer
     UIBezierPath *path = [[UIBezierPath alloc] init];
-    CGFloat angle = self.temperature * 360 / 50;
+    CGFloat endAngle = self.temperature * 360 / 50;
+    CGFloat startAngle = prevTemperature * 360 / 50;
     [path addArcWithCenter:center
                     radius:radius - self.lineWidth / 2
-                startAngle:DegreesToRadians(self.startAngle)
-                  endAngle:DegreesToRadians(self.startAngle + angle)
-                 clockwise:self.temperature >= 0];
+                startAngle:DegreesToRadians(self.initAngle)
+                  endAngle:DegreesToRadians(self.initAngle + endAngle)
+//                startAngle:DegreesToRadians(self.initAngle + startAngle)
+//                  endAngle:DegreesToRadians(self.initAngle + endAngle)
+                 clockwise:self.temperature >= prevTemperature];
     path.lineWidth = self.lineWidth;
     self.circleLayer.path = path.CGPath;
     self.circleLayer.position = bounds.origin;
@@ -91,14 +95,14 @@ static double temperatureMax = 50.0;
     [self.layer addSublayer:self.circleLayer];
 
     CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    drawAnimation.duration  = 2.0;
+    drawAnimation.duration  = self.duration;
     drawAnimation.fromValue = @(0.0f);
     drawAnimation.toValue   = @(1.0f);
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     [self.circleLayer addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     
     CAKeyframeAnimation *colorAnimation = [CAKeyframeAnimation animationWithKeyPath:@"strokeColor"];
-    colorAnimation.duration = 2.0;
+    colorAnimation.duration = self.duration;
     colorAnimation.values   = [self colors];
     colorAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     colorAnimation.fillMode = kCAFillModeForwards;

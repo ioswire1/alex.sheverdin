@@ -107,7 +107,14 @@
     
     if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
         SLComposeViewController *controller = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-        [controller setInitialText:[NSString stringWithFormat:@"Hello Twitter! :) It's just a test! I'll post from my first iOS app :) The temperature at %@ is %@. Hurrah!!!", self.lblCity.text, self.lblTemperature.text]];
+        [controller setInitialText:[NSString stringWithFormat:@"It's a test screenshot post from my iOS Weather App!"]];
+        
+        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        [self.view.layer.presentationLayer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [controller addImage:img];
+        
         [self presentViewController:controller animated:YES completion:nil];
         
     } else {
@@ -125,7 +132,14 @@
     
     if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
         SLComposeViewController *controller = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
-        [controller setInitialText:[NSString stringWithFormat:@"Hello Facebook!:) It's just a test! I'll post from my first iOS app :) The temperature at %@ is %@. Hurrah!!!", self.lblCity.text, self.lblTemperature.text]];
+        [controller setInitialText:[NSString stringWithFormat:@"It's a test screenshot post from my iOS Weather App"]];
+        
+        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        [self.view.layer.presentationLayer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [controller addImage:img];
+        
         [self presentViewController:controller animated:YES completion:nil];
         
     } else {
