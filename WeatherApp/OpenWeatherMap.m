@@ -77,26 +77,30 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 - (void)getWeatherForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion)completion{
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
-                             @"units": @"metric"};
+                             @"units": @"metric",
+                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
 - (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
-                             @"units": @"metric"};
+                             @"units": @"metric",
+                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
 - (void)getWeatherForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"q": cityName,
-                             @"units": @"metric"};
+                             @"units": @"metric",
+                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
 - (void)getForecastForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"q": cityName,
-                             @"units": @"metric"};
+                             @"units": @"metric",
+                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 

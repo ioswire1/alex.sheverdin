@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
 		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
 		0F1A5ED7BD568258AE9ABAD7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855FBCBEE01F83EF1845821 /* libPods.a */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
+		04550CB71BC811CE00B07242 /* UIImage+Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Picker.m"; sourceTree = "<group>"; };
 		04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMap.h; sourceTree = "<group>"; };
 		04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWeatherMap.m; sourceTree = "<group>"; };
 		04FE0E171BA6D2D1005B061F /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
@@ -137,6 +140,8 @@
 				CE3B8AEB1B77F5AE00716155 /* TableViewController.m */,
 				04FE0E171BA6D2D1005B061F /* CircleView.h */,
 				04FE0E181BA6D2D1005B061F /* CircleView.m */,
+				04550CB61BC811CE00B07242 /* UIImage+Picker.h */,
+				04550CB71BC811CE00B07242 /* UIImage+Picker.m */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
 				04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */,
@@ -325,6 +330,7 @@
 			files = (
 				CE4571891B83C9A000323C90 /* ImageTransformer.m in Sources */,
 				CE69C1F31B77954E005CC71D /* ViewController.m in Sources */,
+				04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */,
 				CE4571801B83A2FD00323C90 /* Weather+API.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,

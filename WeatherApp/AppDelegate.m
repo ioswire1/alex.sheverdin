@@ -167,7 +167,12 @@
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray*)locations {
     self.currentLocation = [locations lastObject];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDidUpdateLocationsNotification object:nil];
+    static int count = 0;
+    if (count) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDidUpdateLocationsNotification object:nil];
+    }
+    count++;
+
 }
 
 @end
