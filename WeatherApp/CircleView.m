@@ -7,6 +7,7 @@
 //
 
 #import "CircleView.h"
+#import "UIImage+Picker.h"
 
 static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.0; }
 static double temperatureMax = 50.0;
@@ -17,6 +18,7 @@ static double temperatureMax = 50.0;
 
 @property (nonatomic, strong) CAShapeLayer *circleLayer;
 @property (nonatomic, strong) CAShapeLayer *backLayer;
+@property (nonatomic, strong) UIImage *colorSpectrum;
 
 @end
 
@@ -27,15 +29,52 @@ static double temperatureMax = 50.0;
 {
     self = [super initWithCoder:coder];
     if (self) {
-        _temperature = -50;
+        _temperature = - temperatureMax;
+        _colorSpectrum = [UIImage imageNamed:@"color_spectrum"];
     }
     return self;
 }
 
-- (NSArray *)colors {
-    return @[(id)[UIColor whiteColor].CGColor, (id)[UIColor yellowColor].CGColor, (id)[UIColor greenColor].CGColor, (id)[UIColor blueColor].CGColor, (id)[UIColor redColor].CGColor, (id)[UIColor blackColor].CGColor];
-//    return @[(id)RGBA(28,47,82,1).CGColor, (id)RGBA(20,74,200,1).CGColor, (id)RGBA(8,106,221,1).CGColor, (id)RGBA(1,140,226,1).CGColor, (id)RGBA(3,193,190,1).CGColor, (id)RGBA(203,53,54,1).CGColor];
+- (UIColor *)colorByValue:(CGFloat)value {
+    CGPoint valuePosition = CGPointMake(_colorSpectrum.size.width * value, 1);
+    return [_colorSpectrum colorAtPosition:valuePosition];
+}
 
+- (CAKeyframeAnimation *)colorAnimationFromValue:(CGFloat)fromValue
+                                         toValue:(CGFloat)toValue
+                                         keyPath:(NSString *)keyPath
+{
+    
+    NSMutableArray *values = [NSMutableArray array];
+    NSMutableArray *keyTimes = [NSMutableArray array];
+    int from = fromValue * temperatureMax;
+    int to = toValue * temperatureMax;
+    
+    if (from < to) {
+        for (int i = from; i <= to; i ++) {
+            CGFloat value = ((float)i)/temperatureMax;
+            CGFloat position = i / (float)abs(to - from);
+#warning Check this please!
+            [values addObject:(id)[self colorByValue:value].CGColor];
+            [keyTimes addObject:@(position)];
+        }
+    } else {
+        for (int i = from; i >= to; i--) {
+            CGFloat value = ((float)i)/temperatureMax;
+            CGFloat position = i / (float)abs(from - to);
+            
+            [values addObject:(id)[self colorByValue:value].CGColor];
+            [keyTimes addObject:@(position)];
+        }
+    }
+    CAKeyframeAnimation *colorAnimation = [CAKeyframeAnimation animationWithKeyPath:keyPath];
+    colorAnimation.values               = values;
+    colorAnimation.duration             = 3.0;  // "animate over 3 seconds or so.."
+    colorAnimation.repeatCount          = 1.0;  // Animate only once..
+    colorAnimation.removedOnCompletion  = NO;   // Remain stroked after the animation..
+    colorAnimation.fillMode             = kCAFillModeForwards;
+    colorAnimation.timingFunction       = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return colorAnimation;
 }
 
 - (CAShapeLayer *)circleLayer {
@@ -61,7 +100,7 @@ static double temperatureMax = 50.0;
         temperature = -temperatureMax;
     _temperature = temperature;
     self.initAngle = - M_PI / 2;
-    //self.duration = 2.0;
+    self.duration = 3.0;
     
     CGRect bounds = self.bounds;
     CGPoint center;
@@ -93,13 +132,7 @@ static double temperatureMax = 50.0;
     [self.layer addSublayer:self.circleLayer];
     
     
-    NSMutableArray *colors = [[self colors] mutableCopy];
-    if (nil != (__bridge id _Nonnull)([self.circleLayer.presentationLayer strokeColor])) {
-        colors[0] = (__bridge id _Nonnull)([self.circleLayer.presentationLayer strokeColor]);
-        self.backLayer.strokeColor = [self.circleLayer.presentationLayer strokeColor];
-
-    }
-
+    CGFloat toValue = (_temperature + temperatureMax) / (2 * temperatureMax);
     CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     drawAnimation.duration  = self.duration;
     drawAnimation.fromValue = @((prevTemperature + temperatureMax) / (2 * temperatureMax));
@@ -110,21 +143,26 @@ static double temperatureMax = 50.0;
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     [self.circleLayer addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     
-    CAKeyframeAnimation *colorAnimation = [CAKeyframeAnimation animationWithKeyPath:@"strokeColor"];
-    colorAnimation.duration = self.duration;
-
-    colorAnimation.values   = colors;
-    //colorAnimation.path = path.CGPath;
-    colorAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    colorAnimation.fillMode = kCAFillModeForwards;
-    colorAnimation.removedOnCompletion = NO;
-
-    double koef = (2 * temperatureMax)  / (_temperature + temperatureMax);
-    double delta = 0;//(prevTemperature + temperatureMax) / (2 * temperatureMax);
-    NSArray *times = @[@(0.0f * koef - delta), @(0.2f * koef - delta), @(0.4f * koef - delta), @(0.6 * koef - delta), @(0.8 * koef - delta), @(1.0f * koef - delta)];
-    [colorAnimation setKeyTimes:times];
-
+    
+    CAKeyframeAnimation *colorAnimation = [self colorAnimationFromValue:self.circleLayer.strokeEnd toValue:toValue keyPath:@"strokeColor"];
+    
     [self.circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
+    
+//    CAKeyframeAnimation *colorAnimation = [CAKeyframeAnimation animationWithKeyPath:@"strokeColor"];
+//    colorAnimation.duration = self.duration;
+//
+//    colorAnimation.values   = colors;
+//    //colorAnimation.path = path.CGPath;
+//    colorAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    colorAnimation.fillMode = kCAFillModeForwards;
+//    colorAnimation.removedOnCompletion = NO;
+//
+//    double koef = (2 * temperatureMax)  / (_temperature + temperatureMax);
+//    double delta = 0;//(prevTemperature + temperatureMax) / (2 * temperatureMax);
+//    NSArray *times = @[@(0.0f * koef - delta), @(0.2f * koef - delta), @(0.4f * koef - delta), @(0.6 * koef - delta), @(0.8 * koef - delta), @(1.0f * koef - delta)];
+//    [colorAnimation setKeyTimes:times];
+//
+//    [self.circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
     
 }
 
