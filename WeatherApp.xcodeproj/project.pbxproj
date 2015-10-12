@@ -91,6 +91,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04550CE31BCC0B3A00B07242 /* CircleView */ = {
+			isa = PBXGroup;
+			children = (
+				04FE0E171BA6D2D1005B061F /* CircleView.h */,
+				04FE0E181BA6D2D1005B061F /* CircleView.m */,
+				04550CB61BC811CE00B07242 /* UIImage+Picker.h */,
+				04550CB71BC811CE00B07242 /* UIImage+Picker.m */,
+			);
+			name = CircleView;
+			sourceTree = "<group>";
+		};
+		04550CE51BCC0C7400B07242 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				CE69C1F11B77954E005CC71D /* ViewController.h */,
+				CE69C1F21B77954E005CC71D /* ViewController.m */,
+				CE3B8AEA1B77F5AE00716155 /* TableViewController.h */,
+				CE3B8AEB1B77F5AE00716155 /* TableViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		04550CE61BCC0C8300B07242 /* WeatherService */ = {
+			isa = PBXGroup;
+			children = (
+				04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */,
+				04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */,
+			);
+			name = WeatherService;
+			sourceTree = "<group>";
+		};
 		1BB53C6FB6D879826FD69BCA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -134,18 +165,11 @@
 			children = (
 				CE93C4751B822C5D0098BA9B /* Model */,
 				CE69C1F41B77954E005CC71D /* Main.storyboard */,
-				CE69C1F11B77954E005CC71D /* ViewController.h */,
-				CE69C1F21B77954E005CC71D /* ViewController.m */,
-				CE3B8AEA1B77F5AE00716155 /* TableViewController.h */,
-				CE3B8AEB1B77F5AE00716155 /* TableViewController.m */,
-				04FE0E171BA6D2D1005B061F /* CircleView.h */,
-				04FE0E181BA6D2D1005B061F /* CircleView.m */,
-				04550CB61BC811CE00B07242 /* UIImage+Picker.h */,
-				04550CB71BC811CE00B07242 /* UIImage+Picker.m */,
+				04550CE31BCC0B3A00B07242 /* CircleView */,
+				04550CE51BCC0C7400B07242 /* Controllers */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
-				04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */,
-				04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */,
+				04550CE61BCC0C8300B07242 /* WeatherService */,
 				CE69C1EA1B77954E005CC71D /* Supporting Files */,
 			);
 			path = WeatherApp;
