@@ -1,5 +1,5 @@
 //
-//  WeatherService.h
+//  OpenWeatherMap.h
 //  WeatherApp
 //
 //  Created by Alexey Sheverdin on 8/14/15.

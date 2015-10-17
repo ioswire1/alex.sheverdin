@@ -1,5 +1,5 @@
 //
-//  WeatherService.m
+//  OpenWeatherMap.m
 //  WeatherApp
 //
 //  Created by Alexey Sheverdin on 8/14/15.

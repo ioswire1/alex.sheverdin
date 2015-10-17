@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
 		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
+		04B429211BD121A600685BB8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B429201BD121A600685BB8 /* ViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
 		0F1A5ED7BD568258AE9ABAD7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855FBCBEE01F83EF1845821 /* libPods.a */; };
 		CE3B8AEC1B77F5AE00716155 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B8AEB1B77F5AE00716155 /* TableViewController.m */; };
@@ -18,7 +20,7 @@
 		CE45718C1B83D1C300323C90 /* Weather.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45718B1B83D1C300323C90 /* Weather.m */; };
 		CE69C1ED1B77954E005CC71D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1EC1B77954E005CC71D /* main.m */; };
 		CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1EF1B77954E005CC71D /* AppDelegate.m */; };
-		CE69C1F31B77954E005CC71D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1F21B77954E005CC71D /* ViewController.m */; };
+		CE69C1F31B77954E005CC71D /* OldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1F21B77954E005CC71D /* OldViewController.m */; };
 		CE69C1F61B77954E005CC71D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F41B77954E005CC71D /* Main.storyboard */; };
 		CE69C1F81B77954E005CC71D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F71B77954E005CC71D /* Images.xcassets */; };
 		CE69C1FB1B77954E005CC71D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F91B77954E005CC71D /* LaunchScreen.xib */; };
@@ -37,10 +39,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		044A6C481BCFD18E007B3FA4 /* FallBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FallBehavior.h; sourceTree = "<group>"; };
+		044A6C491BCFD18E007B3FA4 /* FallBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FallBehavior.m; sourceTree = "<group>"; };
 		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
 		04550CB71BC811CE00B07242 /* UIImage+Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Picker.m"; sourceTree = "<group>"; };
 		04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMap.h; sourceTree = "<group>"; };
 		04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWeatherMap.m; sourceTree = "<group>"; };
+		04B4291F1BD121A600685BB8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		04B429201BD121A600685BB8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		04FE0E171BA6D2D1005B061F /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		04FE0E181BA6D2D1005B061F /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		248880C98D2A720CAED18737 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -58,8 +64,8 @@
 		CE69C1EC1B77954E005CC71D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE69C1EE1B77954E005CC71D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CE69C1EF1B77954E005CC71D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		CE69C1F11B77954E005CC71D /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		CE69C1F21B77954E005CC71D /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CE69C1F11B77954E005CC71D /* OldViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OldViewController.h; sourceTree = "<group>"; };
+		CE69C1F21B77954E005CC71D /* OldViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OldViewController.m; sourceTree = "<group>"; };
 		CE69C1F51B77954E005CC71D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CE69C1F71B77954E005CC71D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CE69C1FA1B77954E005CC71D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -105,8 +111,10 @@
 		04550CE51BCC0C7400B07242 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CE69C1F11B77954E005CC71D /* ViewController.h */,
-				CE69C1F21B77954E005CC71D /* ViewController.m */,
+				04B4291F1BD121A600685BB8 /* ViewController.h */,
+				04B429201BD121A600685BB8 /* ViewController.m */,
+				CE69C1F11B77954E005CC71D /* OldViewController.h */,
+				CE69C1F21B77954E005CC71D /* OldViewController.m */,
 				CE3B8AEA1B77F5AE00716155 /* TableViewController.h */,
 				CE3B8AEB1B77F5AE00716155 /* TableViewController.m */,
 			);
@@ -168,6 +176,8 @@
 				04550CE31BCC0B3A00B07242 /* CircleView */,
 				04550CE51BCC0C7400B07242 /* Controllers */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
+				044A6C481BCFD18E007B3FA4 /* FallBehavior.h */,
+				044A6C491BCFD18E007B3FA4 /* FallBehavior.m */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
 				04550CE61BCC0C8300B07242 /* WeatherService */,
 				CE69C1EA1B77954E005CC71D /* Supporting Files */,
@@ -268,6 +278,7 @@
 				TargetAttributes = {
 					CE69C1E61B77954E005CC71D = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = VUM827ZK3T;
 					};
 					CE69C1FF1B77954F005CC71D = {
 						CreatedOnToolsVersion = 6.4;
@@ -353,10 +364,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4571891B83C9A000323C90 /* ImageTransformer.m in Sources */,
-				CE69C1F31B77954E005CC71D /* ViewController.m in Sources */,
+				CE69C1F31B77954E005CC71D /* OldViewController.m in Sources */,
 				04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */,
 				CE4571801B83A2FD00323C90 /* Weather+API.m in Sources */,
+				044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
+				04B429211BD121A600685BB8 /* ViewController.m in Sources */,
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
@@ -490,10 +503,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -503,10 +519,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

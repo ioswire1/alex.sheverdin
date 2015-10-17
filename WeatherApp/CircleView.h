@@ -11,12 +11,16 @@
 IB_DESIGNABLE
 @interface CircleView : UIView
 
-@property (nonatomic) double temperature;
+@property (nonatomic) double progress;
 
-@property (nonatomic) IBInspectable double initAngle;
-@property (nonatomic) IBInspectable double lineWidth;
-@property (nonatomic) IBInspectable double duration;
+@property (nonatomic) double initAngle;
+@property (nonatomic) double lineWidth;
+@property (nonatomic) double duration;
+@property (nonatomic) double radius;
 @property (nonatomic, strong) IBInspectable UIColor *backLineColor;
+
+- (void)addLoadingAnimation;
+- (void)addProgressAnimation:(CGFloat)progress completion:(void (^)(BOOL finished))callbackBlock;
 
 
 @end
