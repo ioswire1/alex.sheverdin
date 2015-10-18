@@ -25,42 +25,22 @@
 
 #pragma mark - debugging methods
 
-- (IBAction)progressChanged:(UISlider *)sender {
-}
-
-- (IBAction)animIntro:(UIButton *)sender {
-    static int count = 0;
-
-    [self.fallBehavior addItem:self.circleView];
-    //TODO: make counting of bounces
-    __weak ViewController *wSelf = self;
-    self.fallBehavior.action = ^{
-        //        NSLog(@"posX = %f posY = %f", wSelf.circleView.center.x, wSelf.circleView.center.y );
-        count++;
-    };
-}
-
 - (IBAction)addProgress:(UIButton *)sender {
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.fallBehavior removeItem:self.circleView];
-        self.circleView.center = self.view.center;//CGPointMake(30.0,30.0);
+    __weak ViewController *wSelf = self;
+    [UIView animateWithDuration:0.85 animations:^{
+        [wSelf.fallBehavior removeItem:wSelf.circleView];
+        wSelf.circleView.center = wSelf.view.center;
     } completion:^(BOOL finished) {
-        [self.circleView addProgressAnimation:self.progressValue.value completion:nil];
+        [wSelf.circleView addProgressAnimation:wSelf.progressValue.value completion:nil];
     }];
 }
 
-- (IBAction)animLoading:(UIButton *)sender {
-    static int count = 0;
+- (IBAction)addLoading:(UIButton *)sender {
     [self.circleView addProgressAnimation:-50.0 completion:^(BOOL finished) {
-        [self.fallBehavior addItem:self.circleView];
+        [self addLoadAnimationWithBounceCount:3];
     }];
-    __weak ViewController *wSelf = self;
-        self.fallBehavior.action = ^{
-//            NSLog(@"posX = %f posY = %f", wSelf.circleView.center.x, wSelf.circleView.center.y );
-            count++;
-        };
 }
+
 
 #pragma mark - Fall Animation
 
@@ -79,14 +59,42 @@
     return _fallBehavior;
 }
 
+- (void) addLoadAnimationWithBounceCount:(int) bounceCount {
+    [self.fallBehavior addItem:self.circleView];
+    __weak ViewController *wSelf = self;
+    self.fallBehavior.action = ^{
+        static int count = 0;
+        static CGFloat xPrev = 0, xPrevDelta = 0;
+        CGFloat xCurrentDelta = wSelf.circleView.center.y - xPrev;
+        NSLog(@"curY = %.1f prevY = %.1f xCurrentDelta = %.1f xPrevDelta = %.1f", wSelf.circleView.center.y, xPrev, xCurrentDelta, xPrevDelta );
+        if ((xCurrentDelta < 0) && (xPrevDelta >= 0)) {
+            count++;
+            NSLog(@"Direction changed!");
+        }
+        if (count >= bounceCount) {
+            
+            [UIView animateWithDuration:0.45 animations:^{
+                [wSelf.fallBehavior removeItem:wSelf.circleView];
+                wSelf.circleView.center = wSelf.view.center;//CGPointMake(30.0,30.0);
+            } completion:^(BOOL finished) {
+                [wSelf.circleView addProgressAnimation:wSelf.progressValue.value completion:nil];
+            }];
+            count = 0;
+            xPrev = xPrevDelta = 0.0;
+        } else {
+            xPrev = wSelf.circleView.center.y;
+            xPrevDelta = xCurrentDelta;
+        }
+    };
+}
+
 
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self.fallBehavior addItem:self.circleView];
-    
+    [self addLoadAnimationWithBounceCount:5];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -185,18 +185,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jYq-lB-NB1">
-                                <rect key="frame" x="268" y="492" width="32" height="30"/>
-                                <state key="normal" title="intro"/>
-                                <connections>
-                                    <action selector="animIntro:" destination="oCe-16-Dhg" eventType="touchUpInside" id="R52-ZA-j8a"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jsf-L8-0TG">
-                                <rect key="frame" x="249" y="530" width="51" height="30"/>
+                                <rect key="frame" x="236" y="530" width="64" height="30"/>
                                 <state key="normal" title="loading"/>
                                 <connections>
-                                    <action selector="animLoading:" destination="oCe-16-Dhg" eventType="touchUpInside" id="2Ih-98-FQD"/>
+                                    <action selector="addLoading:" destination="oCe-16-Dhg" eventType="touchUpInside" id="s5j-Hq-eEl"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zfe-4T-DyU" customClass="CircleView">
@@ -225,18 +218,15 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvh-yi-cnK">
-                                <rect key="frame" x="149" y="530" width="61" height="30"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvh-yi-cnK">
+                                <rect key="frame" x="249" y="502" width="61" height="30"/>
                                 <state key="normal" title="progress"/>
                                 <connections>
                                     <action selector="addProgress:" destination="oCe-16-Dhg" eventType="touchUpInside" id="ptR-hM-350"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="-50" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="feu-K9-RX1">
-                                <rect key="frame" x="12" y="530" width="118" height="31"/>
-                                <connections>
-                                    <action selector="progressChanged:" destination="oCe-16-Dhg" eventType="valueChanged" id="CAn-u5-cTQ"/>
-                                </connections>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="25" minValue="-50" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="feu-K9-RX1">
+                                <rect key="frame" x="35" y="530" width="156" height="31"/>
                             </slider>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
