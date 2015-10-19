@@ -225,14 +225,21 @@
                                     <action selector="addProgress:" destination="oCe-16-Dhg" eventType="touchUpInside" id="ptR-hM-350"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGT-AM-4NI">
+                                <rect key="frame" x="10" y="528" width="42" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="25" minValue="-50" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="feu-K9-RX1">
-                                <rect key="frame" x="35" y="530" width="156" height="31"/>
+                                <rect key="frame" x="86" y="530" width="133" height="31"/>
                             </slider>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="circleView" destination="zfe-4T-DyU" id="Ddx-UN-uGI"/>
+                        <outlet property="lblTemperature" destination="eGT-AM-4NI" id="sEo-vG-2pD"/>
                         <outlet property="progressValue" destination="feu-K9-RX1" id="KWL-0J-0cK"/>
                     </connections>
                 </viewController>
