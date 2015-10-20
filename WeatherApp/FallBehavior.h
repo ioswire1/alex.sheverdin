@@ -11,6 +11,7 @@
 @interface FallBehavior : UIDynamicBehavior
 
 @property (nonatomic) UIEdgeInsets collisionInset;
+@property (nonatomic, copy) void (^bounceAction)(id <UIDynamicItem>);
 
 - (void)addItem:(id <UIDynamicItem>)item;
 - (void)removeItem:(id <UIDynamicItem>)item;

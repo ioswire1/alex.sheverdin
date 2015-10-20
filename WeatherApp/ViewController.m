@@ -71,32 +71,25 @@
 
 - (void) addLoadAnimationWithBounceCount:(int) bounceCount {
     [self.fallBehavior addItem:self.circleView];
+    __block int count = 0;
     __weak ViewController *wSelf = self;
-    self.fallBehavior.action = ^{
-        static int count = 0;
-        static CGFloat xPrev = 0, xPrevDelta = 0;
-        CGFloat xCurrentDelta = wSelf.circleView.center.y - xPrev;
-        //NSLog(@"curY = %.1f prevY = %.1f xCurrentDelta = %.1f xPrevDelta = %.1f", wSelf.circleView.center.y, xPrev, xCurrentDelta, xPrevDelta );
-        if ((xCurrentDelta < 0) && (xPrevDelta >= 0)) {
-            count++;
-            //NSLog(@"Direction changed!");
-        }
-        if (count >= bounceCount) {
-            
-            [UIView animateWithDuration:0.45 animations:^{
+    [self.fallBehavior setBounceAction:^(id<UIDynamicItem> item) {
+        if (item == wSelf.circleView) {
+            count ++;
+            if (bounceCount == count) {
+                // add animation
                 [wSelf.fallBehavior removeItem:wSelf.circleView];
-                wSelf.circleView.center = wSelf.view.center;
-            } completion:^(BOOL finished) {
-//                [wSelf.circleView addProgressAnimation:wSelf.progressValue.value completion:nil];
-                [wSelf.circleView addProgressAnimation:[wSelf.temperature doubleValue] completion:nil];
-            }];
-            count = 0;
-            xPrev = xPrevDelta = 0.0;
-        } else {
-            xPrev = wSelf.circleView.center.y;
-            xPrevDelta = xCurrentDelta;
+                [UIView animateWithDuration:0.45 animations:^{
+                    
+                    wSelf.circleView.center = wSelf.view.center;
+                } completion:^(BOOL finished) {
+                    //                [wSelf.circleView addProgressAnimation:wSelf.progressValue.value completion:nil];
+                    [wSelf.circleView addProgressAnimation:[wSelf.temperature doubleValue] completion:nil];
+                }];
+                count = 0;
+            }
         }
-    };
+    }];
 }
 
 #pragma mark - Getting Weather Data

@@ -13,6 +13,8 @@
 @property (strong, nonatomic) UIGravityBehavior *gravity;
 @property (strong, nonatomic) UICollisionBehavior *collision;
 @property (strong, nonatomic) UIDynamicItemBehavior *animationOptions;
+@property (nonatomic) int bounceCount;
+@property (nonatomic, strong) NSArray <id<UIDynamicItem>> *items;
 
 @end
 
@@ -24,8 +26,26 @@
         [self addChildBehavior:self.gravity];
         [self addChildBehavior:self.collision];
         [self addChildBehavior:self.animationOptions];
+        __weak typeof(self) wSelf = self;
+        [self setAction:^{
+            static CGFloat xPrev = 0, xPrevDelta = 0;
+            UIView *item = (UIView *)wSelf.items.firstObject;
+            CGFloat xCurrentDelta = item.center.y - xPrev;
+            if ((xCurrentDelta < 0) && (xPrevDelta >= 0)) {
+                if (wSelf.bounceAction) {
+                    wSelf.bounceAction(item);
+                }
+                xPrev = xPrevDelta = 0.0;
+            }
+            xPrev = item.center.y;
+            xPrevDelta = xCurrentDelta;
+        }];
     }
     return self;
+}
+
+- (NSArray <id<UIDynamicItem>> *)items {
+    return self.gravity.items;
 }
 
 - (UIGravityBehavior *)gravity {
