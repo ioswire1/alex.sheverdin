@@ -10,6 +10,8 @@
 
 @interface FallBehavior : UIDynamicBehavior
 
+@property (nonatomic) UIEdgeInsets collisionInset;
+
 - (void)addItem:(id <UIDynamicItem>)item;
 - (void)removeItem:(id <UIDynamicItem>)item;
 

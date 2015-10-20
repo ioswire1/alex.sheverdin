@@ -19,7 +19,6 @@ IB_DESIGNABLE
 @property (nonatomic) double radius;
 @property (nonatomic, strong) IBInspectable UIColor *backLineColor;
 
-- (void)addLoadingAnimation;
 - (void)addProgressAnimation:(CGFloat)progress completion:(void (^)(BOOL finished))callbackBlock;
 
 

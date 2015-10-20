@@ -36,17 +36,23 @@
     return _gravity;
 }
 
+- (void)setCollisionInset:(UIEdgeInsets)collisionInset {
+    _collisionInset.left = collisionInset.left;
+    _collisionInset.top = collisionInset.top;
+    _collisionInset.bottom = collisionInset.bottom;
+    _collisionInset.right = collisionInset.right;
+    [_collision setTranslatesReferenceBoundsIntoBoundaryWithInsets:_collisionInset];
+}
+
 - (UICollisionBehavior *)collision {
     if (!_collision) {
         _collision = [[UICollisionBehavior alloc] init];
         _collision.translatesReferenceBoundsIntoBoundary = YES;
         UIEdgeInsets inset;
-        inset.left = 20.0;
-        inset.top = 10.0;
-//        inset.bottom = self.dynamicAnimator.referenceView.frame.size.height / 2 - 100*2;
-        //TODO: get bottom boundary
-        inset.bottom = 568/2 - 100*2;
-        inset.right = 20.0;
+        inset.left = 0.0;
+        inset.top = 0.0;
+        inset.bottom = 0.0;
+        inset.right = 0.0;
         [_collision setTranslatesReferenceBoundsIntoBoundaryWithInsets:inset];
         _collision.collisionMode = UICollisionBehaviorModeBoundaries;
     }

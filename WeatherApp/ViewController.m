@@ -58,6 +58,13 @@
     if (!_fallBehavior) {
         _fallBehavior = [[FallBehavior alloc] init];
         [self.animator addBehavior:_fallBehavior];
+        
+        UIEdgeInsets inset;
+        inset.left = 20.0;
+        inset.top = 10.0;
+        inset.bottom = self.view.bounds.size.height / 2 - self.circleView.radius * 2;
+        inset.right = 20.0;
+        self.fallBehavior.collisionInset = inset;
     }
     return _fallBehavior;
 }
@@ -78,7 +85,7 @@
             
             [UIView animateWithDuration:0.45 animations:^{
                 [wSelf.fallBehavior removeItem:wSelf.circleView];
-                wSelf.circleView.center = wSelf.view.center;//CGPointMake(30.0,30.0);
+                wSelf.circleView.center = wSelf.view.center;
             } completion:^(BOOL finished) {
 //                [wSelf.circleView addProgressAnimation:wSelf.progressValue.value completion:nil];
                 [wSelf.circleView addProgressAnimation:[wSelf.temperature doubleValue] completion:nil];
