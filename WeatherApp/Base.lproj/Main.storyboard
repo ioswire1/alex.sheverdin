@@ -64,7 +64,7 @@
                                     <action selector="stopIntro:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="mt0-fU-4UO"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V2E-xT-YRj">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V2E-xT-YRj">
                                 <rect key="frame" x="20" y="401" width="267" height="133"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8hV-lQ-s5Z">
@@ -222,6 +222,20 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label hidden="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Data download error" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I6z-59-0vT">
+                                <rect key="frame" x="88" y="512" width="146" height="21"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Failed to get location!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDh-G0-NUr">
+                                <rect key="frame" x="20" y="484" width="280" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Baskerville-SemiBoldItalic" family="Baskerville" pointSize="24"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="25" minValue="-50" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="feu-K9-RX1">
                                 <rect key="frame" x="86" y="530" width="133" height="31"/>
                             </slider>
@@ -230,6 +244,8 @@
                     </view>
                     <connections>
                         <outlet property="circleView" destination="zfe-4T-DyU" id="Ddx-UN-uGI"/>
+                        <outlet property="lblFailedConnection" destination="I6z-59-0vT" id="xuT-hR-JBP"/>
+                        <outlet property="lblFailedLocation" destination="uDh-G0-NUr" id="U4F-r9-ZbG"/>
                         <outlet property="lblTemperature" destination="eGT-AM-4NI" id="sEo-vG-2pD"/>
                         <outlet property="progressValue" destination="feu-K9-RX1" id="KWL-0J-0cK"/>
                     </connections>

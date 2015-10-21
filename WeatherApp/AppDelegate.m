@@ -169,7 +169,7 @@
     self.currentLocation = [locations lastObject];
     static int count = 0;
     if (count) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kDidUpdateLocationsNotification object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDidUpdateLocationsNotification object:@(count)];
     }
     count++;
 

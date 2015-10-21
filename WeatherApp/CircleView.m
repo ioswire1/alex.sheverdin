@@ -144,7 +144,7 @@ static double progressMax = 50.0;
     [_circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
 }
 
-- (void)setProgress:(double)progress {
+- (void)addProgressAnimation:(double)progress {
     
     [self addProgressAnimation:progress completion:nil];
     

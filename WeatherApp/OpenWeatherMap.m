@@ -125,9 +125,22 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
                 });
             }
             else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(weatherData, nil);
-                });
+                if ([weatherData[@"cod"]  isEqual: @"404"]) {
+                    error = [NSError errorWithDomain:kWeatherDomain
+                                                code:9999
+                                            userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"city is not found");
+                        completion(nil, error);
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(weatherData, nil);
+                    });
+                }
+                
+                
+
             }
         }
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
