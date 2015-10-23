@@ -21,10 +21,7 @@
 @property (nonatomic, strong) NSNumber * windSpeed;
 @property (nonatomic, strong) NSNumber * windDeg;
 
-+ (instancetype)objectWithDictionary:(NSDictionary *)dictionary;
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
-
-- (void)saveToFile:(NSURL *)filePath;
-- (void)loadFromFile:(NSURL *)filePath;
++ (instancetype)objectWithDictionary:(NSDictionary *)dictionary error:(NSError **)parseError;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)parseError;
 
 @end

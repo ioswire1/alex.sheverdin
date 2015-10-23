@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
+		04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */; settings = {ASSET_TAGS = (); }; };
 		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
 		04B429211BD121A600685BB8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B429201BD121A600685BB8 /* ViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
@@ -37,6 +38,8 @@
 		044A6C491BCFD18E007B3FA4 /* FallBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FallBehavior.m; sourceTree = "<group>"; };
 		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
 		04550CB71BC811CE00B07242 /* UIImage+Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Picker.m"; sourceTree = "<group>"; };
+		04AE66C51BDA63E2004E6FB5 /* WeatherManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherManager.h; path = Model/WeatherManager.h; sourceTree = "<group>"; };
+		04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WeatherManager.m; path = Model/WeatherManager.m; sourceTree = "<group>"; };
 		04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMap.h; sourceTree = "<group>"; };
 		04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWeatherMap.m; sourceTree = "<group>"; };
 		04B4291F1BD121A600685BB8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -196,6 +199,8 @@
 		CE93C4751B822C5D0098BA9B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				04AE66C51BDA63E2004E6FB5 /* WeatherManager.h */,
+				04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */,
 				CE45718A1B83D1C300323C90 /* Weather.h */,
 				CE45718B1B83D1C300323C90 /* Weather.m */,
 			);
@@ -308,6 +313,7 @@
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				04B429211BD121A600685BB8 /* ViewController.m in Sources */,
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,
+				04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,

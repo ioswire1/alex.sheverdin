@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "CircleView.h"
 #import "FallBehavior.h"
-#import "OpenWeatherMap.h"
+#import "WeatherManager.h"
 #import "AppDelegate.h"
 
 static int progressMax = 50;
@@ -20,10 +20,9 @@ static int progressMax = 50;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
 @property (strong, nonatomic) FallBehavior *behavior;
 
-@property (strong, nonatomic) NSDictionary * lastWeather;
-@property (strong, nonatomic) NSDictionary * previousWeather;
+@property (strong, nonatomic) Weather *currentWeather;
 
-- (void)loadWeather:(void (^)(NSDictionary *))completion;
+- (void)loadWeather:(void (^)())completion;
 - (void)addProgressAnimation:(void (^)(BOOL finished))completion;
 - (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion;
 
@@ -33,7 +32,7 @@ static int progressMax = 50;
 
 - (IBAction)addLoading:(UIButton *)sender {
     if (!self.behavior.isActive) {
-        self.lastWeather = nil;
+        self.currentWeather = nil;
         [self.circleView addProgressAnimation:0.0001 completion:^(BOOL finished) {
             [self addBounceAnimation:2 completion:nil];
         }];
@@ -54,7 +53,7 @@ static int progressMax = 50;
                 [wSelf loadWeather:nil];
             }
             
-            if (bounceCount >= repeatCount && wSelf.lastWeather) {
+            if (bounceCount >= repeatCount && wSelf.currentWeather) {
                 [wSelf.behavior removeItem:wSelf.circleView];
                 [UIView animateWithDuration:0.25 animations:^{
                     wSelf.circleView.center = wSelf.animatorView.center;
@@ -70,28 +69,25 @@ static int progressMax = 50;
     if ([self.behavior.items containsObject:self.circleView]) {
         [self.behavior removeItem:self.circleView];
     }
-    NSDictionary *main = self.lastWeather[@"main"];
-    double temp = [main[@"temp"] doubleValue];
-//    temp = self.progressValue.value;
+
+    double temp = [self.currentWeather.temp doubleValue];
     double progress = (temp + progressMax) / (2 * progressMax);
 
     [self.circleView addProgressAnimation:progress completion:completion];
 }
 
-- (void)loadWeather:(void (^)(NSDictionary *))completion {
+- (void)loadWeather:(void (^)())completion {
     
     __weak typeof(self) wSelf = self;
-    [[OpenWeatherMap service] getWeatherForLocation:[self currentLocation].coordinate completion:^(NSDictionary *dictionary, NSError *error) {
-        if (error) {
-            // notify user about this error
+    [[WeatherManager defaultManager] getWeatherByLocation:[self currentLocation] success:^(Weather *weather) {
+        // TODO: just for development
+        NSAssert(weather, @"Weather should not be nil");
+        wSelf.currentWeather = weather;
+        if (completion) {
+            completion();
         }
-        
-        if (!dictionary) {
-//            dictionary = previousWeather;
-        }
-        
-        wSelf.lastWeather = dictionary;
-        if (completion) completion(dictionary);
+    } failure:^(NSError *error) {
+        // TODO: implementation
     }];
 }
 
@@ -142,7 +138,7 @@ static int progressMax = 50;
     if (!self.behavior.isActive) {
         if (notification.object) {
             __weak typeof(self) wSelf = self;
-            [self loadWeather:^(NSDictionary *weather) {
+            [self loadWeather:^{
                 [wSelf addProgressAnimation:nil];
             }];
         }
