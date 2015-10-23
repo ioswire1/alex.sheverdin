@@ -13,8 +13,6 @@
 @property (strong, nonatomic) UIGravityBehavior *gravity;
 @property (strong, nonatomic) UICollisionBehavior *collision;
 @property (strong, nonatomic) UIDynamicItemBehavior *animationOptions;
-@property (nonatomic) int bounceCount;
-@property (nonatomic, strong) NSArray <id<UIDynamicItem>> *items;
 
 @end
 
@@ -26,26 +24,12 @@
         [self addChildBehavior:self.gravity];
         [self addChildBehavior:self.collision];
         [self addChildBehavior:self.animationOptions];
-        __weak typeof(self) wSelf = self;
-        [self setAction:^{
-            static CGFloat xPrev = 0, xPrevDelta = 0;
-            UIView *item = (UIView *)wSelf.items.firstObject;
-            CGFloat xCurrentDelta = item.center.y - xPrev;
-            if ((xCurrentDelta < 0) && (xPrevDelta >= 0)) {
-                if (wSelf.bounceAction) {
-                    wSelf.bounceAction(item);
-                }
-                xPrev = xPrevDelta = 0.0;
-            }
-            xPrev = item.center.y;
-            xPrevDelta = xCurrentDelta;
-        }];
     }
     return self;
 }
 
 - (NSArray <id<UIDynamicItem>> *)items {
-    return self.gravity.items;
+    return self.collision.items;
 }
 
 - (UIGravityBehavior *)gravity {
@@ -56,25 +40,16 @@
     return _gravity;
 }
 
-- (void)setCollisionInset:(UIEdgeInsets)collisionInset {
-    _collisionInset.left = collisionInset.left;
-    _collisionInset.top = collisionInset.top;
-    _collisionInset.bottom = collisionInset.bottom;
-    _collisionInset.right = collisionInset.right;
-    [_collision setTranslatesReferenceBoundsIntoBoundaryWithInsets:_collisionInset];
+- (void)addCollisionBoundaryWithIdentifier:(id<NSCopying>)identifier fromPoint:(CGPoint)fromPoint toPoint:(CGPoint)toPoint {
+    [self.collision addBoundaryWithIdentifier:identifier fromPoint:fromPoint toPoint:toPoint];
 }
 
 - (UICollisionBehavior *)collision {
     if (!_collision) {
         _collision = [[UICollisionBehavior alloc] init];
-        _collision.translatesReferenceBoundsIntoBoundary = YES;
-        UIEdgeInsets inset;
-        inset.left = 0.0;
-        inset.top = 0.0;
-        inset.bottom = 0.0;
-        inset.right = 0.0;
-        [_collision setTranslatesReferenceBoundsIntoBoundaryWithInsets:inset];
+//        _collision.translatesReferenceBoundsIntoBoundary = YES;
         _collision.collisionMode = UICollisionBehaviorModeBoundaries;
+        _collision.collisionDelegate = self;
     }
     
     return _collision;
@@ -88,7 +63,6 @@
 //        _animationOptions.resistance = 0.5;
 //        _animationOptions.friction = 0.5;
 //        _animationOptions.density = 1.0;
-        
     }
     return _animationOptions;
 }
@@ -102,6 +76,13 @@
     [self.gravity removeItem:item];
     [self.collision removeItem:item];
     [self.animationOptions removeItem:item];
+}
+
+- (void)collisionBehavior:(UICollisionBehavior *)behavior endedContactForItem:(id<UIDynamicItem>)item withBoundaryIdentifier:(id<NSCopying>)identifier {
+    __weak typeof(self) wSelf = self;
+    if (wSelf.bounceAction) {
+        wSelf.bounceAction(item);
+    }
 }
 
 @end

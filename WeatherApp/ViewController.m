@@ -12,41 +12,106 @@
 #import "OpenWeatherMap.h"
 #import "AppDelegate.h"
 
+static int progressMax = 50;
+
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
 @property (strong, nonatomic) FallBehavior *fallBehavior;
+
+@property (strong, nonatomic) NSDictionary * lastWeather;
+@property (strong, nonatomic) NSDictionary * previousWeather;
+
+//test properties
 @property (weak, nonatomic) IBOutlet UISlider *progressValue;
 @property (weak, nonatomic) IBOutlet UILabel *lblTemperature;
-@property (strong, nonatomic) NSDictionary * lastWeather;
-
 @property (weak, nonatomic) IBOutlet UILabel *lblFailedLocation;
 @property (weak, nonatomic) IBOutlet UILabel *lblFailedConnection;
+
+- (void)loadWeather:(void (^)(NSDictionary *))completion;
+- (void)addProgressAnimation:(void (^)(BOOL finished))completion;
+- (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion;
 
 @end
 
 @implementation ViewController
 
 
-#pragma mark - debugging methods
+    
 
-- (IBAction)addProgress:(UIButton *)sender {
-    __weak ViewController *wSelf = self;
-    [UIView animateWithDuration:0.85 animations:^{
-        [wSelf.fallBehavior removeItem:wSelf.circleView];
-        wSelf.circleView.center = wSelf.view.center;
-    } completion:^(BOOL finished) {
-        [wSelf.circleView addProgressAnimation:wSelf.progressValue.value completion:nil];
+- (IBAction)addLoading:(UIButton *)sender {
+    [self updateWeather];
+}
+
+- (void)updateWeather {
+    if (!self.fallBehavior.isActive) {
+            self.lastWeather = nil;
+        [self.circleView addProgressAnimation:0.0001 completion:^(BOOL finished) {
+            [self addBounceAnimation:2 completion:nil];
+        }];
+    }
+}
+
+- (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion {
+    self.fallBehavior.isActive = YES;
+    [self.fallBehavior addItem:self.circleView];
+    
+    __weak typeof(self) wSelf = self;
+    __block NSUInteger bounceCount = 0;
+    [self.fallBehavior setBounceAction:^(id<UIDynamicItem> item) {
+        if (item == wSelf.circleView) {
+            
+            if ((0 != [self currentLocation].coordinate.latitude) || (0 != [self currentLocation].coordinate.longitude)) {
+                bounceCount++;
+            }
+            
+            if (bounceCount == 1) {
+                [wSelf loadWeather:nil];
+            }
+            
+            if (bounceCount >= repeatCount && wSelf.lastWeather) {
+                [wSelf.fallBehavior removeItem:wSelf.circleView];
+                wSelf.fallBehavior.isActive = NO;
+                [UIView animateWithDuration:0.25 animations:^{
+                    wSelf.circleView.center = wSelf.view.center;
+                } completion:^(BOOL finished) {
+                    [wSelf addProgressAnimation:completion];
+                }];
+            }
+        }
     }];
 }
 
-- (IBAction)addLoading:(UIButton *)sender {
-    self.lastWeather = nil;
-    [self.circleView addProgressAnimation:-50.0 completion:^(BOOL finished) {
-        [self addLoadAnimationWithBounceCount:3];
+- (void)addProgressAnimation:(void (^)(BOOL finished))completion {
+    if ([self.fallBehavior.items containsObject:self.circleView]) {
+        [self.fallBehavior removeItem:self.circleView];
+        self.fallBehavior.isActive = NO;
+    }
+    NSDictionary *main = self.lastWeather[@"main"];
+    double temp = [main[@"temp"] doubleValue];
+//    temp = self.progressValue.value;
+    double progress = (temp + progressMax) / (2 * progressMax);
+    self.lblTemperature.text = [NSString stringWithFormat:@"%.f", temp];
+    [self.circleView addProgressAnimation:progress completion:completion];
+}
+
+- (void)loadWeather:(void (^)(NSDictionary *))completion {
+    
+    __weak typeof(self) wSelf = self;
+    [[OpenWeatherMap service] getWeatherForLocation:[self currentLocation].coordinate completion:^(NSDictionary *dictionary, NSError *error) {
+        if (error) {
+            // notify user about this error
+        }
+        
+        if (!dictionary) {
+//            dictionary = previousWeather;
+//TODO: message?
+        }
+        
+        wSelf.lastWeather = dictionary;
+        if (completion) completion(dictionary);
     }];
-    [self downloadWeatherWithProgress:NO];
 }
 
 #pragma mark - Location
@@ -68,88 +133,34 @@
     if (!_fallBehavior) {
         _fallBehavior = [[FallBehavior alloc] init];
         [self.animator addBehavior:_fallBehavior];
-        
-        UIEdgeInsets inset;
-        inset.left = 20.0;
-        inset.top = 10.0;
-        inset.bottom = self.view.bounds.size.height / 2 - self.circleView.radius * 2;
-        inset.right = 20.0;
-        self.fallBehavior.collisionInset = inset;
+        CGFloat posY = self.view.bounds.size.height / 2 + self.circleView.radius * 2;
+        [self.fallBehavior addCollisionBoundaryWithIdentifier:@"BottomBoundary" fromPoint:CGPointMake(0.0, posY) toPoint:CGPointMake(self.view.bounds.size.width, posY)];
     }
     return _fallBehavior;
 }
 
-- (void) addLoadAnimationWithBounceCount:(int) bounceCount {
-    [self.fallBehavior addItem:self.circleView];
-    __block int count = 0;
-    __weak ViewController *wSelf = self;
-    [self.fallBehavior setBounceAction:^(id<UIDynamicItem> item) {
-        if (item == wSelf.circleView) {
-            count ++;
-            if ((count >= bounceCount) && (wSelf.lastWeather)) {
-                [wSelf.fallBehavior removeItem:wSelf.circleView];
-                [UIView animateWithDuration:0.45 animations:^{
-                    wSelf.circleView.center = wSelf.view.center;
-                } completion:^(BOOL finished) {
-                 
-                    if (wSelf.lastWeather) {
-                        NSDictionary *main = wSelf.lastWeather[@"main"];
-                        //self.temperature =  main[@"temp"];
-                        [wSelf.circleView addProgressAnimation:[main[@"temp"] doubleValue] completion:nil];
-                    }
-//                    NSDictionary *main = dictionary[@"main"];
-//                    self.temperature =  main[@"temp"];
-//                    [wSelf.circleView addProgressAnimation:[wSelf.temperature doubleValue] completion:nil];
-                }];
-                count = 0;
-            }
-        }
-    }];
-}
-
-#pragma mark - Getting Weather Data
-
-- (void) downloadWeatherWithProgress:(BOOL) isProgress {
-   
-    OpenWeatherMap *weatherService = [OpenWeatherMap service];
-    __weak ViewController *wSelf = self;
-    [weatherService getWeatherForLocation:self.currentLocation.coordinate completion:^(NSDictionary * dictionary, NSError * error) {
-        if (error) {
-            wSelf.lblFailedConnection.hidden = NO;
-        } else {
-            NSDictionary *main = dictionary[@"main"];
-            wSelf.lblTemperature.text = [NSString stringWithFormat:@"%@",main[@"temp"]];
-            NSLog(@"temp = %@", main[@"temp"]);
-            wSelf.lastWeather = dictionary;
-            wSelf.lblFailedConnection.hidden = YES;
-            if (isProgress) {
-                [wSelf.circleView addProgressAnimation:[main[@"temp"] doubleValue] completion:nil];
-            }
-        }
-    }];
-}
-
-
 #pragma mark - Notifications
 
 - (void)appDidBecomeActive {
-   //[self downloadWeatherWithProgress:YES];
-    ;
+
 }
 
-- (void)didReceiveUpdateLocationsNotification:(NSNotification *)notification {
-    if ([notification.object integerValue] == 1) {
-        [self downloadWeatherWithProgress:NO];
-    } else {
-        [self downloadWeatherWithProgress:YES];
-            }
+- (void)locationDidChange:(NSNotification *)notification {
+    if (!self.fallBehavior.isActive) {
+        if (notification.object) {
+            __weak typeof(self) wSelf = self;
+            [self loadWeather:^(NSDictionary *weather) {
+                [wSelf addProgressAnimation:nil];
+            }];
+        }
+    }
 }
 
 #pragma mark - Lifecycle
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveUpdateLocationsNotification:) name:kDidUpdateLocationsNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(appDidBecomeActive)
@@ -165,7 +176,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self addLoadAnimationWithBounceCount:5];
+    [self addBounceAnimation:3 completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

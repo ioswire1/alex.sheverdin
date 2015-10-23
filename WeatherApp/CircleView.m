@@ -9,8 +9,8 @@
 #import "CircleView.h"
 #import "UIImage+Picker.h"
 
+static int COLOR_QUANT = 50;
 static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.0; }
-static double progressMax = 50.0;
 
 #define RGBA(r, g, b, a) [UIColor colorWithRed:(float)r / 255.0 green:(float)g / 255.0 blue:(float)b / 255.0 alpha:a]
 
@@ -38,7 +38,7 @@ static double progressMax = 50.0;
 
 -(void)awakeFromNib {
   
-    _progress = - progressMax;
+    _progress = 0;
     _duration = 2.0;
     _colorSpectrum = [UIImage imageNamed:@"color_spectrum"];
     _initAngle = 90;
@@ -58,16 +58,6 @@ static double progressMax = 50.0;
                 startAngle:DegreesToRadians(_initAngle)
                   endAngle:DegreesToRadians(_initAngle + 360)
                  clockwise:YES];
-    
-//    //create background layer
-//    _backLayer = [CAShapeLayer layer];
-//    _backLayer.path = path.CGPath;
-//    _backLayer.position = bounds.origin;
-//    _backLayer.fillColor = [UIColor clearColor].CGColor;
-//    _backLayer.lineWidth = _lineWidth;
-//    _backLayer.strokeColor = _backLineColor.CGColor;
-//    _backLayer.lineCap = kCALineCapRound;
-//    [self.layer addSublayer:_backLayer];
     
     //create animation layer
     _circleLayer = [CAShapeLayer layer];
@@ -92,17 +82,17 @@ static double progressMax = 50.0;
                                          keyPath:(NSString *)keyPath {
     
     NSMutableArray *values = [NSMutableArray array];
-    int from = fromValue * progressMax;
-    int to = toValue * progressMax;
+    int from = fromValue * COLOR_QUANT;
+    int to = toValue * COLOR_QUANT;
     
     if (from < to) {
         for (int i = from; i < to; i++) {
-            CGFloat value = ((float)i) / progressMax;
+            CGFloat value = ((float)i) / COLOR_QUANT;
             [values addObject:(id)[self colorByValue:value].CGColor];
         }
     } else {
         for (int i = from; i >= to; i--) {
-            CGFloat value = ((float)i) / progressMax;
+            CGFloat value = ((float)i) / COLOR_QUANT;
             [values addObject:(id)[self colorByValue:value].CGColor];
         }
     }
@@ -118,41 +108,35 @@ static double progressMax = 50.0;
 }
 
 - (void)addProgressAnimation:(CGFloat)progress completion:(void (^)(BOOL))callbackBlock {
-    //progress = 50.0; //for UI testing
+    //progress = 1.0; //for UI testing
+//    progress = progress < 0.0001 ? 0.0001 : progress;
+    
     self.completionBlock = callbackBlock;
     double prevprogress = _progress;
-    if (progress > progressMax)
-        progress = progressMax;
-    if (progress < -progressMax)
-        progress = -progressMax;
     _progress = progress;
     
-    
-    CGFloat toValue = (_progress + progressMax) / (2 * progressMax);
-    if (progress == -progressMax)
-        toValue =0.001;
     CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     drawAnimation.duration  = _duration;
-    drawAnimation.fromValue = @((prevprogress + progressMax) / (2 * progressMax));
-    drawAnimation.toValue   = @(toValue);
+    drawAnimation.fromValue = @(prevprogress);
+    drawAnimation.toValue   = @(progress);
     drawAnimation.fillMode = kCAFillModeForwards;
     drawAnimation.removedOnCompletion = NO;
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     [_circleLayer addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
     
-    CAKeyframeAnimation *colorAnimation = [self colorAnimationFromValue:[_circleLayer.presentationLayer strokeEnd] toValue:toValue keyPath:@"strokeColor"];
+    CAKeyframeAnimation *colorAnimation = [self colorAnimationFromValue:prevprogress toValue:progress keyPath:@"strokeColor"];
     [_circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
 }
 
 - (void)addProgressAnimation:(double)progress {
     
     [self addProgressAnimation:progress completion:nil];
-    
 }
 
 #pragma mark - Animation Cleanup
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    
     void (^completionBlock)(BOOL) = self.completionBlock;
     if (completionBlock){
         completionBlock(flag);
