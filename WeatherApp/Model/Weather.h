@@ -7,21 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 
+@interface Weather : NSObject
 
-@interface Weather : NSManagedObject
+@property (nonatomic, strong) NSNumber * dt;
+@property (nonatomic, strong) NSNumber * temp;
+@property (nonatomic, strong) NSNumber * temp_min;
+@property (nonatomic, strong) NSNumber * temp_max;
+@property (nonatomic, strong) NSNumber * pressure;
+@property (nonatomic, strong) NSNumber * humidity;
+@property (nonatomic, copy) NSString * weatherDescription;
+@property (nonatomic, copy) NSString * name;
+@property (nonatomic, strong) NSNumber * windSpeed;
+@property (nonatomic, strong) NSNumber * windDeg;
 
-@property (nonatomic, retain) NSNumber * dt;
-@property (nonatomic, retain) NSNumber * temp;
-@property (nonatomic, retain) NSNumber * temp_min;
-@property (nonatomic, retain) NSNumber * temp_max;
-@property (nonatomic, retain) NSNumber * pressure;
-@property (nonatomic, retain) NSNumber * humidity;
-@property (nonatomic, retain) NSString * weatherDescription;
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * windSpeed;
-@property (nonatomic, retain) NSNumber * windDeg;
-@property (nonatomic, retain) id weatherIcon;
++ (instancetype)objectWithDictionary:(NSDictionary *)dictionary;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+
+- (void)saveToFile:(NSURL *)filePath;
+- (void)loadFromFile:(NSURL *)filePath;
 
 @end

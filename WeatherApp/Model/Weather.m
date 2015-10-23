@@ -11,16 +11,4 @@
 
 @implementation Weather
 
-@dynamic dt;
-@dynamic temp;
-@dynamic temp_min;
-@dynamic temp_max;
-@dynamic pressure;
-@dynamic humidity;
-@dynamic weatherDescription;
-@dynamic name;
-@dynamic windSpeed;
-@dynamic windDeg;
-@dynamic weatherIcon;
-
 @end

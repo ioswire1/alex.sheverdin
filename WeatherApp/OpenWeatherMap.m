@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Alex Sheverdin. All rights reserved.
 //
 
+@import UIKit;
 #import "OpenWeatherMap.h"
-#import "ASIHTTPRequest.h"
 
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
 static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";

@@ -18,16 +18,10 @@ static int progressMax = 50;
 @property (weak, nonatomic) IBOutlet UIView *animatorView;
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
-@property (strong, nonatomic) FallBehavior *fallBehavior;
+@property (strong, nonatomic) FallBehavior *behavior;
 
 @property (strong, nonatomic) NSDictionary * lastWeather;
 @property (strong, nonatomic) NSDictionary * previousWeather;
-
-//test properties
-@property (weak, nonatomic) IBOutlet UISlider *progressValue;
-@property (weak, nonatomic) IBOutlet UILabel *lblTemperature;
-@property (weak, nonatomic) IBOutlet UILabel *lblFailedLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lblFailedConnection;
 
 - (void)loadWeather:(void (^)(NSDictionary *))completion;
 - (void)addProgressAnimation:(void (^)(BOOL finished))completion;
@@ -38,7 +32,7 @@ static int progressMax = 50;
 @implementation ViewController
 
 - (IBAction)addLoading:(UIButton *)sender {
-    if (!self.fallBehavior.isActive) {
+    if (!self.behavior.isActive) {
         self.lastWeather = nil;
         [self.circleView addProgressAnimation:0.0001 completion:^(BOOL finished) {
             [self addBounceAnimation:2 completion:nil];
@@ -47,11 +41,11 @@ static int progressMax = 50;
 }
 
 - (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion {
-    [self.fallBehavior addItem:self.circleView];
+    [self.behavior addItem:self.circleView];
     
     __weak typeof(self) wSelf = self;
     __block NSUInteger bounceCount = 0;
-    [self.fallBehavior setBounceAction:^(id<UIDynamicItem> item) {
+    [self.behavior setBounceAction:^(id<UIDynamicItem> item) {
         if (item == wSelf.circleView) {
             
             bounceCount++;
@@ -61,7 +55,7 @@ static int progressMax = 50;
             }
             
             if (bounceCount >= repeatCount && wSelf.lastWeather) {
-                [wSelf.fallBehavior removeItem:wSelf.circleView];
+                [wSelf.behavior removeItem:wSelf.circleView];
                 [UIView animateWithDuration:0.25 animations:^{
                     wSelf.circleView.center = wSelf.animatorView.center;
                 } completion:^(BOOL finished) {
@@ -73,14 +67,14 @@ static int progressMax = 50;
 }
 
 - (void)addProgressAnimation:(void (^)(BOOL finished))completion {
-    if ([self.fallBehavior.items containsObject:self.circleView]) {
-        [self.fallBehavior removeItem:self.circleView];
+    if ([self.behavior.items containsObject:self.circleView]) {
+        [self.behavior removeItem:self.circleView];
     }
     NSDictionary *main = self.lastWeather[@"main"];
     double temp = [main[@"temp"] doubleValue];
 //    temp = self.progressValue.value;
     double progress = (temp + progressMax) / (2 * progressMax);
-    self.lblTemperature.text = [NSString stringWithFormat:@"%.f", temp];
+
     [self.circleView addProgressAnimation:progress completion:completion];
 }
 
@@ -101,6 +95,20 @@ static int progressMax = 50;
     }];
 }
 
+#pragma mark - UITableView DataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return nil;
+}
+
 #pragma mark - Location
 
 - (CLLocation *)currentLocation {
@@ -116,12 +124,12 @@ static int progressMax = 50;
     return _animator;
 }
 
-- (FallBehavior *)fallBehavior {
-    if (!_fallBehavior) {
-        _fallBehavior = [[FallBehavior alloc] init];
-        [self.animator addBehavior:_fallBehavior];
+- (FallBehavior *)behavior {
+    if (!_behavior) {
+        _behavior = [[FallBehavior alloc] init];
+        [self.animator addBehavior:_behavior];
     }
-    return _fallBehavior;
+    return _behavior;
 }
 
 #pragma mark - Notifications
@@ -131,7 +139,7 @@ static int progressMax = 50;
 }
 
 - (void)locationDidChange:(NSNotification *)notification {
-    if (!self.fallBehavior.isActive) {
+    if (!self.behavior.isActive) {
         if (notification.object) {
             __weak typeof(self) wSelf = self;
             [self loadWeather:^(NSDictionary *weather) {
