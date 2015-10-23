@@ -40,8 +40,18 @@
     return _gravity;
 }
 
-- (void)addCollisionBoundaryWithIdentifier:(id<NSCopying>)identifier fromPoint:(CGPoint)fromPoint toPoint:(CGPoint)toPoint {
-    [self.collision addBoundaryWithIdentifier:identifier fromPoint:fromPoint toPoint:toPoint];
+- (BOOL)isActive {
+    return self.items.count;
+}
+
+static NSString *const kBottomBoundary = @"BottomBoundary";
+
+- (void)willMoveToAnimator:(UIDynamicAnimator *)dynamicAnimator {
+
+    CGSize refViewSize = dynamicAnimator.referenceView.bounds.size;
+    [self.collision addBoundaryWithIdentifier:kBottomBoundary
+                                    fromPoint:CGPointMake(0, refViewSize.height)
+                                      toPoint:CGPointMake(refViewSize.width, refViewSize.height)];
 }
 
 - (UICollisionBehavior *)collision {
@@ -80,8 +90,10 @@
 
 - (void)collisionBehavior:(UICollisionBehavior *)behavior endedContactForItem:(id<UIDynamicItem>)item withBoundaryIdentifier:(id<NSCopying>)identifier {
     __weak typeof(self) wSelf = self;
-    if (wSelf.bounceAction) {
-        wSelf.bounceAction(item);
+    if ([(NSString *)identifier isEqualToString:kBottomBoundary]) {
+        if (wSelf.bounceAction) {
+            wSelf.bounceAction(item);
+        }
     }
 }
 

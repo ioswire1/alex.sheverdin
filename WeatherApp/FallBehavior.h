@@ -11,11 +11,10 @@
 @interface FallBehavior : UIDynamicBehavior <UICollisionBehaviorDelegate>
 
 @property (nonatomic, copy) void (^bounceAction)(id <UIDynamicItem>);
-@property (nonatomic, strong) NSArray <id<UIDynamicItem>> *items;
+@property (nonatomic, strong, readonly) NSArray <id<UIDynamicItem>> *items;
+@property (nonatomic, getter=isActive, readonly) BOOL active;
 
 - (void)addItem:(id <UIDynamicItem>)item;
 - (void)removeItem:(id <UIDynamicItem>)item;
-- (void)addCollisionBoundaryWithIdentifier: (nonnull id<NSCopying>) identifier fromPoint:(CGPoint)fromPoint toPoint:(CGPoint)toPoint;
-@property (nonatomic) BOOL isActive;
 
 @end

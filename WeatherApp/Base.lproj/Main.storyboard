@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Weather-->
@@ -188,33 +189,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jsf-L8-0TG">
                                 <rect key="frame" x="236" y="530" width="64" height="30"/>
                                 <state key="normal" title="loading"/>
-                                <connections>
-                                    <action selector="addLoading:" destination="oCe-16-Dhg" eventType="touchUpInside" id="s5j-Hq-eEl"/>
-                                </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zfe-4T-DyU" customClass="CircleView">
-                                <rect key="frame" x="60" y="0.0" width="200" height="200"/>
-                                <subviews>
-                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="evj-0C-PlJ">
-                                        <rect key="frame" x="63" y="62" width="75" height="75"/>
-                                        <fontDescription key="fontDescription" name="Baskerville-Bold" family="Baskerville" pointSize="48"/>
-                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="backLineColor">
-                                        <color key="value" red="0.91442432929999995" green="0.90396166580000004" blue="0.9622445973" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvh-yi-cnK">
                                 <rect key="frame" x="249" y="502" width="61" height="30"/>
                                 <state key="normal" title="progress"/>
-                                <connections>
-                                    <action selector="addProgress:" destination="oCe-16-Dhg" eventType="touchUpInside" id="ptR-hM-350"/>
-                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGT-AM-4NI">
                                 <rect key="frame" x="10" y="528" width="42" height="32"/>
@@ -239,10 +217,38 @@
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="25" minValue="-50" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="feu-K9-RX1">
                                 <rect key="frame" x="86" y="530" width="133" height="31"/>
                             </slider>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGz-wg-P89">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zfe-4T-DyU" customClass="CircleView">
+                                        <rect key="frame" x="60" y="0.0" width="200" height="200"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="backLineColor">
+                                                <color key="value" red="0.91442432929999995" green="0.90396166580000004" blue="0.9622445973" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="LGz-wg-P89" secondAttribute="height" multiplier="1:1" id="zk7-se-Ysf"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="LGz-wg-P89" secondAttribute="trailing" id="8D5-Ud-BTJ"/>
+                            <constraint firstItem="LGz-wg-P89" firstAttribute="leading" secondItem="q5x-lJ-XPi" secondAttribute="leading" id="BW1-ZL-1Tw"/>
+                            <constraint firstItem="LGz-wg-P89" firstAttribute="top" secondItem="q5x-lJ-XPi" secondAttribute="top" id="ZHw-gV-Z2B"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="CQ8-wx-Dxm" appends="YES" id="GP6-ea-GO1"/>
+                        </connections>
                     </view>
                     <connections>
+                        <outlet property="animatorView" destination="LGz-wg-P89" id="TR1-dm-g4F"/>
                         <outlet property="circleView" destination="zfe-4T-DyU" id="Ddx-UN-uGI"/>
                         <outlet property="lblFailedConnection" destination="I6z-59-0vT" id="xuT-hR-JBP"/>
                         <outlet property="lblFailedLocation" destination="uDh-G0-NUr" id="U4F-r9-ZbG"/>
@@ -251,6 +257,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QxU-Oa-aH2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="CQ8-wx-Dxm">
+                    <connections>
+                        <action selector="addLoading:" destination="oCe-16-Dhg" id="E3u-tj-BNl"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="694" y="1069"/>
         </scene>

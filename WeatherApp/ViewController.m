@@ -15,7 +15,7 @@
 static int progressMax = 50;
 
 @interface ViewController ()
-
+@property (weak, nonatomic) IBOutlet UIView *animatorView;
 @property (weak, nonatomic) IBOutlet CircleView *circleView;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
 @property (strong, nonatomic) FallBehavior *fallBehavior;
@@ -37,16 +37,9 @@ static int progressMax = 50;
 
 @implementation ViewController
 
-
-    
-
 - (IBAction)addLoading:(UIButton *)sender {
-    [self updateWeather];
-}
-
-- (void)updateWeather {
     if (!self.fallBehavior.isActive) {
-            self.lastWeather = nil;
+        self.lastWeather = nil;
         [self.circleView addProgressAnimation:0.0001 completion:^(BOOL finished) {
             [self addBounceAnimation:2 completion:nil];
         }];
@@ -54,7 +47,6 @@ static int progressMax = 50;
 }
 
 - (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion {
-    self.fallBehavior.isActive = YES;
     [self.fallBehavior addItem:self.circleView];
     
     __weak typeof(self) wSelf = self;
@@ -62,19 +54,16 @@ static int progressMax = 50;
     [self.fallBehavior setBounceAction:^(id<UIDynamicItem> item) {
         if (item == wSelf.circleView) {
             
-            if ((0 != [self currentLocation].coordinate.latitude) || (0 != [self currentLocation].coordinate.longitude)) {
-                bounceCount++;
-            }
-            
+            bounceCount++;
+
             if (bounceCount == 1) {
                 [wSelf loadWeather:nil];
             }
             
             if (bounceCount >= repeatCount && wSelf.lastWeather) {
                 [wSelf.fallBehavior removeItem:wSelf.circleView];
-                wSelf.fallBehavior.isActive = NO;
                 [UIView animateWithDuration:0.25 animations:^{
-                    wSelf.circleView.center = wSelf.view.center;
+                    wSelf.circleView.center = wSelf.animatorView.center;
                 } completion:^(BOOL finished) {
                     [wSelf addProgressAnimation:completion];
                 }];
@@ -86,7 +75,6 @@ static int progressMax = 50;
 - (void)addProgressAnimation:(void (^)(BOOL finished))completion {
     if ([self.fallBehavior.items containsObject:self.circleView]) {
         [self.fallBehavior removeItem:self.circleView];
-        self.fallBehavior.isActive = NO;
     }
     NSDictionary *main = self.lastWeather[@"main"];
     double temp = [main[@"temp"] doubleValue];
@@ -106,7 +94,6 @@ static int progressMax = 50;
         
         if (!dictionary) {
 //            dictionary = previousWeather;
-//TODO: message?
         }
         
         wSelf.lastWeather = dictionary;
@@ -124,7 +111,7 @@ static int progressMax = 50;
 
 - (UIDynamicAnimator *)animator {
     if (!_animator) {
-        _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+        _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.animatorView];
     }
     return _animator;
 }
@@ -133,8 +120,6 @@ static int progressMax = 50;
     if (!_fallBehavior) {
         _fallBehavior = [[FallBehavior alloc] init];
         [self.animator addBehavior:_fallBehavior];
-        CGFloat posY = self.view.bounds.size.height / 2 + self.circleView.radius * 2;
-        [self.fallBehavior addCollisionBoundaryWithIdentifier:@"BottomBoundary" fromPoint:CGPointMake(0.0, posY) toPoint:CGPointMake(self.view.bounds.size.width, posY)];
     }
     return _fallBehavior;
 }
