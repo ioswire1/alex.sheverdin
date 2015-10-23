@@ -27,6 +27,12 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
 @implementation CircleView
 
 
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    [self customize];
+    return self;
+}
+
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
@@ -37,7 +43,11 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
 }
 
 -(void)awakeFromNib {
-  
+    [self customize];
+
+}
+
+- (void)customize {
     _progress = 0;
     _duration = 2.0;
     _colorSpectrum = [UIImage imageNamed:@"color_spectrum"];

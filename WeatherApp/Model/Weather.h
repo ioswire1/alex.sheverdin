@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Weather : NSObject
+static NSString *const kLastWeatherKey = @"lastWeather";
+
+@interface Weather : NSObject <NSCoding>
 
 @property (nonatomic, strong) NSNumber * dt;
 @property (nonatomic, strong) NSNumber * temp;

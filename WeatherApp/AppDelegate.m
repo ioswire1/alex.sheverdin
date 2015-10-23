@@ -18,6 +18,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    
+    self.window.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
+    
     // Override point for customization after application launch.
     // init locationManager
     self.locationManager = [[CLLocationManager alloc] init];

@@ -10,7 +10,7 @@
 #import "OpenWeatherMap.h"
 #import "AppDelegate.h"
 
-static NSString *const kLastWeatherKey = @"lastWeather";
+
 
 @interface WeatherManager()
 
@@ -20,8 +20,7 @@ static NSString *const kLastWeatherKey = @"lastWeather";
 
 + (instancetype)defaultManager {
     static WeatherManager *instance;
-    
-    dispatch_once_t predicate;
+    static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
         instance = [[WeatherManager alloc] init];
     });
@@ -70,12 +69,14 @@ static NSString *const kLastWeatherKey = @"lastWeather";
 #pragma mark - Memento Design Pattern
 
 - (void)setLastWeather:(Weather *)lastWeather {
-    [[NSUserDefaults standardUserDefaults] setObject:lastWeather forKey:kLastWeatherKey];
+    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastWeather];
+    [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastWeatherKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (Weather *)lastWeather {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:kLastWeatherKey];
+    NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastWeatherKey];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
 }
 
 

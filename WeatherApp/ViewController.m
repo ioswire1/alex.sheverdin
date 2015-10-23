@@ -15,8 +15,8 @@
 static int progressMax = 50;
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet UIView *animatorView;
-@property (weak, nonatomic) IBOutlet CircleView *circleView;
+@property (strong, nonatomic) UIView *animatorView;
+@property (strong, nonatomic) CircleView *circleView;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
 @property (strong, nonatomic) FallBehavior *behavior;
 
@@ -33,8 +33,9 @@ static int progressMax = 50;
 - (IBAction)addLoading:(UIButton *)sender {
     if (!self.behavior.isActive) {
         self.currentWeather = nil;
+        __weak typeof(self) wSelf = self;
         [self.circleView addProgressAnimation:0.0001 completion:^(BOOL finished) {
-            [self addBounceAnimation:2 completion:nil];
+            [wSelf addBounceAnimation:2 completion:nil];
         }];
     }
 }
@@ -94,15 +95,35 @@ static int progressMax = 50;
 #pragma mark - UITableView DataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return 10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    return [tableView dequeueReusableCellWithIdentifier:@"cell"];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return (self.view.bounds.size.height - 30.f) / 10.f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
+    return 30;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return @"Day";
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.tableView.contentOffset.y > 0) {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    } else {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    }
 }
 
 #pragma mark - Location
@@ -111,7 +132,7 @@ static int progressMax = 50;
     return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
 }
 
-#pragma mark - Fall Animation
+#pragma mark - Getters
 
 - (UIDynamicAnimator *)animator {
     if (!_animator) {
@@ -126,6 +147,25 @@ static int progressMax = 50;
         [self.animator addBehavior:_behavior];
     }
     return _behavior;
+}
+
+- (CircleView *)circleView {
+    if (!_circleView) {
+        _circleView = [[CircleView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+        _circleView.backgroundColor = [UIColor clearColor];
+        
+        [self.animatorView addSubview:_circleView];
+        _circleView.center = self.animatorView.center;
+    }
+    return _circleView;
+}
+
+- (UIView *)animatorView {
+    if (!_animatorView) {
+        _animatorView = [[UIView alloc] init];
+        _animatorView.backgroundColor = [UIColor clearColor];
+    }
+    return _animatorView;
 }
 
 #pragma mark - Notifications
@@ -155,6 +195,21 @@ static int progressMax = 50;
                                             selector:@selector(appDidBecomeActive)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    
+}
+
+- (void)viewWillLayoutSubviews {
+    if (!self.tableView.tableHeaderView) {
+        self.animatorView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        self.tableView.tableHeaderView = self.animatorView;
+    }
+}
+
+- (void)viewDidLayoutSubviews {
+    
+    if (!_circleView) {
+        [self addBounceAnimation:3 completion:nil];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -164,8 +219,18 @@ static int progressMax = 50;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (!UIAccessibilityIsReduceTransparencyEnabled()) {
+        self.tableView.backgroundColor = [UIColor clearColor];
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        self.tableView.backgroundView = blurEffectView;
+        
+        //if you want translucent vibrant table view separator lines
+        self.tableView.separatorEffect = [UIVibrancyEffect effectForBlurEffect:blurEffect];
+    }
     // Do any additional setup after loading the view.
-    [self addBounceAnimation:3 completion:nil];
+    
 }
 
 - (void)didReceiveMemoryWarning {

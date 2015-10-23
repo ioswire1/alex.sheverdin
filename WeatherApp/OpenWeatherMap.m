@@ -125,7 +125,7 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
                 });
             }
             else {
-                if ([weatherData[@"cod"]  isEqual: @"404"]) {
+                if ([weatherData[@"cod"] intValue] == 404) {
                     error = [NSError errorWithDomain:kWeatherDomain
                                                 code:9999
                                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];                    
