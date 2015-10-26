@@ -8,22 +8,89 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *const kLastWeatherKey = @"lastWeather";
+@interface OWMObject: NSMutableDictionary <NSCoding, NSCopying>
 
-@interface Weather : NSObject <NSCoding>
+- (instancetype)initWithJsonDictionary:(NSDictionary *)jsonDictionary;
 
-@property (nonatomic, strong) NSNumber * dt;
-@property (nonatomic, strong) NSNumber * temp;
-@property (nonatomic, strong) NSNumber * temp_min;
-@property (nonatomic, strong) NSNumber * temp_max;
-@property (nonatomic, strong) NSNumber * pressure;
-@property (nonatomic, strong) NSNumber * humidity;
-@property (nonatomic, strong) NSDictionary * weather;
-@property (nonatomic, copy) NSString * name;
-@property (nonatomic, strong) NSNumber * windSpeed;
-@property (nonatomic, strong) NSNumber * windDeg;
+@end
 
-+ (instancetype)objectWithDictionary:(NSDictionary *)dictionary error:(NSError **)parseError;
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)parseError;
+@interface OWMPrecipitationObject : OWMObject
+
+@end
+
+@interface OWMMainObject : OWMObject
+@property (nonatomic, strong, readonly) NSNumber *temp;
+@end
+@interface OWMWindObject : OWMObject
+
+@end
+@interface OWMRainObject : OWMPrecipitationObject
+
+@end
+@interface OWMWeatherObject : OWMObject
+
+@end
+@interface OWMCloudsObject : OWMObject
+
+@end
+@interface OWMSnowObject : OWMPrecipitationObject
+
+@end
+@interface OWMCityObject : OWMObject
+
+@end
+
+@protocol OWMWeather <NSObject>
+
+//@required
+
+@property (nonatomic, strong, readonly) OWMMainObject *main;
+@property (nonatomic, strong, readonly) NSArray <OWMWeatherObject *> *weather;
+@property (nonatomic, strong, readonly) NSNumber *dt;
+
+//@optional
+
+@property (nonatomic, strong, readonly) OWMWindObject *wind;
+@property (nonatomic, strong, readonly) OWMRainObject *rain;
+@property (nonatomic, strong, readonly) OWMCloudsObject *clouds;
+@property (nonatomic, strong, readonly) OWMSnowObject *snow;
+@property (nonatomic, strong, readonly) NSString *dt_txt;
+
+@end
+
+@import CoreLocation;
+
+@protocol OWMSysObject <NSObject>
+
+@end
+
+@protocol OWMCurrentWeatherObject <OWMWeather>
+
+//@required
+
+@property (nonatomic, strong, readonly) NSNumber *cod;
+@property (nonatomic, assign, readonly) CLLocationCoordinate2D coord;
+@property (nonatomic, copy,   readonly) NSString *name; // "name"
+@property (nonatomic, strong, readonly) NSNumber *id; // "id"
+
+//@optional
+
+@property (nonatomic, copy, readonly) NSString *base;
+@property (nonatomic, strong, readonly) id <OWMSysObject> sys;
+
+
+@end
+
+@protocol OWMForecastObject <NSObject>
+
+//@optional
+
+@property (nonatomic, strong, readonly) OWMCityObject *city;
+@property (nonatomic, strong, readonly) NSNumber *code;
+@property (nonatomic, copy, readonly) NSString *message;
+
+//@required
+
+@property (nonatomic, strong, readonly) NSArray <OWMCurrentWeatherObject> *list;
 
 @end

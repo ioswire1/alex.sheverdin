@@ -116,16 +116,18 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
                 completion(nil, error);
             });
         } else {
-            NSDictionary * weatherData = [NSJSONSerialization JSONObjectWithData:data
+            id serializedObject = [NSJSONSerialization JSONObjectWithData:data
                                                                          options:0
                                                                            error:&error];
+            
+            OWMObject *object = [[OWMObject alloc] initWithJsonDictionary:serializedObject];
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(nil, error);
                 });
             }
             else {
-                if ([weatherData[@"cod"] intValue] == 404) {
+                if ([object[@"cod"] intValue] == 404) {
                     error = [NSError errorWithDomain:kWeatherDomain
                                                 code:9999
                                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];                    
@@ -135,12 +137,9 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
                     });
                 } else {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(weatherData, nil);
+                        completion(object, nil);
                     });
                 }
-                
-                
-
             }
         }
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];

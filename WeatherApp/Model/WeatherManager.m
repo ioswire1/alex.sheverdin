@@ -36,47 +36,47 @@
     return self;
 }
 
-- (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(Weather *weather))success failure:(void (^)(NSError *error))failure {
+- (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure {
     __weak typeof(self) wSelf = self;
-    [[OpenWeatherMap service] getWeatherForLocation:location.coordinate completion:^(NSDictionary * _Nullable dictionary, NSError * _Nullable error) {
+    [[OpenWeatherMap service] getWeatherForLocation:location.coordinate completion:^(OWMObject *object, NSError * _Nullable error) {
         if (error) {
             if (failure)
                 failure(error);
             return;
         }
         
-        if (dictionary) {
-            
-            Weather *weather = [Weather objectWithDictionary:dictionary error:&error];
-            if (weather) {
-                wSelf.lastWeather = weather;
-            } else if (failure && !wSelf.lastWeather) {
-                failure(error);
-                return;
-            }
+        if (object) {
+            wSelf.lastWeather = (OWMObject<OWMCurrentWeatherObject> *)object;
+        } else if (failure && !wSelf.lastWeather) {
+            failure(error);
+            return;
         }
         
         if (success) {
-            success(wSelf.lastWeather);
+            success((OWMObject<OWMCurrentWeatherObject> *)object);
         }
     }];
 }
 
-- (void)getWeatherByCity:(NSString *)city success:(void (^)(Weather *weather))success failure:(void (^)(NSError *error))failure {
+- (void)getWeatherByCity:(NSString *)city success:(void (^)(OWMObject <OWMCurrentWeatherObject> *))success failure:(void (^)(NSError *error))failure {
     // TODO: implementation
 }
 
 #pragma mark - Memento Design Pattern
 
-- (void)setLastWeather:(Weather *)lastWeather {
+static NSString *const kLastWeatherKey = @"lastWeatherKey";
+
+- (void)setLastWeather:(OWMObject <OWMCurrentWeatherObject> *)lastWeather {
     NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastWeather];
     [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastWeatherKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (Weather *)lastWeather {
+- (OWMObject <OWMCurrentWeatherObject>*)lastWeather {
     NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastWeatherKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+    id object = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+    // TODO: 1
+    return [[OWMObject alloc] initWithJsonDictionary:object];
 }
 
 

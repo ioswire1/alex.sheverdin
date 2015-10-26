@@ -15,9 +15,9 @@
 
 + (instancetype)defaultManager;
 
-- (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(Weather *weather))success failure:(void (^)(NSError *error))failure;
-- (void)getWeatherByCity:(NSString *)city success:(void (^)(Weather *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getWeatherByCity:(NSString *)city success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
 
-@property (nonatomic, strong) Weather *lastWeather;
+@property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
 
 @end

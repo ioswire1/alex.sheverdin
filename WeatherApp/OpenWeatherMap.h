@@ -9,7 +9,9 @@
 @import Foundation;
 @import CoreLocation;
 
-typedef void (^GetWeatherCompletion)(NSDictionary * __nullable dictionary, NSError * __nullable error);
+#import "Weather.h"
+
+typedef void (^GetWeatherCompletion)(OWMObject * __nullable dictionary, NSError * __nullable error);
 
 @interface OpenWeatherMap : NSObject
 

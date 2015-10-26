@@ -111,10 +111,21 @@
 		04550CE61BCC0C8300B07242 /* WeatherService */ = {
 			isa = PBXGroup;
 			children = (
+				CE45718A1B83D1C300323C90 /* Weather.h */,
+				CE45718B1B83D1C300323C90 /* Weather.m */,
 				04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */,
 				04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */,
 			);
 			name = WeatherService;
+			sourceTree = "<group>";
+		};
+		048E1B681BDE2DAE00707BDD /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				044A6C481BCFD18E007B3FA4 /* FallBehavior.h */,
+				044A6C491BCFD18E007B3FA4 /* FallBehavior.m */,
+			);
+			name = Animations;
 			sourceTree = "<group>";
 		};
 		601B7960EE0107727B4A3D6D /* Pods */ = {
@@ -159,9 +170,8 @@
 			children = (
 				CE93C4751B822C5D0098BA9B /* Model */,
 				04550CE31BCC0B3A00B07242 /* CircleView */,
+				048E1B681BDE2DAE00707BDD /* Animations */,
 				04550CE51BCC0C7400B07242 /* Controllers */,
-				044A6C481BCFD18E007B3FA4 /* FallBehavior.h */,
-				044A6C491BCFD18E007B3FA4 /* FallBehavior.m */,
 				04550CE61BCC0C8300B07242 /* WeatherService */,
 				CE69C1EA1B77954E005CC71D /* Supporting Files */,
 			);
@@ -206,8 +216,6 @@
 			children = (
 				04AE66C51BDA63E2004E6FB5 /* WeatherManager.h */,
 				04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */,
-				CE45718A1B83D1C300323C90 /* Weather.h */,
-				CE45718B1B83D1C300323C90 /* Weather.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -223,8 +231,8 @@
 				CE69C1E31B77954E005CC71D /* Sources */,
 				CE69C1E41B77954E005CC71D /* Frameworks */,
 				CE69C1E51B77954E005CC71D /* Resources */,
-				8D992698E432B6CC6DDA1C97 /* Embed Pods Frameworks */,
 				27EAEE2C4CBB8C15DB2857AD /* Copy Pods Resources */,
+				EB7F724631F7ABC5A608238D /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -326,7 +334,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8D992698E432B6CC6DDA1C97 /* Embed Pods Frameworks */ = {
+		EB7F724631F7ABC5A608238D /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -414,6 +422,79 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		048E1B691BDE5FB500707BDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Debug;
+		};
+		048E1B6A1BDE5FB500707BDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A72E2C44007A34DB6A766E6 /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = WeatherApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.halkyon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Debug;
+		};
+		048E1B6B1BDE5FB500707BDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WeatherAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.halkyon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeatherApp.app/WeatherApp";
+			};
+			name = Debug;
+		};
 		CE69C2091B77954F005CC71D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -462,6 +543,8 @@
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.halkyon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -491,25 +574,28 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE69C2091B77954F005CC71D /* Release */,
+				048E1B691BDE5FB500707BDD /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CE69C20A1B77954F005CC71D /* Build configuration list for PBXNativeTarget "WeatherApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE69C20C1B77954F005CC71D /* Release */,
+				048E1B6A1BDE5FB500707BDD /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CE69C20D1B77954F005CC71D /* Build configuration list for PBXNativeTarget "WeatherAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE69C20F1B77954F005CC71D /* Release */,
+				048E1B6B1BDE5FB500707BDD /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

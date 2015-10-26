@@ -25,7 +25,7 @@ static int progressMax = 50;
 @property (strong, nonatomic) UIImage *locationImage;
 @property (strong, nonatomic) UIImage *bluredImage;
 
-@property (strong, nonatomic) Weather *currentWeather;
+@property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 
 - (void)loadWeather:(void (^)())completion;
 - (void)addProgressAnimation:(void (^)(BOOL finished))completion;
@@ -76,7 +76,7 @@ static int progressMax = 50;
         [self.behavior removeItem:self.circleView];
     }
 
-    double temp = [self.currentWeather.temp doubleValue];
+    double temp = [self.currentWeather.main.temp doubleValue];
     double progress = (temp + progressMax) / (2 * progressMax);
 
     [self.circleView addProgressAnimation:progress completion:completion];
@@ -86,15 +86,15 @@ static int progressMax = 50;
     
     __weak typeof(self) wSelf = self;
     CLLocation *location = [self currentLocation];
-    [[WeatherManager defaultManager] getWeatherByLocation:location success:^(Weather *weather) {
+    [[WeatherManager defaultManager] getWeatherByLocation:location success:^(OWMObject <OWMCurrentWeatherObject> *object) {
         // TODO: just for development
         NSAssert(weather, @"Weather should not be nil");
-        wSelf.currentWeather = weather;
+        wSelf.currentWeather = object;
         if (completion) {
             completion();
         }
         
-        NSString *hundred = [[weather.weather[@"id"] stringValue] substringWithRange:NSMakeRange(0, 1)];
+        NSString *hundred = [[object.weather[0][@"id"] stringValue] substringWithRange:NSMakeRange(0, 1)];
         NSString *imageName = [hundred stringByAppendingString:@"00"];
 
         __weak typeof(wSelf) wwSelf = wSelf;
