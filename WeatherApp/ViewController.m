@@ -11,6 +11,9 @@
 #import "FallBehavior.h"
 #import "WeatherManager.h"
 #import "AppDelegate.h"
+#import "UIImageView+WebCache.h"
+#import "UIImage+ImageEffects.h"
+#import "UIImage+Picker.h"
 
 static int progressMax = 50;
 
@@ -19,6 +22,8 @@ static int progressMax = 50;
 @property (strong, nonatomic) CircleView *circleView;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
 @property (strong, nonatomic) FallBehavior *behavior;
+@property (strong, nonatomic) UIImage *locationImage;
+@property (strong, nonatomic) UIImage *bluredImage;
 
 @property (strong, nonatomic) Weather *currentWeather;
 
@@ -35,7 +40,7 @@ static int progressMax = 50;
         self.currentWeather = nil;
         __weak typeof(self) wSelf = self;
         [self.circleView addProgressAnimation:0.0001 completion:^(BOOL finished) {
-            [wSelf addBounceAnimation:2 completion:nil];
+            [wSelf addBounceAnimation:1 completion:nil];
         }];
     }
 }
@@ -56,7 +61,7 @@ static int progressMax = 50;
             
             if (bounceCount >= repeatCount && wSelf.currentWeather) {
                 [wSelf.behavior removeItem:wSelf.circleView];
-                [UIView animateWithDuration:0.25 animations:^{
+                [UIView animateWithDuration:0.45 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     wSelf.circleView.center = wSelf.animatorView.center;
                 } completion:^(BOOL finished) {
                     [wSelf addProgressAnimation:completion];
@@ -80,13 +85,36 @@ static int progressMax = 50;
 - (void)loadWeather:(void (^)())completion {
     
     __weak typeof(self) wSelf = self;
-    [[WeatherManager defaultManager] getWeatherByLocation:[self currentLocation] success:^(Weather *weather) {
+    CLLocation *location = [self currentLocation];
+    [[WeatherManager defaultManager] getWeatherByLocation:location success:^(Weather *weather) {
         // TODO: just for development
         NSAssert(weather, @"Weather should not be nil");
         wSelf.currentWeather = weather;
         if (completion) {
             completion();
         }
+        
+        NSString *hundred = [[weather.weather[@"id"] stringValue] substringWithRange:NSMakeRange(0, 1)];
+        NSString *imageName = [hundred stringByAppendingString:@"00"];
+
+        __weak typeof(wSelf) wwSelf = wSelf;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            UIImage *image = [UIImage imageNamed:imageName];
+            wwSelf.locationImage = [image applyBlurWithRadius:0
+                                                    tintColor:nil
+                                        saturationDeltaFactor:1
+                                                    maskImage:nil];
+            wwSelf.bluredImage = [image applyBlurWithRadius:5
+                                                  tintColor:nil
+                                      saturationDeltaFactor:1
+                                                  maskImage:nil];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wwSelf refreshBackground];
+            });
+        });
+
+        
     } failure:^(NSError *error) {
         // TODO: implementation
     }];
@@ -99,31 +127,61 @@ static int progressMax = 50;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return section ? 100 : 8;
 }
 
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    int varRand = arc4random() % 6 - 6;
+    int random = (indexPath.row + varRand) - 50;
+    
+    UIImage *spectorImage = [UIImage imageNamed:@"color_spectrum"];
+    
+    float pecentage = (float)(random + 50 + 6)/ 106.f;
+    CGPoint valuePosition = CGPointMake(spectorImage.size.width * pecentage, 1);
+    UIColor *color = [spectorImage colorAtPosition:valuePosition];
+    
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d°", random];
+    cell.detailTextLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
+    
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%0d:00", (int)indexPath.row]];
+    [attrStr addAttribute:NSKernAttributeName value:@(0.5) range:NSMakeRange(0, attrStr.length)];
+    cell.textLabel.attributedText = attrStr;
+    cell.textLabel.textColor = [UIColor whiteColor];
+    
+    cell.contentView.backgroundColor = [color colorWithAlphaComponent:0.25];
+    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return (self.view.bounds.size.height - 30.f) / 10.f;
+    return (self.view.bounds.size.height) / 10.f;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
-    return 30;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Day";
-}
+static bool blured;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.tableView.contentOffset.y > 0) {
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-    } else {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    BOOL newValue = self.tableView.contentOffset.y > 100;
+    if (blured != newValue) {
+        blured = newValue;
+
+        [[UIApplication sharedApplication] setStatusBarHidden:blured withAnimation:UIStatusBarAnimationFade];
+        [self refreshBackground];
     }
+    
+    self.tableView.pagingEnabled = (self.tableView.contentOffset.y < self.tableView.bounds.size.height + 10);
+}
+
+- (void)refreshBackground {
+    UIImage *backgroundImage = blured ? self.bluredImage : self.locationImage;
+    __block UIImageView *imageView = (UIImageView *)self.tableView.backgroundView;
+        [UIView transitionWithView:imageView
+                          duration:0.5
+                           options:(UIViewAnimationOptionShowHideTransitionViews)
+                        animations:^{
+                            imageView.image = backgroundImage;
+                        } completion:NULL];
 }
 
 #pragma mark - Location
@@ -208,7 +266,7 @@ static int progressMax = 50;
 - (void)viewDidLayoutSubviews {
     
     if (!_circleView) {
-        [self addBounceAnimation:3 completion:nil];
+        [self addBounceAnimation:1 completion:nil];
     }
 }
 
@@ -219,17 +277,18 @@ static int progressMax = 50;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    
+    UIImageView *backgroundView = [[UIImageView alloc] init];
+    backgroundView.contentMode = UIViewContentModeScaleAspectFill;
+    self.tableView.backgroundView = backgroundView;
     
     if (!UIAccessibilityIsReduceTransparencyEnabled()) {
-        self.tableView.backgroundColor = [UIColor clearColor];
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-        UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        self.tableView.backgroundView = blurEffectView;
-        
+
         //if you want translucent vibrant table view separator lines
         self.tableView.separatorEffect = [UIVibrancyEffect effectForBlurEffect:blurEffect];
     }
-    // Do any additional setup after loading the view.
     
 }
 
@@ -237,6 +296,7 @@ static int progressMax = 50;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 /*
 #pragma mark - Navigation

@@ -64,9 +64,7 @@
         self.temp_max = main[@"temp_max"];
         self.humidity = main[@"humidity"];
         NSDictionary *weatherDic = [dictionary[@"weather"] firstObject];
-        self.weatherDescription = weatherDic[@"description"];
-        
-        
+        self.weather = weatherDic;
     }
     return self;
 }

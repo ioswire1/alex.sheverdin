@@ -18,7 +18,7 @@ static NSString *const kLastWeatherKey = @"lastWeather";
 @property (nonatomic, strong) NSNumber * temp_max;
 @property (nonatomic, strong) NSNumber * pressure;
 @property (nonatomic, strong) NSNumber * humidity;
-@property (nonatomic, copy) NSString * weatherDescription;
+@property (nonatomic, strong) NSDictionary * weather;
 @property (nonatomic, copy) NSString * name;
 @property (nonatomic, strong) NSNumber * windSpeed;
 @property (nonatomic, strong) NSNumber * windDeg;

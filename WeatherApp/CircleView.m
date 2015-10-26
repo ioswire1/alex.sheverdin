@@ -52,7 +52,7 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     _duration = 2.0;
     _colorSpectrum = [UIImage imageNamed:@"color_spectrum"];
     _initAngle = 90;
-    _lineWidth = 30.0;
+    _lineWidth = 15.0;
     
     CGRect bounds = self.bounds;
     CGPoint center;
@@ -76,7 +76,7 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     _circleLayer.fillColor = [UIColor clearColor].CGColor;
     _circleLayer.lineWidth = _lineWidth;
     _circleLayer.lineCap = kCALineCapRound;
-    _circleLayer.strokeColor = [UIColor blueColor].CGColor;
+    _circleLayer.strokeColor = [UIColor whiteColor].CGColor;
     _circleLayer.strokeEnd = 0.0001;
     [self.layer addSublayer:_circleLayer];
 }
@@ -113,7 +113,6 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     colorAnimation.removedOnCompletion  = NO;
     colorAnimation.fillMode             = kCAFillModeForwards;
     colorAnimation.timingFunction       = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    colorAnimation.delegate = self;
     return colorAnimation;
 }
 
@@ -132,10 +131,11 @@ static inline double DegreesToRadians(double angle) { return M_PI * angle / 180.
     drawAnimation.fillMode = kCAFillModeForwards;
     drawAnimation.removedOnCompletion = NO;
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    drawAnimation.delegate = self;
     [_circleLayer addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
-    
-    CAKeyframeAnimation *colorAnimation = [self colorAnimationFromValue:prevprogress toValue:progress keyPath:@"strokeColor"];
-    [_circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
+//    
+//    CAKeyframeAnimation *colorAnimation = [self colorAnimationFromValue:prevprogress toValue:progress keyPath:@"strokeColor"];
+//    [_circleLayer addAnimation:colorAnimation forKey:@"colorCircleAnimation"];
 }
 
 - (void)addProgressAnimation:(double)progress {

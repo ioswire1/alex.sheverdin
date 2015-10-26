@@ -19,8 +19,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    
-    self.window.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [self.window setBackgroundColor:[UIColor blackColor]];
     
     // Override point for customization after application launch.
     // init locationManager
@@ -35,7 +35,7 @@
         [self.locationManager requestWhenInUseAuthorization];
     }
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
-    self.locationManager.distanceFilter=500;
+    self.locationManager.distanceFilter = 500;
     [self.locationManager startUpdatingLocation];
     return YES;
 }
