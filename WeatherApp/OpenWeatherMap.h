@@ -16,6 +16,8 @@ typedef void (^GetWeatherCompletion)(OWMObject * __nullable dictionary, NSError 
 @interface OpenWeatherMap : NSObject
 
 + (nonnull instancetype)service;
++ (void)setApiKey:(NSString  * _Nullable)apiKey;
++ (void)setUnits:(NSString * _Nonnull)units;
 
 - (void)getWeatherForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion __nullable) completion;
 - (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion __nullable)completion;

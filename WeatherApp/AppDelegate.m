@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "OpenWeatherMap.h"
+
+static NSString *const kOpenWeatherApiKey = @"317eb1575c16aa97869f70407660d3e6";
 
 @interface AppDelegate ()
 
@@ -18,6 +21,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    [OpenWeatherMap setApiKey:kOpenWeatherApiKey];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self.window setBackgroundColor:[UIColor blackColor]];

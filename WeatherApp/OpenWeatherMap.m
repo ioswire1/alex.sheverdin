@@ -11,18 +11,20 @@
 
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
 static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
+static NSTimeInterval const kRequestTimeLimits = 36000.0; // 10 minutes
+static NSInteger const kCacheLimit = 1024 * 1024 * 2; // 2 mb
 
 #pragma mark - Category NSDictionary (HTTPGETParameters)
 
 @interface NSDictionary (HTTPGETParameters)
 
-- (NSString *)GETParameters; // return a string in format ?key1=value1&key2=value2&...
+- (NSString *)wic_GETParameters; // return a string in format ?key1=value1&key2=value2&...
 
 @end
 
 @implementation NSDictionary (HTTPGETParameters)
 
-- (NSString *)GETParameters {
+- (NSString *)wic_GETParameters {
     NSString *resultString = [NSString string];
     NSMutableArray<NSString *> *array = [NSMutableArray array];
     
@@ -44,15 +46,56 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 
 #pragma mark - WeatherService
 
+@interface OWMResponseCacheObject : NSObject
+
+@property (nonatomic, strong, readonly) NSData *data;
+@property (nonatomic, strong, readonly) NSError *error;
+@property (nonatomic, strong, readonly) NSURLResponse *response;
+@property (nonatomic, strong, readonly) NSDate *requestDate;
+
++ (instancetype)responseCacheObject:(NSData *)data response:(NSURLResponse *)response error:(NSError *)error;
+
+@end
+
+@implementation OWMResponseCacheObject
+
+- (instancetype)initWithData:(NSData *)data response:(NSURLResponse *)response error:(NSError *)error {
+    self = [super init];
+    if (self) {
+        _data = data;
+        _response = response;
+        _error = error;
+        _requestDate = [NSDate date];
+    }
+    return self;
+}
+
++ (instancetype)responseCacheObject:(NSData *)data response:(NSURLResponse *)response error:(NSError *)error {
+    return [[OWMResponseCacheObject alloc] initWithData:data response:response error:error];
+}
+
+@end
+
 @interface OpenWeatherMap()
 
 @property (nonatomic, strong) NSOperationQueue* serviceQueue;
+@property (nonatomic, strong) NSCache *cache;
 
 @end
 
 
 @implementation OpenWeatherMap
 
+static NSString *_apiKey = nil;
+static NSString *_units = @"metric";
+
++ (void)setApiKey:(NSString *)apiKey {
+    _apiKey = apiKey;
+}
+
++ (void)setUnits:(NSString *)units {
+    _units = units;
+}
 
 + (nonnull instancetype)service {
     static dispatch_once_t once;
@@ -63,6 +106,14 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
     return sharedInstance;
 }
 
+- (NSCache *)cache {
+    if (!_cache) {
+        _cache = [[NSCache alloc] init];
+        _cache.name = kWeatherDomain;
+        _cache.totalCostLimit = kCacheLimit;
+    }
+    return _cache;
+}
 
 - (nonnull NSOperationQueue *)serviceQueue {
         if (!_serviceQueue) {
@@ -77,73 +128,96 @@ static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
 - (void)getWeatherForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion)completion{
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
-                             @"units": @"metric",
-                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
+                             @"units": _units,
+                             @"APPID": _apiKey};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
 - (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
-                             @"units": @"metric",
-                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
+                             @"units": _units,
+                             @"APPID": _apiKey};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
 - (void)getWeatherForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"q": cityName,
-                             @"units": @"metric",
-                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
+                             @"units": _units,
+                             @"APPID": _apiKey};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
 - (void)getForecastForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
     NSDictionary *params = @{@"q": cityName,
-                             @"units": @"metric",
-                             @"APPID": @"317eb1575c16aa97869f70407660d3e6"};
+                             @"units": _units,
+                             @"APPID": _apiKey};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
+
+
 - (void)getDataAtPath:(NSString *)path params:(nullable NSDictionary *)params completion:(GetWeatherCompletion) completion {
+    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params GETParameters]];
+    NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params wic_GETParameters]];
+    
+    OWMResponseCacheObject *lastResponse = [self.cache objectForKey:urlString];
+    if (lastResponse) {
+        
+        // Confirm API requirments http://openweathermap.org/apieff #1
+        NSTimeInterval requestTimeInterval = [lastResponse.requestDate timeIntervalSinceDate:[NSDate date]];
+        if (requestTimeInterval < kRequestTimeLimits) {
+            [self handleResponse:lastResponse completion:completion];
+            return;
+        }
+    }
+    
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
+    __weak typeof(self) wSelf = self;
     [NSURLConnection sendAsynchronousRequest:request queue:self.serviceQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        
-        if (error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(nil, error);
-            });
-        } else {
-            id serializedObject = [NSJSONSerialization JSONObjectWithData:data
-                                                                         options:0
-                                                                           error:&error];
-            
-            OWMObject *object = [[OWMObject alloc] initWithJsonDictionary:serializedObject];
-            if (error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, error);
-                });
-            }
-            else {
-                if ([object[@"cod"] intValue] == 404) {
-                    error = [NSError errorWithDomain:kWeatherDomain
-                                                code:9999
-                                            userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"city is not found");
-                        completion(nil, error);
-                    });
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(object, nil);
-                    });
-                }
-            }
-        }
+        OWMResponseCacheObject *responseCacheObject = [OWMResponseCacheObject responseCacheObject:data response:response error:error];
+        [wSelf.cache setObject:responseCacheObject
+                        forKey:urlString];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wSelf handleResponse:responseCacheObject completion:completion];
+        });
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
+}
+
+- (void)handleResponse:(OWMResponseCacheObject *)responseCachedObject completion:(GetWeatherCompletion)completion {
+    
+    if (responseCachedObject.error) {
+        completion(nil, responseCachedObject.error);
+    } else {
+        NSError *error;
+        id serializedObject = [NSJSONSerialization JSONObjectWithData:responseCachedObject.data
+                                                              options:0
+                                                                error:&error];
+        
+        OWMObject *object = [[OWMObject alloc] initWithJsonDictionary:serializedObject];
+        if (error) {
+            completion(nil, error);
+        } else {
+            int code = 0;
+            if ([object conformsToProtocol:@protocol(OWMCurrentWeatherObject)]) {
+                code = [(id <OWMCurrentWeatherObject>)object cod].intValue;
+            }
+            if ([object conformsToProtocol:@protocol(OWMForecastObject)]) {
+                code = [(id <OWMForecastObject>)object code].intValue;
+            }
+            if (code == 404) {
+                error = [NSError errorWithDomain:kWeatherDomain
+                                            code:9999
+                                        userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];
+                completion(nil, error);
+            } else {
+                completion(object, nil);
+            }
+        }
+    }
 }
 
 @end
