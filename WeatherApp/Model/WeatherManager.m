@@ -53,7 +53,7 @@
         }
         
         if (success) {
-            success((OWMObject<OWMCurrentWeatherObject> *)object);
+            success(wSelf.lastWeather);
         }
     }];
 }
@@ -74,9 +74,7 @@ static NSString *const kLastWeatherKey = @"lastWeatherKey";
 
 - (OWMObject <OWMCurrentWeatherObject>*)lastWeather {
     NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastWeatherKey];
-    id object = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-    // TODO: 1
-    return [[OWMObject alloc] initWithJsonDictionary:object];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
 }
 
 

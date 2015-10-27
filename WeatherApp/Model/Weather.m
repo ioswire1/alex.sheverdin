@@ -23,16 +23,22 @@ typedef NS_ENUM(NSUInteger, SelectorInferredImplType) { // TODO: rename
 
 #pragma mark - NSCoding
 
+static NSString *const kOWMObjectContentKey = @"content";
+
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-    [encoder encodeObject:_content forKey:@"content"];
+    [encoder encodeObject:_content forKey:kOWMObjectContentKey];
+}
+
+- (Class)classForCoder {
+    return [self class];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
-    if((self = [super init]))
+    if (self = [super init])
     {
-        _content = [decoder decodeObjectForKey:@"content"];
+        _content = [decoder decodeObjectForKey:kOWMObjectContentKey];
     }
     
     return self;
