@@ -93,7 +93,7 @@ static int progressMax = 50;
         if (completion) {
             completion();
         }
-        
+        NSLog(@"wind = %@ press = %@", wSelf.currentWeather.wind, wSelf.currentWeather.main.pressure );
         NSString *hundred = [[object.weather[0][@"id"] stringValue] substringWithRange:NSMakeRange(0, 1)];
         NSString *imageName = [hundred stringByAppendingString:@"00"];
 

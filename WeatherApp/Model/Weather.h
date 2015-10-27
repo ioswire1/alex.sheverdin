@@ -15,14 +15,16 @@
 @end
 
 @interface OWMPrecipitationObject : OWMObject
-
+@property (nonatomic, strong, readonly) NSNumber *h;
 @end
 
 @interface OWMMainObject : OWMObject
 @property (nonatomic, strong, readonly) NSNumber *temp;
+@property (nonatomic, strong, readonly) NSNumber *pressure;
 @end
 @interface OWMWindObject : OWMObject
-
+@property (nonatomic, strong, readonly) NSNumber *speed;
+@property (nonatomic, strong, readonly) NSNumber *deg;
 @end
 @interface OWMRainObject : OWMPrecipitationObject
 
@@ -31,7 +33,7 @@
 
 @end
 @interface OWMCloudsObject : OWMObject
-
+@property (nonatomic, strong, readonly) NSNumber *all;
 @end
 @interface OWMSnowObject : OWMPrecipitationObject
 
@@ -40,15 +42,16 @@
 
 @end
 
+
 @protocol OWMWeather <NSObject>
 
-//@required
+@required
 
 @property (nonatomic, strong, readonly) OWMMainObject *main;
 @property (nonatomic, strong, readonly) NSArray <OWMWeatherObject *> *weather;
 @property (nonatomic, strong, readonly) NSNumber *dt;
 
-//@optional
+@optional
 
 @property (nonatomic, strong, readonly) OWMWindObject *wind;
 @property (nonatomic, strong, readonly) OWMRainObject *rain;
@@ -66,14 +69,14 @@
 
 @protocol OWMCurrentWeatherObject <OWMWeather>
 
-//@required
+@required
 
 @property (nonatomic, strong, readonly) NSNumber *cod;
 @property (nonatomic, assign, readonly) CLLocationCoordinate2D coord;
 @property (nonatomic, copy,   readonly) NSString *name; // "name"
 @property (nonatomic, strong, readonly) NSNumber *id; // "id"
 
-//@optional
+@optional
 
 @property (nonatomic, copy, readonly) NSString *base;
 @property (nonatomic, strong, readonly) id <OWMSysObject> sys;
@@ -83,14 +86,14 @@
 
 @protocol OWMForecastObject <NSObject>
 
-//@optional
+@optional
 
 @property (nonatomic, strong, readonly) OWMCityObject *city;
-@property (nonatomic, strong, readonly) NSNumber *code;
 @property (nonatomic, copy, readonly) NSString *message;
 
-//@required
+@required
 
+@property (nonatomic, strong, readonly) NSNumber *code;
 @property (nonatomic, strong, readonly) NSArray <OWMCurrentWeatherObject> *list;
 
 @end

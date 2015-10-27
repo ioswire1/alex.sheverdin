@@ -118,7 +118,7 @@ static NSString *const kOWMObjectContentKey = @"content";
 #pragma mark -
 #pragma mark NSObject overrides
 
-// make the respondsToSelector method do the right thing for the selectors we handle
+
 - (BOOL)respondsToSelector:(SEL)sel
 {
     return  [super respondsToSelector:sel] ||
@@ -127,7 +127,7 @@ static NSString *const kOWMObjectContentKey = @"content";
 
 - (BOOL)conformsToProtocol:(Protocol *)protocol {
     return  [super conformsToProtocol:protocol] ||
-    ([OWMObject isProtocolImplementationInferable:protocol]);
+    ([self isProtocolImplementationInferable:protocol]);
     //TODO:
     // 1. send self not class
     // 2. get required methods of the protocol
@@ -190,21 +190,11 @@ static NSString *const kOWMObjectContentKey = @"content";
     }
 }
 
-+ (BOOL)isProtocolImplementationInferable:(Protocol *)protocol {
+- (BOOL)isProtocolImplementationInferable:(Protocol *)protocol {
     // first handle base protocol questions
     
     unsigned int count = 0;
     struct objc_method_description *methods = nil;
-    
-    // then confirm that all methods are required
-    methods = protocol_copyMethodDescriptionList(protocol,
-                                                 NO,        // optional
-                                                 YES,       // instance
-                                                 &count);
-    if (methods) {
-        free(methods);
-        return NO;
-    }
     
     @try {
         // fetch methods of the protocol and confirm that each can be implemented automatically
@@ -213,32 +203,30 @@ static NSString *const kOWMObjectContentKey = @"content";
                                                      YES,   // instance
                                                      &count);
         for (int index = 0; index < count; index++) {
-            if ([OWMObject inferredImplTypeForSelector:methods[index].name] == SelectorInferredImplTypeNone) {
-                // we have a bad actor, short circuit
-                return NO;
+            
+            SEL selector = methods[index].name;
+            if ([OWMObject inferredImplTypeForSelector:selector] == SelectorInferredImplTypeGet) {
+                NSString *key = NSStringFromSelector(selector);
+                if (![_content objectForKey:key]) {
+                    return NO;
+                }
             }
-        }
+            
+//            id object = objc_msgSend(self, selector);
+//
+//            if ([self performSelector:selector]) {
+//
+//            }
+            
+//            if (![self respondsToSelector:selector]) {
+//                return NO;
+//            }
+                     }
     } @finally {
         if (methods) {
             free(methods);
         }
     }
-    
-//    // fetch adopted protocols
-//    Protocol * __unsafe_unretained *adopted = nil;
-//    @try {
-//        adopted = protocol_copyProtocolList(protocol, &count);
-//        for (int index = 0; index < count; index++) {
-//            // here we go again...
-//            if (![OWMObject isProtocolImplementationInferable:adopted[index]]) {
-//                return NO;
-//            }
-//        }
-//    } @finally {
-//        if (adopted) {
-//            free(adopted);
-//        }
-//    }
     
     // protocol ran the gauntlet
     return YES;
