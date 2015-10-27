@@ -38,19 +38,22 @@
 
 - (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure {
     __weak typeof(self) wSelf = self;
-    [[OpenWeatherMap service] getWeatherForLocation:location.coordinate completion:^(OWMObject *object, NSError * _Nullable error) {
+    [[OpenWeatherMap service] getWeatherForLocation:location.coordinate completion:^(OWMObject <OWMCurrentWeatherObject> *object, NSError * _Nullable error) {
         if (error) {
             if (failure)
                 failure(error);
             return;
         }
         
-        if (object) {
-            wSelf.lastWeather = (OWMObject<OWMCurrentWeatherObject> *)object;
-        } else if (failure && !wSelf.lastWeather) {
-            failure(error);
+        if (![object conformsToProtocol:@protocol(OWMCurrentWeatherObject)]) {
+            NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Wrong response data!"}];
+            if (failure) {
+                failure(error);
+            }
             return;
         }
+        
+        wSelf.lastWeather = object;
         
         if (success) {
             success(wSelf.lastWeather);

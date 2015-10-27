@@ -125,7 +125,7 @@ static NSString *_units = @"metric";
     return  _serviceQueue;
 }
 
-- (void)getWeatherForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion)completion{
+- (void)getWeatherForLocation:(CLLocationCoordinate2D)coordinate completion:(OWMCompletionBlock)completion{
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
                              @"units": _units,
@@ -133,7 +133,7 @@ static NSString *_units = @"metric";
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
-- (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(GetWeatherCompletion) completion {
+- (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(OWMCompletionBlock) completion {
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
                              @"units": _units,
@@ -141,14 +141,14 @@ static NSString *_units = @"metric";
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
-- (void)getWeatherForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
+- (void)getWeatherForCityName:(NSString *)cityName completion:(OWMCompletionBlock) completion {
     NSDictionary *params = @{@"q": cityName,
                              @"units": _units,
                              @"APPID": _apiKey};
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
-- (void)getForecastForCityName:(NSString *)cityName completion:(GetWeatherCompletion) completion {
+- (void)getForecastForCityName:(NSString *)cityName completion:(OWMCompletionBlock) completion {
     NSDictionary *params = @{@"q": cityName,
                              @"units": _units,
                              @"APPID": _apiKey};
@@ -157,7 +157,7 @@ static NSString *_units = @"metric";
 
 
 
-- (void)getDataAtPath:(NSString *)path params:(nullable NSDictionary *)params completion:(GetWeatherCompletion) completion {
+- (void)getDataAtPath:(NSString *)path params:(nullable NSDictionary *)params completion:(OWMCompletionBlock) completion {
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params wic_GETParameters]];
@@ -187,7 +187,7 @@ static NSString *_units = @"metric";
     }];
 }
 
-- (void)handleResponse:(OWMResponseCacheObject *)responseCachedObject completion:(GetWeatherCompletion)completion {
+- (void)handleResponse:(OWMResponseCacheObject *)responseCachedObject completion:(OWMCompletionBlock)completion {
     
     if (responseCachedObject.error) {
         completion(nil, responseCachedObject.error);
