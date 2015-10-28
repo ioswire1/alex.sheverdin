@@ -27,6 +27,7 @@ static int progressMax = 50;
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
+@property (nonatomic, strong) NSMutableArray *dates;
 
 - (void)loadWeather:(void (^)())completion;
 - (void)loadForecast:(void (^)())completion;
@@ -63,6 +64,7 @@ static int progressMax = 50;
             }
             
             if (bounceCount >= repeatCount && wSelf.currentWeather) {
+//                [wSelf getDateSectionedDictionary];
                 [wSelf.behavior removeItem:wSelf.circleView];
                 [UIView animateWithDuration:0.45 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     wSelf.circleView.center = wSelf.animatorView.center;
@@ -141,20 +143,64 @@ static int progressMax = 50;
 }
 
 
+- (NSString *)shortStringDateFromDt:(NSTimeInterval) seconds {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"dd.MM";
+    dateFormatter.locale = [NSLocale currentLocale];
+    
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
+    NSString *dateString = [[NSString alloc] initWithString:[dateFormatter stringFromDate:date]];
+    return dateString;
+}
+
+
+- (NSArray *)setDates {
+    if (!_dates) {
+         _dates = [[NSMutableArray alloc] init];
+    } else {
+        [_dates removeAllObjects];
+    }
+    OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
+    if (firstObject) {
+        NSString *prevShortDate = [self shortStringDateFromDt:firstObject.dt.floatValue];
+        NSMutableArray *sameDates = [[NSMutableArray alloc] init];
+        for (id <OWMWeather> object in self.currentForecast.list) {
+            
+           NSString *shortDate = [self shortStringDateFromDt:object.dt.floatValue];
+//           NSLog(@"date = %@", shortDate);
+            
+           if ([shortDate isEqualToString:prevShortDate]) {
+               [sameDates addObject:object];
+           } else {
+               [_dates addObject:[sameDates copy]];
+               [sameDates removeAllObjects];
+               [sameDates addObject:object];
+               prevShortDate = shortDate;
+           }
+        }
+        [_dates addObject:[sameDates copy]];        
+    }
+    return [_dates copy];
+}
+
 #pragma mark - UITableView DataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return self.dates.count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+     id <OWMWeather> object = self.dates[section][0];
+    return [self shortStringDateFromDt:object.dt.floatValue];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.currentForecast.list count];
+    NSArray *array = self.dates[section];
+    return array.count;
 }
 
-
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    id <OWMWeather> object = self.currentForecast.list[indexPath.row];
+    id <OWMWeather> object = self.dates[indexPath.section][indexPath.row];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     
@@ -171,7 +217,6 @@ static int progressMax = 50;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = @"hh:mm";
     dateFormatter.locale = [NSLocale currentLocale];
-    
 
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:object.dt.floatValue];
     
@@ -183,6 +228,9 @@ static int progressMax = 50;
     cell.contentView.backgroundColor = [color colorWithAlphaComponent:0.25];
     return cell;
 }
+
+
+#pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return (self.view.bounds.size.height) / 10.f;
@@ -260,6 +308,7 @@ static bool blured;
 - (void)setCurrentForecast:(id<OWMForecastObject>)currentForecast {
     
     _currentForecast = currentForecast;
+    [self setDates];
     [self.tableView reloadData];    
     
 }
