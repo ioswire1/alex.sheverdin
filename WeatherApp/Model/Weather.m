@@ -67,6 +67,8 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
     // array and dictionary wrap
     if ([originalObject isKindOfClass:[NSDictionary class]]) {
         result = [[OWMObject alloc] initWithJsonDictionary: originalObject];
+    } else if ([originalObject isKindOfClass:[NSArray class]]) {
+        result = [[OWMArrayObject alloc] initWithJsonArray:originalObject];
     }
     
     // return our object
@@ -128,17 +130,12 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 - (BOOL)conformsToProtocol:(Protocol *)protocol {
     return  [super conformsToProtocol:protocol] ||
     ([self isProtocolImplementationInferable:protocol]);
-    //TODO:
-    // 1. send self not class
-    // 2. get required methods of the protocol
-    // 3. compare required methods from _jsonObject
 }
 
 // returns the signature for the method that we will actually invoke
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
     SEL alternateSelector = sel;
     
-    // if we should forward, to where?
     switch ([OWMObject inferredImplTypeForSelector:sel]) {
         case SelectorInferredImplTypeGet:
             alternateSelector = @selector(objectForKey:);
@@ -211,23 +208,13 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
                     return NO;
                 }
             }
-            
-//            id object = objc_msgSend(self, selector);
-//
-//            if ([self performSelector:selector]) {
-//
-//            }
-            
-//            if (![self respondsToSelector:selector]) {
-//                return NO;
-//            }
-                     }
+        }
+        
     } @finally {
         if (methods) {
             free(methods);
         }
     }
-    
     // protocol ran the gauntlet
     return YES;
 }
@@ -294,6 +281,64 @@ static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
     }
     return self;
 }
+
+- (NSUInteger)count {
+    return _array.count;
+}
+
+- (id)graphObjectifyAtIndex:(NSUInteger)index {
+    id object = [_array objectAtIndex:index];
+    // make certain it is FBObjectGraph-ified
+    id possibleReplacement = [OWMObject graphObjectWrappingObject:object];
+    if (object != possibleReplacement) {
+        // and if not-yet, replace the original with the wrapped object
+        [_array replaceObjectAtIndex:index withObject:possibleReplacement];
+        object = possibleReplacement;
+    }
+    return object;
+}
+
+- (void)graphObjectifyAll {
+    NSUInteger count = [_array count];
+    for (NSUInteger i = 0; i < count; ++i) {
+        [self graphObjectifyAtIndex:i];
+    }
+}
+
+- (id)objectAtIndex:(NSUInteger)index {
+    return [self graphObjectifyAtIndex:index];
+}
+
+- (NSEnumerator *)objectEnumerator {
+    [self graphObjectifyAll];
+    return _array.objectEnumerator;
+}
+
+- (NSEnumerator *)reverseObjectEnumerator {
+    [self graphObjectifyAll];
+    return _array.reverseObjectEnumerator;
+}
+
+- (void)insertObject:(id)object atIndex:(NSUInteger)index {
+    [_array insertObject:object atIndex:index];
+}
+
+- (void)removeObjectAtIndex:(NSUInteger)index {
+    [_array removeObjectAtIndex:index];
+}
+
+- (void)addObject:(id)object {
+    [_array addObject:object];
+}
+
+- (void)removeLastObject {
+    [_array removeLastObject];
+}
+
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)object {
+    [_array replaceObjectAtIndex:index withObject:object];
+}
+
 
 
 @end
