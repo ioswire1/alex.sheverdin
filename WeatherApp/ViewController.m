@@ -26,8 +26,10 @@ static int progressMax = 50;
 @property (strong, nonatomic) UIImage *bluredImage;
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
+@property (strong, nonatomic) id <OWMForecastObject> currentForecast;
 
 - (void)loadWeather:(void (^)())completion;
+- (void)loadForecast:(void (^)())completion;
 - (void)addProgressAnimation:(void (^)(BOOL finished))completion;
 - (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion;
 
@@ -57,6 +59,7 @@ static int progressMax = 50;
 
             if (bounceCount == 1) {
                 [wSelf loadWeather:nil];
+                [wSelf loadForecast:nil];
             }
             
             if (bounceCount >= repeatCount && wSelf.currentWeather) {
@@ -120,33 +123,59 @@ static int progressMax = 50;
     }];
 }
 
+
+- (void)loadForecast:(void (^)())completion {
+    
+    __weak typeof(self) wSelf = self;
+    CLLocation *location = [self currentLocation];
+    [[WeatherManager defaultManager] getForecastByLocation:location success:^(OWMObject <OWMForecastObject> *object) {
+
+        wSelf.currentForecast = object;
+        if (completion) {
+            completion();
+        }
+        
+    } failure:^(NSError *error) {
+        // TODO: implementation
+    }];
+}
+
+
 #pragma mark - UITableView DataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section ? 100 : 8;
+    return [self.currentForecast.list count];
 }
 
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    id <OWMWeather> object = self.currentForecast.list[indexPath.row];
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    int varRand = arc4random() % 6 - 6;
-    int random = (indexPath.row + varRand) - 50;
     
     UIImage *spectorImage = [UIImage imageNamed:@"color_spectrum"];
+    int temperature = object.main.temp.intValue;
     
-    float pecentage = (float)(random + 50 + 6)/ 106.f;
+    float pecentage = (temperature + 50)/ 100.f;
     CGPoint valuePosition = CGPointMake(spectorImage.size.width * pecentage, 1);
     UIColor *color = [spectorImage colorAtPosition:valuePosition];
     
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d°", random];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d°", temperature];
     cell.detailTextLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
     
-    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%0d:00", (int)indexPath.row]];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"hh:mm";
+    dateFormatter.locale = [NSLocale currentLocale];
+    
+
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:object.dt.floatValue];
+    
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[dateFormatter stringFromDate:date]];
     [attrStr addAttribute:NSKernAttributeName value:@(0.5) range:NSMakeRange(0, attrStr.length)];
     cell.textLabel.attributedText = attrStr;
     cell.textLabel.textColor = [UIColor whiteColor];
@@ -226,6 +255,15 @@ static bool blured;
     return _animatorView;
 }
 
+#pragma mark - Setters 
+
+- (void)setCurrentForecast:(id<OWMForecastObject>)currentForecast {
+    
+    _currentForecast = currentForecast;
+    [self.tableView reloadData];    
+    
+}
+
 #pragma mark - Notifications
 
 - (void)appDidBecomeActive {
@@ -239,6 +277,7 @@ static bool blured;
             [self loadWeather:^{
                 [wSelf addProgressAnimation:nil];
             }];
+            [self loadForecast:nil];
         }
     }
 }
