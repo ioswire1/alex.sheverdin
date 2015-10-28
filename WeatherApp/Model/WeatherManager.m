@@ -65,9 +65,36 @@
     // TODO: implementation
 }
 
+- (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure {
+    __weak typeof(self) wSelf = self;
+    [[OpenWeatherMap service] getForecastForLocation:location.coordinate completion:^(OWMObject <OWMForecastObject> *object, NSError * _Nullable error) {
+        if (error) {
+            if (failure)
+                failure(error);
+            return;
+        }
+        
+        if (![object conformsToProtocol:@protocol(OWMForecastObject)]) {
+            NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Wrong response data!"}];
+            if (failure) {
+                failure(error);
+            }
+            return;
+        }
+        
+        wSelf.lastForecast = object;
+        
+        if (success) {
+            success(wSelf.lastForecast);
+        }
+    }];
+}
+
 #pragma mark - Memento Design Pattern
 
 static NSString *const kLastWeatherKey = @"lastWeatherKey";
+static NSString *const kLastForecastKey = @"lastForecastKey";
+
 
 - (void)setLastWeather:(OWMObject <OWMCurrentWeatherObject> *)lastWeather {
     NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastWeather];
@@ -80,5 +107,15 @@ static NSString *const kLastWeatherKey = @"lastWeatherKey";
     return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
 }
 
+- (void)setLastForecast:(OWMObject<OWMForecastObject> *)lastForecast{
+    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastForecast];
+    [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastForecastKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (OWMObject <OWMForecastObject>*)lastForecast {
+    NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastKey];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+}
 
 @end

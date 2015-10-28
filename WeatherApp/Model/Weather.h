@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OWMObject: NSMutableDictionary <NSCoding, NSCopying>
+@interface OWMObject: NSDictionary <NSCoding>
 
 - (instancetype)initWithJsonDictionary:(NSDictionary *)jsonDictionary;
+
+@end
+
+@interface OWMArrayObject<__covariant ObjectType: OWMObject*>: NSArray <NSCoding>
+
+- (instancetype)initWithJsonArray:(NSArray *)jsonArray;
 
 @end
 
@@ -48,7 +54,7 @@
 @required
 
 @property (nonatomic, strong, readonly) OWMMainObject *main;
-@property (nonatomic, strong, readonly) NSArray <OWMWeatherObject *> *weather;
+@property (nonatomic, strong, readonly) OWMArrayObject <OWMWeatherObject *> *weather;
 @property (nonatomic, strong, readonly) NSNumber *dt;
 
 @optional
@@ -67,11 +73,18 @@
 
 @end
 
-@protocol OWMCurrentWeatherObject <OWMWeather>
+@protocol OWMResponseObject <NSObject>
 
 @required
 
 @property (nonatomic, strong, readonly) NSNumber *cod;
+
+@end
+
+@protocol OWMCurrentWeatherObject <OWMWeather, OWMResponseObject>
+
+@required
+
 @property (nonatomic, assign, readonly) CLLocationCoordinate2D coord;
 @property (nonatomic, copy,   readonly) NSString *name; // "name"
 @property (nonatomic, strong, readonly) NSNumber *id; // "id"
@@ -84,7 +97,7 @@
 
 @end
 
-@protocol OWMForecastObject <NSObject>
+@protocol OWMForecastObject <NSObject, OWMResponseObject>
 
 @optional
 
@@ -93,7 +106,6 @@
 
 @required
 
-@property (nonatomic, strong, readonly) NSNumber *code;
-@property (nonatomic, strong, readonly) NSArray <OWMCurrentWeatherObject> *list;
+@property (nonatomic, strong, readonly) OWMArrayObject <OWMObject<OWMWeather> *> *list;
 
 @end

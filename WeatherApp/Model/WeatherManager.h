@@ -17,7 +17,9 @@
 
 - (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
 - (void)getWeatherByCity:(NSString *)city success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
 
 @property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
+@property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
 
 @end

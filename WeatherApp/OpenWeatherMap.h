@@ -11,7 +11,7 @@
 
 #import "Weather.h"
 
-typedef void (^OWMCompletionBlock)(OWMObject * __nullable dictionary, NSError * __nullable error);
+typedef void (^OWMCompletionBlock)(OWMObject <OWMResponseObject> * __nullable dictionary, NSError * __nullable error);
 
 @interface OpenWeatherMap : NSObject
 

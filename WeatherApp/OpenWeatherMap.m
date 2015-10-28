@@ -202,19 +202,21 @@ static NSString *_units = @"metric";
             completion(nil, error);
         } else {
             int code = 0;
-            if ([object conformsToProtocol:@protocol(OWMCurrentWeatherObject)]) {
-                code = [(id <OWMCurrentWeatherObject>)object cod].intValue;
-            }
-            if ([object conformsToProtocol:@protocol(OWMForecastObject)]) {
-                code = [(id <OWMForecastObject>)object code].intValue;
-            }
-            if (code == 404) {
-                error = [NSError errorWithDomain:kWeatherDomain
-                                            code:9999
-                                        userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];
-                completion(nil, error);
-            } else {
-                completion(object, nil);
+            if ([object conformsToProtocol:@protocol(OWMResponseObject)]) {
+                code = [(id <OWMResponseObject>)object cod].intValue;
+                if (code == 404) {
+                    error = [NSError errorWithDomain:kWeatherDomain
+                                                code:9999
+                                            userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not found city!", nil)}];
+                    completion(nil, error);
+                } else {
+                    completion((OWMObject<OWMResponseObject> *)object, nil);
+                }
+            } else { // Wrong response
+                NSError *error = nil; //
+                if (completion) {
+                    completion(nil, error);
+                }
             }
         }
     }

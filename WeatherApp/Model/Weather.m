@@ -18,16 +18,16 @@ typedef NS_ENUM(NSUInteger, SelectorInferredImplType) { // TODO: rename
 
 @implementation OWMObject
 {
-    NSMutableDictionary *_content;
+    NSMutableDictionary *_dictionary;
 }
 
 #pragma mark - NSCoding
 
-static NSString *const kOWMObjectContentKey = @"content";
+static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-    [encoder encodeObject:_content forKey:kOWMObjectContentKey];
+    [encoder encodeObject:_dictionary forKey:kOWMObjectContentKey];
 }
 
 - (Class)classForCoder {
@@ -38,7 +38,7 @@ static NSString *const kOWMObjectContentKey = @"content";
 {
     if (self = [super init])
     {
-        _content = [decoder decodeObjectForKey:kOWMObjectContentKey];
+        _dictionary = [decoder decodeObjectForKey:kOWMObjectContentKey];
     }
     
     return self;
@@ -47,7 +47,7 @@ static NSString *const kOWMObjectContentKey = @"content";
 - (instancetype)initWithJsonDictionary:(NSDictionary *)jsonDictionary {
     self = [super init];
     if (self) {
-        _content = [NSMutableDictionary dictionaryWithDictionary:jsonDictionary];
+        _dictionary = [NSMutableDictionary dictionaryWithDictionary:jsonDictionary];
     }
     return self;
 }
@@ -74,19 +74,19 @@ static NSString *const kOWMObjectContentKey = @"content";
 }
 
 - (id)graphObjectifyAtKey:(id)key {
-    id object = [_content objectForKey:key];
+    id object = [_dictionary objectForKey:key];
     // make certain it is FBObjectGraph-ified
     id possibleReplacement = [OWMObject graphObjectWrappingObject:object];
     if (object != possibleReplacement) {
         // and if not-yet, replace the original with the wrapped object
-        [_content setObject:possibleReplacement forKey:key];
+        [_dictionary setObject:possibleReplacement forKey:key];
         object = possibleReplacement;
     }
     return object;
 }
 
 - (void)graphObjectifyAll {
-    NSArray *keys = [_content allKeys];
+    NSArray *keys = [_dictionary allKeys];
     for (NSString *key in keys) {
         [self graphObjectifyAtKey:key];
     }
@@ -95,7 +95,7 @@ static NSString *const kOWMObjectContentKey = @"content";
 #pragma mark NSDictionary and NSMutableDictionary overrides
 
 - (NSUInteger)count {
-    return _content.count;
+    return _dictionary.count;
 }
 
 - (id)objectForKey:(id)key {
@@ -104,15 +104,15 @@ static NSString *const kOWMObjectContentKey = @"content";
 
 - (NSEnumerator *)keyEnumerator {
     [self graphObjectifyAll];
-    return _content.keyEnumerator;
+    return _dictionary.keyEnumerator;
 }
 
 - (void)setObject:(id)object forKey:(id)key {
-    return [_content setObject:object forKey:key];
+    return [_dictionary setObject:object forKey:key];
 }
 
 - (void)removeObjectForKey:(id)key {
-    return [_content removeObjectForKey:key];
+    return [_dictionary removeObjectForKey:key];
 }
 
 #pragma mark -
@@ -207,7 +207,7 @@ static NSString *const kOWMObjectContentKey = @"content";
             SEL selector = methods[index].name;
             if ([OWMObject inferredImplTypeForSelector:selector] == SelectorInferredImplTypeGet) {
                 NSString *key = NSStringFromSelector(selector);
-                if (![_content objectForKey:key]) {
+                if (![_dictionary objectForKey:key]) {
                     return NO;
                 }
             }
@@ -252,5 +252,48 @@ static NSString *const kOWMObjectContentKey = @"content";
     
     return SelectorInferredImplTypeNone;
 }
+
+@end
+
+#pragma mark -
+#pragma mark - OWMArrayObject
+
+
+@implementation OWMArrayObject
+{
+    NSMutableArray *_array;
+}
+
+#pragma mark - NSCoding
+
+static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    [encoder encodeObject:_array forKey:kOWMArrayObjectContentKey];
+}
+
+- (Class)classForCoder {
+    return [self class];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if (self = [super init])
+    {
+        _array = [decoder decodeObjectForKey:kOWMArrayObjectContentKey];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithJsonArray:(NSArray *)jsonArray{
+    self = [super init];
+    if (self) {
+        _array = [NSMutableArray arrayWithArray:jsonArray];
+    }
+    return self;
+}
+
 
 @end
