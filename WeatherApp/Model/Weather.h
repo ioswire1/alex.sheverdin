@@ -20,32 +20,50 @@
 
 @end
 
+
+@import CoreLocation;
+
 @interface OWMPrecipitationObject : OWMObject
-@property (nonatomic, strong, readonly) NSNumber *h;
 @end
 
 @interface OWMMainObject : OWMObject
 @property (nonatomic, strong, readonly) NSNumber *temp;
 @property (nonatomic, strong, readonly) NSNumber *pressure;
+@property (nonatomic, strong, readonly) NSNumber *humidity;
+@property (nonatomic, strong, readonly) NSNumber *temp_min;
+@property (nonatomic, strong, readonly) NSNumber *temp_max;
+@property (nonatomic, strong, readonly) NSNumber *sea_level;
+@property (nonatomic, strong, readonly) NSNumber *grnd_level;
+
 @end
+
 @interface OWMWindObject : OWMObject
 @property (nonatomic, strong, readonly) NSNumber *speed;
 @property (nonatomic, strong, readonly) NSNumber *deg;
 @end
+
 @interface OWMRainObject : OWMPrecipitationObject
 
 @end
+
 @interface OWMWeatherObject : OWMObject
 
 @end
+
 @interface OWMCloudsObject : OWMObject
 @property (nonatomic, strong, readonly) NSNumber *all;
 @end
+
 @interface OWMSnowObject : OWMPrecipitationObject
 
 @end
-@interface OWMCityObject : OWMObject
 
+@interface OWMCityObject : OWMObject
+@property (nonatomic, assign, readonly) CLLocationCoordinate2D coord;
+@property (nonatomic, assign, readonly) NSString *country;
+@property (nonatomic, strong, readonly) NSNumber *id;
+@property (nonatomic, copy,   readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSNumber *population;
 @end
 
 
@@ -67,19 +85,20 @@
 
 @end
 
-@import CoreLocation;
+
 
 @protocol OWMSysObject <NSObject>
 
 @end
 
+
 @protocol OWMResponseObject <NSObject>
 
 @required
-
 @property (nonatomic, strong, readonly) NSNumber *cod;
 
 @end
+
 
 @protocol OWMCurrentWeatherObject <OWMWeather, OWMResponseObject>
 
@@ -96,6 +115,7 @@
 
 
 @end
+
 
 @protocol OWMForecastObject <NSObject, OWMResponseObject>
 
