@@ -143,13 +143,15 @@ static int progressMax = 50;
 }
 
 
-- (NSString *)shortStringDateFromDt:(NSTimeInterval) seconds {
+- (NSString *)stringFromTimeInterval:(NSTimeInterval) seconds withFormat:(NSString *) format{
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"dd.MM";
+    dateFormatter.dateFormat = format;
     dateFormatter.locale = [NSLocale currentLocale];
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
     NSString *dateString = [[NSString alloc] initWithString:[dateFormatter stringFromDate:date]];
+    
     return dateString;
 }
 
@@ -162,11 +164,11 @@ static int progressMax = 50;
     }
     OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
     if (firstObject) {
-        NSString *prevShortDate = [self shortStringDateFromDt:firstObject.dt.floatValue];
+        NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd:MM"];
         NSMutableArray *sameDates = [[NSMutableArray alloc] init];
         for (id <OWMWeather> object in self.currentForecast.list) {
             
-           NSString *shortDate = [self shortStringDateFromDt:object.dt.floatValue];
+           NSString *shortDate = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd:MM"];
 //           NSLog(@"date = %@", shortDate);
             
            if ([shortDate isEqualToString:prevShortDate]) {
@@ -190,8 +192,9 @@ static int progressMax = 50;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    //NSString *string
      id <OWMWeather> object = self.dates[section][0];
-    return [self shortStringDateFromDt:object.dt.floatValue];
+     return [self stringFromTimeInterval:object.dt.floatValue withFormat: @"EEEE, MMM dd"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -213,14 +216,10 @@ static int progressMax = 50;
     
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d°", temperature];
     cell.detailTextLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"hh:mm";
-    dateFormatter.locale = [NSLocale currentLocale];
-
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:object.dt.floatValue];
-    
-    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[dateFormatter stringFromDate:date]];
+  
+    NSString *dateString = [self stringFromTimeInterval:object.dt.floatValue
+                                             withFormat:@"hh:mm"];    
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:dateString];
     [attrStr addAttribute:NSKernAttributeName value:@(0.5) range:NSMakeRange(0, attrStr.length)];
     cell.textLabel.attributedText = attrStr;
     cell.textLabel.textColor = [UIColor whiteColor];
