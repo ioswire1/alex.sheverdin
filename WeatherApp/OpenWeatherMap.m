@@ -11,7 +11,7 @@
 
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
 static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
-static NSTimeInterval const kRequestTimeLimits = 36000.0; // 10 minutes
+static NSTimeInterval const kRequestTimeLimits = 100;//36000.0; // 10 minutes
 static NSInteger const kCacheLimit = 1024 * 1024 * 2; // 2 mb
 
 #pragma mark - Category NSDictionary (HTTPGETParameters)
@@ -159,20 +159,19 @@ static NSString *_units = @"metric";
 
 - (void)getDataAtPath:(NSString *)path params:(nullable NSDictionary *)params completion:(OWMCompletionBlock) completion {
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSString *urlString = [[kBaseWeatherURL stringByAppendingPathComponent:path] stringByAppendingString:[params wic_GETParameters]];
     
     OWMResponseCacheObject *lastResponse = [self.cache objectForKey:urlString];
     if (lastResponse) {
         
         // Confirm API requirments http://openweathermap.org/apieff #1
-        NSTimeInterval requestTimeInterval = [lastResponse.requestDate timeIntervalSinceDate:[NSDate date]];
+        NSTimeInterval requestTimeInterval = [[NSDate date] timeIntervalSinceDate:lastResponse.requestDate];
         if (requestTimeInterval < kRequestTimeLimits) {
             [self handleResponse:lastResponse completion:completion];
             return;
         }
     }
-    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     __weak typeof(self) wSelf = self;
