@@ -10,7 +10,8 @@
 #import <objc/runtime.h>
 
 // used internally by the category impl
-typedef NS_ENUM(NSUInteger, SelectorInferredImplType) { // TODO: rename
+//TODO: rename
+typedef NS_ENUM(NSUInteger, SelectorInferredImplType) {
     SelectorInferredImplTypeNone  = 0,
     SelectorInferredImplTypeGet = 1,
     SelectorInferredImplTypeSet = 2
@@ -243,35 +244,12 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 @end
 
 #pragma mark -
-#pragma mark - OWMArrayObject
+#pragma mark - OWMArrayObject implementation
 
 
 @implementation OWMArrayObject
 {
     NSMutableArray *_array;
-}
-
-#pragma mark - NSCoding
-
-static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-    [encoder encodeObject:_array forKey:kOWMArrayObjectContentKey];
-}
-
-- (Class)classForCoder {
-    return [self class];
-}
-
-- (id)initWithCoder:(NSCoder *)decoder
-{
-    if (self = [super init])
-    {
-        _array = [decoder decodeObjectForKey:kOWMArrayObjectContentKey];
-    }
-    
-    return self;
 }
 
 - (instancetype)initWithJsonArray:(NSArray *)jsonArray{
@@ -280,10 +258,6 @@ static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
         _array = [NSMutableArray arrayWithArray:jsonArray];
     }
     return self;
-}
-
-- (NSUInteger)count {
-    return _array.count;
 }
 
 - (id)graphObjectifyAtIndex:(NSUInteger)index {
@@ -303,6 +277,12 @@ static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
     for (NSUInteger i = 0; i < count; ++i) {
         [self graphObjectifyAtIndex:i];
     }
+}
+
+#pragma mark - NSArray overrides
+
+- (NSUInteger)count {
+    return _array.count;
 }
 
 - (id)objectAtIndex:(NSUInteger)index {
@@ -339,6 +319,27 @@ static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
     [_array replaceObjectAtIndex:index withObject:object];
 }
 
+#pragma mark - NSCoding for OWMArrayObject
 
+static NSString *const kOWMArrayObjectContentKey = @"arrayContent";
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    [encoder encodeObject:_array forKey:kOWMArrayObjectContentKey];
+}
+
+- (Class)classForCoder {
+    return [self class];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if (self = [super init])
+    {
+        _array = [decoder decodeObjectForKey:kOWMArrayObjectContentKey];
+    }
+    
+    return self;
+}
 
 @end

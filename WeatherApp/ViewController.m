@@ -49,6 +49,7 @@ static int progressMax = 50;
 }
 
 - (void)addBounceAnimation:(NSUInteger)repeatCount completion:(void (^)(BOOL finished))completion {
+    
     [self.behavior addItem:self.circleView];
     
     __weak typeof(self) wSelf = self;
@@ -64,7 +65,6 @@ static int progressMax = 50;
             }
             
             if (bounceCount >= repeatCount && wSelf.currentWeather) {
-//                [wSelf getDateSectionedDictionary];
                 [wSelf.behavior removeItem:wSelf.circleView];
                 [UIView animateWithDuration:0.45 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     wSelf.circleView.center = wSelf.animatorView.center;
@@ -80,7 +80,6 @@ static int progressMax = 50;
     if ([self.behavior.items containsObject:self.circleView]) {
         [self.behavior removeItem:self.circleView];
     }
-
     double temp = [self.currentWeather.main.temp doubleValue];
     double progress = (temp + progressMax) / (2 * progressMax);
 
@@ -92,13 +91,11 @@ static int progressMax = 50;
     __weak typeof(self) wSelf = self;
     CLLocation *location = [self currentLocation];
     [[WeatherManager defaultManager] getWeatherByLocation:location success:^(OWMObject <OWMCurrentWeatherObject> *object) {
-        // TODO: just for development
-        NSAssert(weather, @"Weather should not be nil");
+        
         wSelf.currentWeather = object;
         if (completion) {
             completion();
         }
-        NSLog(@"wind = %@ press = %@", wSelf.currentWeather.wind, wSelf.currentWeather.main.pressure );
         NSString *hundred = [[object.weather[0][@"id"] stringValue] substringWithRange:NSMakeRange(0, 1)];
         NSString *imageName = [hundred stringByAppendingString:@"00"];
 
@@ -148,7 +145,6 @@ static int progressMax = 50;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = format;
     dateFormatter.locale = [NSLocale currentLocale];
-    
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
     NSString *dateString = [[NSString alloc] initWithString:[dateFormatter stringFromDate:date]];
     
@@ -163,13 +159,13 @@ static int progressMax = 50;
         [_dates removeAllObjects];
     }
     OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
+    
     if (firstObject) {
-        NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd:MM"];
+        NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd.MM"];
         NSMutableArray *sameDates = [[NSMutableArray alloc] init];
+        
         for (id <OWMWeather> object in self.currentForecast.list) {
-            
-           NSString *shortDate = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd:MM"];
-//           NSLog(@"date = %@", shortDate);
+           NSString *shortDate = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd.MM"];
             
            if ([shortDate isEqualToString:prevShortDate]) {
                [sameDates addObject:object];
@@ -180,6 +176,7 @@ static int progressMax = 50;
                prevShortDate = shortDate;
            }
         }
+        
         [_dates addObject:[sameDates copy]];        
     }
     return [_dates copy];
@@ -192,7 +189,7 @@ static int progressMax = 50;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    //NSString *string
+    //TODO: or not to do - today and tomorrow
      id <OWMWeather> object = self.dates[section][0];
      return [self stringFromTimeInterval:object.dt.floatValue withFormat: @"EEEE, MMM dd"];
 }
@@ -260,6 +257,15 @@ static bool blured;
                         } completion:NULL];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    if ([view isKindOfClass:[UITableViewHeaderFooterView class]]) {
+        UITableViewHeaderFooterView *headerView = (UITableViewHeaderFooterView *)view;
+        headerView.contentView.backgroundColor = [UIColor clearColor];
+        headerView.backgroundView.backgroundColor = [UIColor clearColor];
+    }
+}
+
 #pragma mark - Location
 
 - (CLLocation *)currentLocation {
@@ -308,8 +314,7 @@ static bool blured;
     
     _currentForecast = currentForecast;
     [self setDates];
-    [self.tableView reloadData];    
-    
+    [self.tableView reloadData];
 }
 
 #pragma mark - Notifications
