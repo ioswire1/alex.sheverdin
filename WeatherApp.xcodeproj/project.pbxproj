@@ -14,7 +14,7 @@
 		04B429211BD121A600685BB8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B429201BD121A600685BB8 /* ViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
 		635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 635EDD771BDBFBC6008D48C6 /* UIImage+ImageEffects.m */; settings = {ASSET_TAGS = (); }; };
-		C155D590B87F5A3CF3D0E2AF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D5A1BC4CD8E86521C92227A /* libPods.a */; };
+		6ACDF4095808A5A709AE250A /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A412F4BD9CE982D8DB97CE1 /* Pods.framework */; };
 		CE3B8AEE1B78E68300716155 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3B8AED1B78E68300716155 /* CoreLocation.framework */; };
 		CE45718C1B83D1C300323C90 /* Weather.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45718B1B83D1C300323C90 /* Weather.m */; };
 		CE69C1ED1B77954E005CC71D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C1EC1B77954E005CC71D /* main.m */; };
@@ -48,9 +48,9 @@
 		04B429201BD121A600685BB8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		04FE0E171BA6D2D1005B061F /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		04FE0E181BA6D2D1005B061F /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
-		2D5A1BC4CD8E86521C92227A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		635EDD761BDBFBC6008D48C6 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		635EDD771BDBFBC6008D48C6 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		6A412F4BD9CE982D8DB97CE1 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A72E2C44007A34DB6A766E6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		CE3B8AED1B78E68300716155 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		CE45718A1B83D1C300323C90 /* Weather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Weather.h; path = Model/Weather.h; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE3B8AEE1B78E68300716155 /* CoreLocation.framework in Frameworks */,
-				C155D590B87F5A3CF3D0E2AF /* libPods.a in Frameworks */,
+				6ACDF4095808A5A709AE250A /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,7 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				CE3B8AED1B78E68300716155 /* CoreLocation.framework */,
-				2D5A1BC4CD8E86521C92227A /* libPods.a */,
+				6A412F4BD9CE982D8DB97CE1 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
