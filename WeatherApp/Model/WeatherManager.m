@@ -90,6 +90,33 @@
     }];
 }
 
+
+- (void)getForecastByCity:(NSString *)city success:(void (^)(OWMObject<OWMCurrentWeatherObject> *))success failure:(void (^)(NSError *))failure {
+    __weak typeof(self) wSelf = self;
+    [[OpenWeatherMap service] getForecastForCityName:city completion:^(OWMObject <OWMForecastObject> *object, NSError * _Nullable error) {
+        if (error) {
+            if (failure)
+                failure(error);
+            return;
+        }
+        
+        if (![object conformsToProtocol:@protocol(OWMForecastObject)]) {
+            NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Wrong response data!"}];
+            if (failure) {
+                failure(error);
+            }
+            return;
+        }
+        
+        wSelf.lastForecast = object;
+        
+        if (success) {
+            success(wSelf.lastForecast);
+        }
+    }];
+}
+
+
 #pragma mark - Memento Design Pattern
 
 static NSString *const kLastWeatherKey = @"lastWeatherKey";
