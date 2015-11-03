@@ -16,7 +16,7 @@
 #import "UIImage+ImageEffects.h"
 #import "UIImage+Picker.h"
 
-static double progressMax = 50.0;
+static int progressMax = 50;
 
 @interface ViewController ()
 @property (strong, nonatomic) UIView *animatorView;
@@ -40,7 +40,6 @@ static double progressMax = 50.0;
 @implementation ViewController
 
 - (IBAction)addLoading:(UIButton *)sender {
-    [self.refreshControl endRefreshing];
     if (!self.behavior.isActive) {
         self.currentWeather = nil;
         __weak typeof(self) wSelf = self;
@@ -142,8 +141,6 @@ static double progressMax = 50.0;
 }
 
 
-#pragma mark - UITableView helpers
-
 - (NSString *)stringFromTimeInterval:(NSTimeInterval) seconds withFormat:(NSString *) format{
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -155,33 +152,29 @@ static double progressMax = 50.0;
     return dateString;
 }
 
-- (NSMutableArray *)dates {
-    if (!_dates) {
-        _dates = [[NSMutableArray alloc] init];
-    }
-    return _dates;
-}
 
 - (NSArray *)setDates {
-
-    [_dates removeAllObjects];
-
+    if (!_dates) {
+         _dates = [[NSMutableArray alloc] init];
+    } else {
+        [_dates removeAllObjects];
+    }
     OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
     
     if (firstObject) {
-        NSString *prevDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd.MM"];
+        NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd.MM"];
         NSMutableArray *sameDates = [[NSMutableArray alloc] init];
         
         for (id <OWMWeather> object in self.currentForecast.list) {
-           NSString *date = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd.MM"];
+           NSString *shortDate = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd.MM"];
             
-           if ([date isEqualToString:prevDate]) {
+           if ([shortDate isEqualToString:prevShortDate]) {
                [sameDates addObject:object];
            } else {
                [_dates addObject:[sameDates copy]];
                [sameDates removeAllObjects];
                [sameDates addObject:object];
-               prevDate = date;
+               prevShortDate = shortDate;
            }
         }
         
@@ -215,8 +208,8 @@ static double progressMax = 50.0;
     UIImage *spectorImage = [UIImage imageNamed:@"color_spectrum"];
     int temperature = object.main.temp.intValue;
     
-    double percentage = (temperature + progressMax)/ progressMax * 2;
-    CGPoint valuePosition = CGPointMake(spectorImage.size.width * percentage, 1);
+    float pecentage = (temperature + 50)/ 100.f;
+    CGPoint valuePosition = CGPointMake(spectorImage.size.width * pecentage, 1);
     UIColor *color = [spectorImage colorAtPosition:valuePosition];
     
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d°", temperature];
