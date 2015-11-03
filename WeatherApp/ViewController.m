@@ -5,7 +5,7 @@
 //  Created by Alex Sheverdin on 10/16/15.
 //  Copyright © 2015 Alex Sheverdin. All rights reserved.
 //
-
+@import ImageIO;
 #import "ViewController.h"
 #import "CircleView.h"
 #import "FallBehavior.h"
