@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04154AE71BEA2BC6009989FD /* GradientPlot.m in Sources */ = {isa = PBXBuildFile; fileRef = 04154AE61BEA2BC6009989FD /* GradientPlot.m */; settings = {ASSET_TAGS = (); }; };
 		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
 		04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AC9B551BE9126100D0D429 /* ChartsViewController.m */; settings = {ASSET_TAGS = (); }; };
@@ -37,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04154AE51BEA2BC6009989FD /* GradientPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientPlot.h; sourceTree = "<group>"; };
+		04154AE61BEA2BC6009989FD /* GradientPlot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientPlot.m; sourceTree = "<group>"; };
 		044A6C481BCFD18E007B3FA4 /* FallBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FallBehavior.h; sourceTree = "<group>"; };
 		044A6C491BCFD18E007B3FA4 /* FallBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FallBehavior.m; sourceTree = "<group>"; };
 		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
@@ -54,6 +57,7 @@
 		635EDD761BDBFBC6008D48C6 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		635EDD771BDBFBC6008D48C6 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		7A72E2C44007A34DB6A766E6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		C8F1EB7E79EF128728660A47 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		CE3B8AED1B78E68300716155 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		CE45718A1B83D1C300323C90 /* Weather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Weather.h; path = Model/Weather.h; sourceTree = "<group>"; };
 		CE45718B1B83D1C300323C90 /* Weather.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Weather.m; path = Model/Weather.m; sourceTree = "<group>"; };
@@ -91,6 +95,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04154AE81BEA2BD1009989FD /* Trends */ = {
+			isa = PBXGroup;
+			children = (
+				04154AE51BEA2BC6009989FD /* GradientPlot.h */,
+				04154AE61BEA2BC6009989FD /* GradientPlot.m */,
+			);
+			name = Trends;
+			sourceTree = "<group>";
+		};
 		04550CE31BCC0B3A00B07242 /* CircleView */ = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				7A72E2C44007A34DB6A766E6 /* Pods.release.xcconfig */,
+				C8F1EB7E79EF128728660A47 /* Pods.debug.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -173,6 +187,7 @@
 		CE69C1E91B77954E005CC71D /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				04154AE81BEA2BD1009989FD /* Trends */,
 				CE93C4751B822C5D0098BA9B /* Model */,
 				04550CE31BCC0B3A00B07242 /* CircleView */,
 				048E1B681BDE2DAE00707BDD /* Animations */,
@@ -385,6 +400,7 @@
 				04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */,
 				635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
+				04154AE71BEA2BC6009989FD /* GradientPlot.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
 			);
@@ -459,6 +475,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -468,12 +485,19 @@
 		};
 		048E1B6A1BDE5FB500707BDD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A72E2C44007A34DB6A766E6 /* Pods.release.xcconfig */;
+			baseConfigurationReference = C8F1EB7E79EF128728660A47 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/CorePlot\"",
+					"\"${PODS_ROOT}/Headers/Public/CorePlot/ios\"",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+				);
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -531,6 +555,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -546,6 +571,13 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/CorePlot\"",
+					"\"${PODS_ROOT}/Headers/Public/CorePlot/ios\"",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+				);
 				INFOPLIST_FILE = WeatherApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

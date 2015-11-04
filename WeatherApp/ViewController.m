@@ -6,7 +6,6 @@
 //  Copyright © 2015 Alex Sheverdin. All rights reserved.
 //
 
-@import Charts;
 #import "ViewController.h"
 #import "CircleView.h"
 #import "FallBehavior.h"

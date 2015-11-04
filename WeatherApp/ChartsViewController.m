@@ -6,15 +6,18 @@
 //  Copyright © 2015 Alex Sheverdin. All rights reserved.
 //
 
-
 #import "ChartsViewController.h"
 #import "WeatherManager.h"
 #import "AppDelegate.h"
 
+#import "GradientPlot.h"
 
 static double progressMax = 50.0;
 
 @interface ChartsViewController ()
+
+@property (strong, nonatomic) IBOutlet CPTGraphHostingView *graphHostingView;
+@property (nonatomic, retain) GradientPlot *scatterPlot;
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
@@ -22,10 +25,19 @@ static double progressMax = 50.0;
 @property (strong, nonatomic) NSMutableArray *maxTemps;
 @property (strong, nonatomic) NSMutableArray *temps;
 
+-(CPTTheme *)currentTheme;
+
+@property (nonatomic, readwrite) UIPopoverController *themePopoverController;
+
+-(void)setupView;
+-(void)themeChanged:(NSNotification *)notification;
+
 @end
 
 @implementation ChartsViewController
 
+
+#pragma mark - Load weather data
 
 - (void)loadWeather:(void (^)())completion {
     
@@ -59,10 +71,22 @@ static double progressMax = 50.0;
     [[WeatherManager defaultManager] getForecastByCity:@"Kharkov" success:^(OWMObject <OWMForecastObject> *object) {
         wSelf.currentForecast = object;
         
+        if (!_maxTemps) {
+            _maxTemps = [[NSMutableArray alloc] init];
+        }
+        int index = 0;
+        
+        for (id <OWMWeather> obj in self.currentForecast.list) {
+            CGFloat Y = [obj.main.temp_max doubleValue];
+            [_maxTemps addObject:[NSValue valueWithCGPoint:CGPointMake(index, Y)]];
+//            [_minTemps addObject:obj.main.temp_min];
+            index++;
+        }
       
         if (completion) {
             completion();
         }
+
         
     } failure:^(NSError *error) {
         // TODO: implementation
@@ -102,7 +126,8 @@ static double progressMax = 50.0;
     [super viewDidLoad];
     
     [self loadForecast:^{
-
+        self.scatterPlot = [[GradientPlot alloc] initWithHostingView:_graphHostingView andData:_maxTemps];
+        [self.scatterPlot initialisePlot];
     }];
     
 
@@ -118,6 +143,8 @@ static double progressMax = 50.0;
                                             selector:@selector(appDidBecomeActive)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    
+
     
 }
 
