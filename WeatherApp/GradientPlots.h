@@ -1,5 +1,5 @@
 //
-//  GradientPlot.h
+//  GradientPlots.h
 //  WeatherApp
 //
 //  Created by Alex Sheverdin on 11/4/15.
@@ -9,16 +9,17 @@
 #import <Foundation/Foundation.h>
 #import <CorePlot-CocoaTouch.h>
 
-@interface GradientPlot : NSObject <CPTPlotDataSource>
+@interface GradientPlots : NSObject <CPTPlotDataSource>
+
+//TODO: move from interface
 @property (nonatomic, retain) CPTGraphHostingView *hostingView;
 @property (nonatomic, retain) CPTXYGraph *graph;
-@property (nonatomic, retain) NSMutableArray *graphData;
 
-// Method to create this object and attach it to it's hosting view.
+// init the plots in the provided hosting view with the provided data
+// The data array should contain array of NSValue objects each representing a CGPoint
 -(id)initWithHostingView:(CPTGraphHostingView *)hostingView andData:(NSMutableArray *)data;
 
-// Specific code that creates the scatter plot.
--(void)initialisePlot;
+-(void)initialisePlots;
 
 
 @end

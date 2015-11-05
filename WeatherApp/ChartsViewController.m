@@ -10,32 +10,36 @@
 #import "WeatherManager.h"
 #import "AppDelegate.h"
 
-#import "GradientPlot.h"
+#import "GradientPlots.h"
 
 static double progressMax = 50.0;
 
 @interface ChartsViewController ()
 
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *graphHostingView;
-@property (nonatomic, retain) GradientPlot *scatterPlot;
+@property (nonatomic, retain) GradientPlots *plots;
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
-@property (strong, nonatomic) NSMutableArray *minTemps;
-@property (strong, nonatomic) NSMutableArray *maxTemps;
-@property (strong, nonatomic) NSMutableArray *temps;
-
--(CPTTheme *)currentTheme;
-
-@property (nonatomic, readwrite) UIPopoverController *themePopoverController;
-
--(void)setupView;
--(void)themeChanged:(NSNotification *)notification;
+@property (nonatomic, strong) NSMutableArray *dates;
+@property (strong, nonatomic) NSMutableArray *plotsData;
 
 @end
 
 @implementation ChartsViewController
 
+
+#pragma mark -
+//TODO: remove
+- (IBAction)refreshChart:(UIButton *)sender {
+    CGRect frame = [self.view bounds];
+    self.plots.hostingView.frame = frame;
+    for (CPTPlot *p in self.plots.graph.allPlots)
+    {
+        [p reloadData];
+    }
+
+}
 
 #pragma mark - Load weather data
 
@@ -55,12 +59,6 @@ static double progressMax = 50.0;
     }];
 }
 
-- (NSArray *)temps {
-    if (!_temps) {
-        _temps = [[NSMutableArray alloc] init];
-    }
-    return _temps;
-}
 
 - (void)loadForecast:(void (^)())completion {
     
@@ -68,21 +66,9 @@ static double progressMax = 50.0;
     CLLocation *location = [self currentLocation];
     
 //    [[WeatherManager defaultManager] getForecastByLocation:location success:^(OWMObject <OWMForecastObject> *object) {
-    [[WeatherManager defaultManager] getForecastByCity:@"Kharkov" success:^(OWMObject <OWMForecastObject> *object) {
+    [[WeatherManager defaultManager] getForecastByCity:@"London" success:^(OWMObject <OWMForecastObject> *object) {
         wSelf.currentForecast = object;
-        
-        if (!_maxTemps) {
-            _maxTemps = [[NSMutableArray alloc] init];
-        }
-        int index = 0;
-        
-        for (id <OWMWeather> obj in self.currentForecast.list) {
-            CGFloat Y = [obj.main.temp_max doubleValue];
-            [_maxTemps addObject:[NSValue valueWithCGPoint:CGPointMake(index, Y)]];
-//            [_minTemps addObject:obj.main.temp_min];
-            index++;
-        }
-      
+  
         if (completion) {
             completion();
         }
@@ -93,6 +79,82 @@ static double progressMax = 50.0;
     }];
 }
 
+#pragma mark - Prossessing weather data 
+
+- (NSString *)stringFromTimeInterval:(NSTimeInterval) seconds withFormat:(NSString *) format{
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = format;
+    dateFormatter.locale = [NSLocale currentLocale];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
+    NSString *dateString = [[NSString alloc] initWithString:[dateFormatter stringFromDate:date]];
+    
+    return dateString;
+}
+
+// generates arrays of weatherObjects, grouped by date
+- (NSArray *)setDates {
+//TODO: implement sorting
+    if (!_dates) {
+        _dates = [[NSMutableArray alloc] init];
+    } else {
+        [_dates removeAllObjects];
+    }
+    OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
+    
+    if (firstObject) {
+        NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd.MM"];
+        NSMutableArray *sameDates = [[NSMutableArray alloc] init];
+        
+        for (id <OWMWeather> object in self.currentForecast.list) {
+            NSString *shortDate = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd.MM"];
+            
+            if ([shortDate isEqualToString:prevShortDate]) {
+                [sameDates addObject:object];
+            } else {
+                [_dates addObject:[sameDates copy]];
+                [sameDates removeAllObjects];
+                [sameDates addObject:object];
+                prevShortDate = shortDate;
+            }
+        }
+        
+        [_dates addObject:[sameDates copy]];
+    }
+    return [_dates copy];
+}
+
+
+// generates data for plots (array of array with 2 points) by date index (0 - today, 1 - tomorrow)
+- (void) generatePlotsDataForDatesIndex:(NSUInteger)dateIndex {
+    
+    if (!_plotsData) {
+        _plotsData = [[NSMutableArray alloc] init];
+    }
+//TODO: implement real hour for X instead index
+    int index = 0;
+    for (id <OWMWeather> obj in self.dates[dateIndex]) {
+        NSMutableArray *array = [NSMutableArray array];
+        CGFloat Y = [obj.main.temp_max doubleValue];
+        [array addObject:[NSValue valueWithCGPoint:CGPointMake(index, Y)]];
+        Y = [obj.main.temp_min doubleValue] - 5.0; // minus 5 because "temp" & "temp_min"("temp_max") mostly equals :(
+        [array addObject:[NSValue valueWithCGPoint:CGPointMake(index, Y)]];
+        [_plotsData addObject:array];
+        index++;
+    }
+}
+
+
+
+#pragma mark - Setters
+
+- (void)setCurrentForecast:(id<OWMForecastObject>)currentForecast {
+    
+    _currentForecast = currentForecast;
+    [self setDates];
+    [self generatePlotsDataForDatesIndex:1];
+    //[self.tableView reloadData];
+}
 
 #pragma mark - Location
 
@@ -124,15 +186,12 @@ static double progressMax = 50.0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    __weak typeof(self) wSelf = self;
     [self loadForecast:^{
-        self.scatterPlot = [[GradientPlot alloc] initWithHostingView:_graphHostingView andData:_maxTemps];
-        [self.scatterPlot initialisePlot];
+        wSelf.plots = [[GradientPlots alloc] initWithHostingView:wSelf.graphHostingView andData:wSelf.plotsData];
+        [wSelf.plots initialisePlots];
     }];
-    
-
 }
-
 
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -143,9 +202,6 @@ static double progressMax = 50.0;
                                             selector:@selector(appDidBecomeActive)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
-    
-
-    
 }
 
 
@@ -154,6 +210,16 @@ static double progressMax = 50.0;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+//TODO: move to Plots class?
+// reload plots after rotation
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    CGRect frame = [self.view bounds];
+    self.plots.hostingView.frame = frame;
+    for (CPTPlot *plot in self.plots.graph.allPlots)     {
+        [plot reloadData];
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -169,5 +235,6 @@ static double progressMax = 50.0;
     // Pass the selected object to the new view controller.
 }
 */
+
 
 @end

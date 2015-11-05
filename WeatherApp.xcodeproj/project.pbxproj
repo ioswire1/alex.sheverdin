@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04154AE71BEA2BC6009989FD /* GradientPlot.m in Sources */ = {isa = PBXBuildFile; fileRef = 04154AE61BEA2BC6009989FD /* GradientPlot.m */; settings = {ASSET_TAGS = (); }; };
+		04154AE71BEA2BC6009989FD /* GradientPlots.m in Sources */ = {isa = PBXBuildFile; fileRef = 04154AE61BEA2BC6009989FD /* GradientPlots.m */; settings = {ASSET_TAGS = (); }; };
 		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
 		04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AC9B551BE9126100D0D429 /* ChartsViewController.m */; settings = {ASSET_TAGS = (); }; };
@@ -38,8 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		04154AE51BEA2BC6009989FD /* GradientPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientPlot.h; sourceTree = "<group>"; };
-		04154AE61BEA2BC6009989FD /* GradientPlot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientPlot.m; sourceTree = "<group>"; };
+		04154AE51BEA2BC6009989FD /* GradientPlots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientPlots.h; sourceTree = "<group>"; };
+		04154AE61BEA2BC6009989FD /* GradientPlots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientPlots.m; sourceTree = "<group>"; };
 		044A6C481BCFD18E007B3FA4 /* FallBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FallBehavior.h; sourceTree = "<group>"; };
 		044A6C491BCFD18E007B3FA4 /* FallBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FallBehavior.m; sourceTree = "<group>"; };
 		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
@@ -98,8 +98,8 @@
 		04154AE81BEA2BD1009989FD /* Trends */ = {
 			isa = PBXGroup;
 			children = (
-				04154AE51BEA2BC6009989FD /* GradientPlot.h */,
-				04154AE61BEA2BC6009989FD /* GradientPlot.m */,
+				04154AE51BEA2BC6009989FD /* GradientPlots.h */,
+				04154AE61BEA2BC6009989FD /* GradientPlots.m */,
 			);
 			name = Trends;
 			sourceTree = "<group>";
@@ -400,7 +400,7 @@
 				04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */,
 				635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
-				04154AE71BEA2BC6009989FD /* GradientPlot.m in Sources */,
+				04154AE71BEA2BC6009989FD /* GradientPlots.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
 			);

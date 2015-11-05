@@ -17,8 +17,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tod-iE-KhL">
+                                <rect key="frame" x="142" y="20" width="49" height="30"/>
+                                <state key="normal" title="refresh"/>
+                                <connections>
+                                    <action selector="refreshChart:" destination="e1Q-GZ-VkL" eventType="touchUpInside" id="abd-ny-Fpm"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1jb-vq-tsQ" customClass="CPTGraphHostingView">
-                                <rect key="frame" x="0.0" y="28" width="320" height="540"/>
+                                <rect key="frame" x="0.0" y="63" width="320" height="505"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
