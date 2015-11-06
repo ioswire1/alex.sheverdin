@@ -9,13 +9,29 @@
 #import <Foundation/Foundation.h>
 #import <CorePlot-CocoaTouch.h>
 
+@protocol GradientPlotsDataSource <NSObject>
+
+@required
+
+- (NSUInteger)numberOfRecords;
+- (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index;
+- (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index;
+
+@end
+
 @interface GradientPlots : NSObject <CPTPlotDataSource>
+
+@property (nonatomic) CGFloat start; // timestamp
+@property (nonatomic) CGFloat length; // timestamp difference
+
+@property (nonatomic) CGFloat minTempereature;
+@property (nonatomic) CGFloat maxTempereature;
+
+@property (nonatomic, weak) IBOutlet CPTGraphHostingView *hostingView;
+@property (weak, nonatomic) IBOutlet id <GradientPlotsDataSource> dataSource;
 
 // init the plots in the provided hosting view with the provided data
 // The data array should contain array of NSValue objects each representing a CGPoint
--(id)initWithHostingView:(CPTGraphHostingView *)hostingView;
-
--(void)drawPlotsWithData:(NSMutableArray *)data;
-
+- (instancetype)initWithHostingView:(CPTGraphHostingView *)hostingView;
 
 @end

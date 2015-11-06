@@ -91,6 +91,19 @@
 
 @end
 
+typedef NS_ENUM(NSUInteger, DayTime) {
+    DayTimeMorning,
+    DayTimeDay,
+    DayTimeEvening,
+    DayTimeNigth
+};
+
+@interface OWMWeatherSysObject : OWMObject <OWMSysObject>
+
+@property (nonatomic, readonly) DayTime dayTime;
+
+@end
+
 
 @protocol OWMResponseObject <NSObject>
 
@@ -111,7 +124,7 @@
 @optional
 
 @property (nonatomic, copy, readonly) NSString *base;
-@property (nonatomic, strong, readonly) id <OWMSysObject> sys;
+@property (nonatomic, strong, readonly) OWMWeatherSysObject <OWMSysObject> *sys;
 
 
 @end

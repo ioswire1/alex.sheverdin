@@ -14,15 +14,14 @@
 
 static double progressMax = 50.0;
 
-@interface ChartsViewController ()
+@interface ChartsViewController () <GradientPlotsDataSource>
 
-@property (strong, nonatomic) IBOutlet CPTGraphHostingView *graphHostingView;
-@property (nonatomic, retain) GradientPlots *plots;
-
+@property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
-@property (nonatomic, strong) NSMutableArray *dates;
+
 @property (strong, nonatomic) NSMutableArray *plotsData;
+@property (strong, nonatomic) NSMutableArray *dates;
 
 @end
 
@@ -123,15 +122,18 @@ static double progressMax = 50.0;
     int index = 0;
     for (id <OWMWeather> obj in self.dates[dateIndex]) {
         NSMutableArray *array = [NSMutableArray array];
+//        CGFloat X = [[self stringFromTimeInterval:obj.dt.floatValue withFormat:@"H"] doubleValue];
+        NSRange range = NSMakeRange(11, 2);
+        CGFloat X = [[obj.dt_txt substringWithRange: range] doubleValue];
         CGFloat Y = [obj.main.temp_max doubleValue];
-        [array addObject:[NSValue valueWithCGPoint:CGPointMake(index, Y)]];
+        [array addObject:[NSValue valueWithCGPoint:CGPointMake(X, Y)]];
         Y = [obj.main.temp_min doubleValue] - 5.0; // minus 5 because "temp" & "temp_min"("temp_max") mostly equals :(
-        [array addObject:[NSValue valueWithCGPoint:CGPointMake(index, Y)]];
+        [array addObject:[NSValue valueWithCGPoint:CGPointMake(X, Y)]];
         [_plotsData addObject:array];
+        NSLog(@"%d, %.1f, %.1f, %@", index, X, Y, obj.dt_txt);
         index++;
     }
 }
-
 
 
 #pragma mark - Setters
@@ -166,11 +168,30 @@ static double progressMax = 50.0;
 //            nil;
 //        }];
         [self loadForecast:^{
-            [wSelf.plots drawPlotsWithData:wSelf.plotsData];
+//            [wSelf.plots drawPlotsWithData:wSelf.plotsData];
         }];
     }
 }
 
+
+#pragma mark - Datasource
+
+- (NSUInteger)numberOfRecords {
+    if (_dates) {
+        return [_dates[1] count];
+    }
+    return 0;
+}
+
+- (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index {
+
+    return [[_plotsData[1] objectAtIndex:0] CGPointValue];
+}
+
+- (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index {
+    
+    return [[_plotsData[1] objectAtIndex:1] CGPointValue];
+}
 
 #pragma mark - Lifecycle
 
@@ -179,8 +200,8 @@ static double progressMax = 50.0;
     [super viewDidLoad];
     __weak typeof(self) wSelf = self;
     [self loadForecast:^{
-        wSelf.plots = [[GradientPlots alloc] initWithHostingView:wSelf.graphHostingView];
-        [wSelf.plots drawPlotsWithData:wSelf.plotsData];
+//        wSelf.plots = [[GradientPlots alloc] initWithHostingView:wSelf.graphHostingView];
+//        [wSelf.plots drawPlotsWithData:wSelf.plotsData];
     }];
 }
 

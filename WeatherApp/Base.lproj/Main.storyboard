@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
-        <!--Charts View Controller-->
+        <!--Data Source-->
         <scene sceneID="zkj-Q6-iMy">
             <objects>
                 <viewController id="e1Q-GZ-VkL" customClass="ChartsViewController" sceneMemberID="viewController">
@@ -24,19 +24,25 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="bottom" secondItem="mCG-7e-egQ" secondAttribute="top" id="CnA-Ys-drf"/>
                             <constraint firstItem="1jb-vq-tsQ" firstAttribute="leading" secondItem="7hs-sn-T08" secondAttribute="leading" id="IV6-Pa-otN"/>
-                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="top" secondItem="kC6-NW-dpU" secondAttribute="bottom" id="a7h-Kq-oAA"/>
+                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="top" secondItem="kC6-NW-dpU" secondAttribute="bottom" id="UZa-uJ-lAx"/>
+                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="bottom" secondItem="mCG-7e-egQ" secondAttribute="top" id="tZH-Xe-cWd"/>
                             <constraint firstAttribute="trailing" secondItem="1jb-vq-tsQ" secondAttribute="trailing" id="xdV-Xp-t7H"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="graphHostingView" destination="1jb-vq-tsQ" id="ZN2-EB-rWy"/>
+                        <outlet property="plots" destination="OjG-vo-5TQ" id="8lu-hH-XVA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="096-ma-PtT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="OjG-vo-5TQ" customClass="GradientPlots">
+                    <connections>
+                        <outlet property="dataSource" destination="e1Q-GZ-VkL" id="0QE-iN-nyH"/>
+                        <outlet property="hostingView" destination="1jb-vq-tsQ" id="u6V-C3-gwg"/>
+                    </connections>
+                </customObject>
             </objects>
-            <point key="canvasLocation" x="443" y="459"/>
+            <point key="canvasLocation" x="494" y="471"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="2wI-Lz-XvQ">
