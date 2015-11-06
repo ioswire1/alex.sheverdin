@@ -11,25 +11,27 @@
 @interface GradientPlots ()
 
 @property (nonatomic, retain) NSMutableArray *graphData;
-
+@property (nonatomic, retain) CPTGraphHostingView *hostingView;
+@property (nonatomic, retain) CPTXYGraph *graph;
 @end
 
 @implementation GradientPlots
 
 
--(id)initWithHostingView:(CPTGraphHostingView *)hostingView andData:(NSMutableArray *)data {
-    
+-(id)initWithHostingView:(CPTGraphHostingView *)hostingView {
+
     self = [super init];
     if ( self != nil ) {
         self.hostingView = hostingView;
-        self.graphData = data;
-        self.graph = nil;
     }
     return self;
 }
 
--(void)initialisePlots {
-
+-(void)drawPlotsWithData:(NSMutableArray *)data {
+    
+    self.graph = nil;
+    self.graphData = data;
+    
     if ( (self.hostingView == nil) || (self.graphData == nil) ) {
         NSLog(@"Cannot initialise plots without hosting view or data.");
         return;
@@ -48,9 +50,8 @@
     //self.graph.backgroundColor = [UIColor blueColor].CGColor;
     
     self.hostingView.hostedGraph = self.graph;
-    
 
-    //[self.graph applyTheme:[CPTTheme themeNamed:kCPTDarkGradientTheme]];
+    [self.graph applyTheme:[CPTTheme themeNamed:kCPTStocksTheme]];
     
     //TODO: Create more line (text) styles for different plots
     CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];

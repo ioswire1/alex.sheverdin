@@ -11,15 +11,11 @@
 
 @interface GradientPlots : NSObject <CPTPlotDataSource>
 
-//TODO: move from interface
-@property (nonatomic, retain) CPTGraphHostingView *hostingView;
-@property (nonatomic, retain) CPTXYGraph *graph;
-
 // init the plots in the provided hosting view with the provided data
 // The data array should contain array of NSValue objects each representing a CGPoint
--(id)initWithHostingView:(CPTGraphHostingView *)hostingView andData:(NSMutableArray *)data;
+-(id)initWithHostingView:(CPTGraphHostingView *)hostingView;
 
--(void)initialisePlots;
+-(void)drawPlotsWithData:(NSMutableArray *)data;
 
 
 @end

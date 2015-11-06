@@ -29,18 +29,6 @@ static double progressMax = 50.0;
 @implementation ChartsViewController
 
 
-#pragma mark -
-//TODO: remove
-- (IBAction)refreshChart:(UIButton *)sender {
-    CGRect frame = [self.view bounds];
-    self.plots.hostingView.frame = frame;
-    for (CPTPlot *p in self.plots.graph.allPlots)
-    {
-        [p reloadData];
-    }
-
-}
-
 #pragma mark - Load weather data
 
 - (void)loadWeather:(void (^)())completion {
@@ -65,14 +53,13 @@ static double progressMax = 50.0;
     __weak typeof(self) wSelf = self;
     CLLocation *location = [self currentLocation];
     
-//    [[WeatherManager defaultManager] getForecastByLocation:location success:^(OWMObject <OWMForecastObject> *object) {
-    [[WeatherManager defaultManager] getForecastByCity:@"London" success:^(OWMObject <OWMForecastObject> *object) {
+    [[WeatherManager defaultManager] getForecastByLocation:location success:^(OWMObject <OWMForecastObject> *object) {
+//    [[WeatherManager defaultManager] getForecastByCity:@"London" success:^(OWMObject <OWMForecastObject> *object) {
         wSelf.currentForecast = object;
   
         if (completion) {
             completion();
         }
-
         
     } failure:^(NSError *error) {
         // TODO: implementation
@@ -131,6 +118,7 @@ static double progressMax = 50.0;
     if (!_plotsData) {
         _plotsData = [[NSMutableArray alloc] init];
     }
+    [_plotsData removeAllObjects];
 //TODO: implement real hour for X instead index
     int index = 0;
     for (id <OWMWeather> obj in self.dates[dateIndex]) {
@@ -171,13 +159,16 @@ static double progressMax = 50.0;
 
 - (void)locationDidChange:(NSNotification *)notification {
 
-//    if (notification.object) {
-//        __weak typeof(self) wSelf = self;
+    if (notification.object) {
+        NSLog(@"Location Changed!");
+        __weak typeof(self) wSelf = self;
 //        [self loadWeather:^{
 //            nil;
 //        }];
-//        [self loadForecast:nil];
-//    }
+        [self loadForecast:^{
+            [wSelf.plots drawPlotsWithData:wSelf.plotsData];
+        }];
+    }
 }
 
 
@@ -188,8 +179,8 @@ static double progressMax = 50.0;
     [super viewDidLoad];
     __weak typeof(self) wSelf = self;
     [self loadForecast:^{
-        wSelf.plots = [[GradientPlots alloc] initWithHostingView:wSelf.graphHostingView andData:wSelf.plotsData];
-        [wSelf.plots initialisePlots];
+        wSelf.plots = [[GradientPlots alloc] initWithHostingView:wSelf.graphHostingView];
+        [wSelf.plots drawPlotsWithData:wSelf.plotsData];
     }];
 }
 
@@ -210,16 +201,6 @@ static double progressMax = 50.0;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-//TODO: move to Plots class?
-// reload plots after rotation
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    CGRect frame = [self.view bounds];
-    self.plots.hostingView.frame = frame;
-    for (CPTPlot *plot in self.plots.graph.allPlots)     {
-        [plot reloadData];
-    }
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
