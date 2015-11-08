@@ -33,5 +33,6 @@
 // init the plots in the provided hosting view with the provided data
 // The data array should contain array of NSValue objects each representing a CGPoint
 - (instancetype)initWithHostingView:(CPTGraphHostingView *)hostingView;
+- (void) redrawPlots;
 
 @end

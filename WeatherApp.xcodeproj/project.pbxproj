@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04154AE71BEA2BC6009989FD /* GradientPlots.m in Sources */ = {isa = PBXBuildFile; fileRef = 04154AE61BEA2BC6009989FD /* GradientPlots.m */; settings = {ASSET_TAGS = (); }; };
 		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; settings = {ASSET_TAGS = (); }; };
-		04515F381BECE6AB007EAF41 /* LinesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04515F371BECE6AB007EAF41 /* LinesViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
 		04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AC9B551BE9126100D0D429 /* ChartsViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */; settings = {ASSET_TAGS = (); }; };
@@ -43,8 +42,6 @@
 		04154AE61BEA2BC6009989FD /* GradientPlots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientPlots.m; sourceTree = "<group>"; };
 		044A6C481BCFD18E007B3FA4 /* FallBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FallBehavior.h; sourceTree = "<group>"; };
 		044A6C491BCFD18E007B3FA4 /* FallBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FallBehavior.m; sourceTree = "<group>"; };
-		04515F361BECE6AB007EAF41 /* LinesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinesViewController.h; sourceTree = "<group>"; };
-		04515F371BECE6AB007EAF41 /* LinesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinesViewController.m; sourceTree = "<group>"; };
 		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
 		04550CB71BC811CE00B07242 /* UIImage+Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Picker.m"; sourceTree = "<group>"; };
 		04AC9B541BE9126100D0D429 /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
@@ -125,8 +122,6 @@
 				04B429201BD121A600685BB8 /* ViewController.m */,
 				04AC9B541BE9126100D0D429 /* ChartsViewController.h */,
 				04AC9B551BE9126100D0D429 /* ChartsViewController.m */,
-				04515F361BECE6AB007EAF41 /* LinesViewController.h */,
-				04515F371BECE6AB007EAF41 /* LinesViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -398,7 +393,6 @@
 			files = (
 				04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */,
 				044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */,
-				04515F381BECE6AB007EAF41 /* LinesViewController.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				04B429211BD121A600685BB8 /* ViewController.m in Sources */,
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,

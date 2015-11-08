@@ -17,8 +17,34 @@ typedef NS_ENUM(NSUInteger, SelectorInferredImplType) {
     SelectorInferredImplTypeSet = 2
 };
 
-@implementation OWMObject
-{
+
+@interface OWMWeatherSysObject ()
+
+@property (nonatomic, readwrite) DayTime dayTime;
+
+@end
+
+@implementation OWMWeatherSysObject
+
+-(DayTime)dayTime {
+        DayTime daytime;
+        NSDate *now = [NSDate date];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:now];
+        NSInteger hour = [components hour];
+        NSInteger minute = [components minute];
+        if (hour > 4 && hour < 11) {
+            daytime = DayTimeMorning;
+        } else
+            daytime = DayTimeEvening;
+    
+        return daytime;
+}
+
+@end
+
+@implementation OWMObject {
+    
     NSMutableDictionary *_dictionary;
 }
 
@@ -26,8 +52,7 @@ typedef NS_ENUM(NSUInteger, SelectorInferredImplType) {
 
 static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
+- (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeObject:_dictionary forKey:kOWMObjectContentKey];
 }
 
@@ -37,8 +62,7 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
-    if (self = [super init])
-    {
+    if (self = [super init]) {
         _dictionary = [decoder decodeObjectForKey:kOWMObjectContentKey];
     }
     

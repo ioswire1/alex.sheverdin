@@ -9,10 +9,12 @@
 #import "ChartsViewController.h"
 #import "WeatherManager.h"
 #import "AppDelegate.h"
-
 #import "GradientPlots.h"
 
 static double progressMax = 50.0;
+
+#define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
+
 
 @interface ChartsViewController () <GradientPlotsDataSource>
 
@@ -136,6 +138,37 @@ static double progressMax = 50.0;
 }
 
 
+- (void)setGradient {
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    OWMWeatherSysObject *sys = (OWMWeatherSysObject *)self.currentWeather.sys;
+    DayTime daytime = [sys dayTime];
+    switch (daytime) {
+        case DayTimeMorning:
+            gradient.frame = self.view.bounds;
+            gradient.colors = @[UIColorFromRGB(0xf8f3c9), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xd3808a), UIColorFromRGB(0x55e75), UIColorFromRGB(0x3a4f6e)];
+            gradient.locations = @[@(0.0), @(0.2), @(0.34), @(0.7), @(1.0)];
+            break;
+        case DayTimeDay:
+            gradient.frame = self.view.bounds;
+            gradient.colors = @[UIColorFromRGB(0x6dcff6), UIColorFromRGB(0x0daaed), UIColorFromRGB(0x0771c7), UIColorFromRGB(0x012d78)];
+            gradient.locations = @[@(0.0), @(0.35), @(0.6), @(1.0)];
+            break;
+        case DayTimeEvening:
+            gradient.frame = self.view.bounds;
+            gradient.colors = @[UIColorFromRGB(0xb47c4b), UIColorFromRGB(0xac6049), UIColorFromRGB(0x432a51), UIColorFromRGB(0x110724), UIColorFromRGB(0x150c1f)];
+            gradient.locations = @[@(0.0), @(0.11), @(0.36), @(0.7), @(1.0)];
+            break;
+        case DayTimeNigth:
+            gradient.frame = self.view.bounds;
+            gradient.colors = @[UIColorFromRGB(0x387d7e), UIColorFromRGB(0x154e59), UIColorFromRGB(0x05111d), UIColorFromRGB(0x02020c)];
+            gradient.locations = @[@(0.0), @(0.14), @(0.55), @(1.0)];
+            break;
+        default:
+            break;
+    }
+    [self.view.layer insertSublayer:gradient atIndex:0];
+}
+
 #pragma mark - Setters
 
 - (void)setCurrentForecast:(id<OWMForecastObject>)currentForecast {
@@ -160,15 +193,18 @@ static double progressMax = 50.0;
 }
 
 - (void)locationDidChange:(NSNotification *)notification {
-
     if (notification.object) {
         NSLog(@"Location Changed!");
         __weak typeof(self) wSelf = self;
-//        [self loadWeather:^{
-//            nil;
-//        }];
-        [self loadForecast:^{
-//            [wSelf.plots drawPlotsWithData:wSelf.plotsData];
+        [self loadWeather:^{
+            [self setGradient];
+        }];
+        [self loadForecast:^{//
+            wSelf.plots.start = 0.0;
+            wSelf.plots.length = [_plotsData count];
+            wSelf.plots.minTempereature = -20.0;
+            wSelf.plots.maxTempereature = 20.0;
+            [wSelf.plots redrawPlots];
         }];
     }
 }
@@ -185,12 +221,12 @@ static double progressMax = 50.0;
 
 - (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index {
 
-    return [[_plotsData[1] objectAtIndex:0] CGPointValue];
+    return [[_plotsData[index] objectAtIndex:0] CGPointValue];
 }
 
 - (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index {
     
-    return [[_plotsData[1] objectAtIndex:1] CGPointValue];
+    return [[_plotsData[index] objectAtIndex:1] CGPointValue];
 }
 
 #pragma mark - Lifecycle
@@ -198,10 +234,14 @@ static double progressMax = 50.0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setGradient];
     __weak typeof(self) wSelf = self;
+    [self loadWeather:^{
+       
+    }];
+    
     [self loadForecast:^{
-//        wSelf.plots = [[GradientPlots alloc] initWithHostingView:wSelf.graphHostingView];
-//        [wSelf.plots drawPlotsWithData:wSelf.plotsData];
+
     }];
 }
 
