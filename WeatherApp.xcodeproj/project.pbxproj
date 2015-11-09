@@ -95,13 +95,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		04154AE81BEA2BD1009989FD /* Trends */ = {
+		04154AE81BEA2BD1009989FD /* Charts */ = {
 			isa = PBXGroup;
 			children = (
 				04154AE51BEA2BC6009989FD /* GradientPlots.h */,
 				04154AE61BEA2BC6009989FD /* GradientPlots.m */,
 			);
-			name = Trends;
+			name = Charts;
 			sourceTree = "<group>";
 		};
 		04550CE31BCC0B3A00B07242 /* CircleView */ = {
@@ -187,7 +187,7 @@
 		CE69C1E91B77954E005CC71D /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				04154AE81BEA2BD1009989FD /* Trends */,
+				04154AE81BEA2BD1009989FD /* Charts */,
 				CE93C4751B822C5D0098BA9B /* Model */,
 				04550CE31BCC0B3A00B07242 /* CircleView */,
 				048E1B681BDE2DAE00707BDD /* Animations */,

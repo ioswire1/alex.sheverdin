@@ -17,18 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1jb-vq-tsQ" customClass="CPTGraphHostingView">
-                                <rect key="frame" x="0.0" y="219" width="320" height="349"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crR-bJ-Ne0" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="202" width="320" height="366"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="top" secondItem="kC6-NW-dpU" secondAttribute="bottom" constant="199" id="NY7-2O-x5z"/>
-                            <constraint firstAttribute="trailing" secondItem="1jb-vq-tsQ" secondAttribute="trailing" id="OZ1-N6-Ot6"/>
-                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="bottom" secondItem="mCG-7e-egQ" secondAttribute="top" id="o9v-VW-EFd"/>
-                            <constraint firstItem="1jb-vq-tsQ" firstAttribute="leading" secondItem="7hs-sn-T08" secondAttribute="leading" id="vC8-01-4sB"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="plots" destination="OjG-vo-5TQ" id="8lu-hH-XVA"/>
@@ -38,7 +32,7 @@
                 <customObject id="OjG-vo-5TQ" customClass="GradientPlots">
                     <connections>
                         <outlet property="dataSource" destination="e1Q-GZ-VkL" id="0QE-iN-nyH"/>
-                        <outlet property="hostingView" destination="1jb-vq-tsQ" id="u6V-C3-gwg"/>
+                        <outlet property="hostingView" destination="crR-bJ-Ne0" id="hws-gb-usl"/>
                     </connections>
                 </customObject>
             </objects>

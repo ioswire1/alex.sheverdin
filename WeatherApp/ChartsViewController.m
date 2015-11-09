@@ -127,6 +127,7 @@ static double progressMax = 50.0;
 //        CGFloat X = [[self stringFromTimeInterval:obj.dt.floatValue withFormat:@"H"] doubleValue];
         NSRange range = NSMakeRange(11, 2);
         CGFloat X = [[obj.dt_txt substringWithRange: range] doubleValue];
+//        CGFloat X = [obj.dt doubleValue];
         CGFloat Y = [obj.main.temp_max doubleValue];
         [array addObject:[NSValue valueWithCGPoint:CGPointMake(X, Y)]];
         Y = [obj.main.temp_min doubleValue] - 5.0; // minus 5 because "temp" & "temp_min"("temp_max") mostly equals :(
@@ -134,6 +135,38 @@ static double progressMax = 50.0;
         [_plotsData addObject:array];
         NSLog(@"%d, %.1f, %.1f, %@", index, X, Y, obj.dt_txt);
         index++;
+    }
+}
+
+static double const axisTopBottomPadding = 0.05;
+
+- (void)setScaleMinMax {
+    
+    float xmax, xmin, ymin1, ymax1, ymin2, ymax2;
+    xmax = ymax1 = ymax2 = - MAXFLOAT;
+    xmin = ymin1 = ymin2 = MAXFLOAT;
+
+    if (_plotsData) {
+        for (NSArray *array in _plotsData) {
+            CGPoint point1 = [array[0] CGPointValue];
+//            CGFloat x = point1.x;
+//            if (x < xmin) xmin = x;
+//            if (x > xmax) xmax = x;
+            CGFloat y1 = point1.y;
+            if (y1 < ymin1) ymin1 = y1;
+            if (y1 > ymax1) ymax1 = y1;
+            
+            CGPoint point2 = [array[1] CGPointValue];
+            CGFloat y2 = point2.y;
+            if (y2 < ymin2) ymin2 = y2;
+            if (y2 > ymax2) ymax2 = y2;
+        }
+
+//        _plots.start = xmin;
+//        _plots.length = xmax - xmin;
+        
+        _plots.minTempereature = ymin2;// - ymin2 * axisTopBottomPadding;
+        _plots.maxTempereature = ymax1 + ymax1 * axisTopBottomPadding;
     }
 }
 
@@ -145,8 +178,8 @@ static double progressMax = 50.0;
     switch (daytime) {
         case DayTimeMorning:
             gradient.frame = self.view.bounds;
-            gradient.colors = @[UIColorFromRGB(0xf8f3c9), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xd3808a), UIColorFromRGB(0x55e75), UIColorFromRGB(0x3a4f6e)];
-            gradient.locations = @[@(0.0), @(0.2), @(0.34), @(0.7), @(1.0)];
+            gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
+            gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
             break;
         case DayTimeDay:
             gradient.frame = self.view.bounds;
@@ -202,8 +235,9 @@ static double progressMax = 50.0;
         [self loadForecast:^{//
             wSelf.plots.start = 0.0;
             wSelf.plots.length = [_plotsData count];
-            wSelf.plots.minTempereature = -20.0;
-            wSelf.plots.maxTempereature = 20.0;
+            [wSelf setScaleMinMax];
+//            wSelf.plots.minTempereature = -20.0;
+//            wSelf.plots.maxTempereature = 20.0;
             [wSelf.plots redrawPlots];
         }];
     }

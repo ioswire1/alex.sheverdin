@@ -13,6 +13,10 @@
 
 @interface WeatherManager : NSObject
 
+@property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
+@property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
+
+
 + (instancetype)defaultManager;
 
 - (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
@@ -20,7 +24,7 @@
 - (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
 - (void)getForecastByCity:(NSString *)city success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
 
-@property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
-@property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
+- (NSArray *) forecast3hFromDate:(NSDate *) date count: (NSUInteger) count;
+- (NSArray *) forecast3hFromDate:(NSDate *) fromDate toDate: (NSDate *) toDate;
 
 @end
