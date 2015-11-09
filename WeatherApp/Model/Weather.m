@@ -8,6 +8,7 @@
 
 #import "Weather.h"
 #import <objc/runtime.h>
+#import "NSObject+WICUtils.h"
 
 // used internally by the category impl
 //TODO: rename
@@ -85,13 +86,13 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
     return [[self alloc] initWithJsonDictionary:dict];
 }
 
-+ (instancetype)graphObjectWrappingObject:(id)originalObject {
++ (instancetype)graphObjectWrappingObject:(id)originalObject originClass:(Class)originClass {
     // non-array and non-dictionary case, returns original object
     id result = originalObject;
     
     // array and dictionary wrap
     if ([originalObject isKindOfClass:[NSDictionary class]]) {
-        result = [[OWMObject alloc] initWithJsonDictionary: originalObject];
+        result = [[originClass alloc] initWithJsonDictionary: originalObject];
     } else if ([originalObject isKindOfClass:[NSArray class]]) {
         result = [[OWMArrayObject alloc] initWithJsonArray:originalObject];
     }
@@ -103,7 +104,9 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 - (id)graphObjectifyAtKey:(id)key {
     id object = [_dictionary objectForKey:key];
     // make certain it is FBObjectGraph-ified
-    id possibleReplacement = [OWMObject graphObjectWrappingObject:object];
+
+    Class originClass = [self classForPropertyName:key];
+    id possibleReplacement = [OWMObject graphObjectWrappingObject:object originClass:originClass];
     if (object != possibleReplacement) {
         // and if not-yet, replace the original with the wrapped object
         [_dictionary setObject:possibleReplacement forKey:key];
@@ -127,6 +130,14 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 
 - (id)objectForKey:(id)key {
     return [self graphObjectifyAtKey:key];
+}
+
+- (Class)classForPropertyName:(NSString *)propertyName {
+    
+    NSDictionary *classPropertyList = [[self class] classPropertyList];
+    NSString *className = classPropertyList[propertyName];
+    
+    return className ? NSClassFromString(className) : [OWMObject class];
 }
 
 - (NSEnumerator *)keyEnumerator {
@@ -287,7 +298,7 @@ static NSString *const kOWMObjectContentKey = @"dictionaryContent";
 - (id)graphObjectifyAtIndex:(NSUInteger)index {
     id object = [_array objectAtIndex:index];
     // make certain it is FBObjectGraph-ified
-    id possibleReplacement = [OWMObject graphObjectWrappingObject:object];
+    id possibleReplacement = [OWMObject graphObjectWrappingObject:object originClass:[OWMObject class]];
     if (object != possibleReplacement) {
         // and if not-yet, replace the original with the wrapped object
         [_array replaceObjectAtIndex:index withObject:possibleReplacement];

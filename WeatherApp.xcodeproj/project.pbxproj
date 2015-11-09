@@ -14,6 +14,7 @@
 		04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */; settings = {ASSET_TAGS = (); }; };
 		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
 		04B429211BD121A600685BB8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B429201BD121A600685BB8 /* ViewController.m */; settings = {ASSET_TAGS = (); }; };
+		04CA7ECF1BF0A0A40041350D /* NSObject+WICUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA7ECE1BF0A0A40041350D /* NSObject+WICUtils.m */; settings = {ASSET_TAGS = (); }; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
 		270D2FF70C22C7ACF78225BC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6FF7968807FCA3E7085C27C /* libPods.a */; };
 		635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 635EDD771BDBFBC6008D48C6 /* UIImage+ImageEffects.m */; settings = {ASSET_TAGS = (); }; };
@@ -52,6 +53,8 @@
 		04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWeatherMap.m; sourceTree = "<group>"; };
 		04B4291F1BD121A600685BB8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		04B429201BD121A600685BB8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		04CA7ECD1BF0A0A40041350D /* NSObject+WICUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+WICUtils.h"; path = "Model/NSObject+WICUtils.h"; sourceTree = "<group>"; };
+		04CA7ECE1BF0A0A40041350D /* NSObject+WICUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+WICUtils.m"; path = "Model/NSObject+WICUtils.m"; sourceTree = "<group>"; };
 		04FE0E171BA6D2D1005B061F /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		04FE0E181BA6D2D1005B061F /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		635EDD761BDBFBC6008D48C6 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
@@ -133,6 +136,8 @@
 				CE45718B1B83D1C300323C90 /* Weather.m */,
 				04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */,
 				04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */,
+				04CA7ECD1BF0A0A40041350D /* NSObject+WICUtils.h */,
+				04CA7ECE1BF0A0A40041350D /* NSObject+WICUtils.m */,
 			);
 			name = WeatherService;
 			sourceTree = "<group>";
@@ -401,6 +406,7 @@
 				635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
 				04154AE71BEA2BC6009989FD /* GradientPlots.m in Sources */,
+				04CA7ECF1BF0A0A40041350D /* NSObject+WICUtils.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
 			);
