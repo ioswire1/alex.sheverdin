@@ -8,6 +8,8 @@
 
 #import "GradientPlots.h"
 
+#define CGColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
+
 @interface GradientPlots ()
 
 @property (nonatomic, strong) CPTXYGraph *graph;
@@ -48,66 +50,78 @@
     [self setup];
 }
 
+static double const invisibleStartLengthX = 14.0;
+static double const invisibleEndLengthX = 9.0;
 - (CPTXYGraph *)graph {
     if (!_graph) {
         CGRect frame = [self.hostingView bounds];
         _graph = [[CPTXYGraph alloc] initWithFrame:frame];
     }
+    _graph.paddingTop = 0.0f;
+    _graph.paddingRight = 0.0f;
+    _graph.paddingBottom = 0.0f;
+    _graph.paddingLeft = 0.0f;
+   
     _graph.plotAreaFrame.paddingTop = 0.0f;
     _graph.plotAreaFrame.paddingRight = 0.0f;
     _graph.plotAreaFrame.paddingBottom = 0.0f;
     _graph.plotAreaFrame.paddingLeft = 0.0f;
 
-    //TODO: Create more line (text) styles for different plots
     CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
     lineStyle.lineColor = [CPTColor whiteColor];
-    lineStyle.lineWidth = 2.0f;
+    lineStyle.lineWidth = 1.0f;
     
     CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
     textStyle.fontName = @"Helvetica";
-    textStyle.fontSize = 14;
+    textStyle.fontSize = 11;
     textStyle.color = [CPTColor whiteColor];
-
 
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)_graph.axisSet;
     axisSet.zPosition = 1;
 
-    CPTMutableLineStyle *lineStyleNoLine = [CPTMutableLineStyle lineStyle];
-    lineStyleNoLine.lineWidth = 0.0f;
-
-    axisSet.xAxis.axisLineStyle = lineStyleNoLine;
-    axisSet.xAxis.majorTickLineStyle = lineStyleNoLine;
-    axisSet.xAxis.minorTickLineStyle = lineStyleNoLine;
+    axisSet.xAxis.axisLineStyle = nil;
+    axisSet.xAxis.majorTickLineStyle = nil;
+    axisSet.xAxis.minorTickLineStyle = nil;
+    
+    NSTimeInterval threeHour = 3 * 60 * 60;
+    axisSet.xAxis.majorIntervalLength = @(threeHour);
     axisSet.xAxis.labelTextStyle = textStyle;
-    axisSet.xAxis.labelOffset = 0.0f;
+    axisSet.xAxis.labelOffset = -2.0f;
     axisSet.xAxis.tickLabelDirection = CPTSignPositive;
-    axisSet.xAxis.orthogonalPosition = @(self.minTempereature);// @(0.0);
+    axisSet.xAxis.orthogonalPosition = @(self.minTempereature);
     
-//    CPTPlotRange *exclusiveRangeX = [[CPTPlotRange alloc] initWithLocationDecimal:[@(0.0) decimalValue] lengthDecimal:[@(0.1) decimalValue]];
-//    axisSet.xAxis.labelExclusionRanges = @[exclusiveRangeX];
-//    
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    dateFormatter.dateFormat = @"hh:mm";
-//    dateFormatter.locale = [NSLocale currentLocale];
-//    axisSet.xAxis.labelFormatter = dateFormatter;
-    
-    axisSet.yAxis.axisLineStyle = lineStyleNoLine;
+    CPTPlotRange *exclusiveRangeX = [[CPTPlotRange alloc] initWithLocation:@(self.start) length:@(100)];
+    axisSet.xAxis.labelExclusionRanges = @[exclusiveRangeX];
+
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init] ;
+    dateFormatter.dateFormat = @"H:mm";
+    dateFormatter.locale = [NSLocale currentLocale];
+    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
+//    NSDate *refDate = [NSDate dateWithTimeIntervalSince1970:self.start];
+//    timeFormatter.referenceDate = refDate;
+    axisSet.xAxis.labelFormatter = timeFormatter;
+
+    axisSet.yAxis.axisLineStyle = nil;
     axisSet.yAxis.majorTickLineStyle = lineStyle;
     axisSet.yAxis.minorTickLineStyle = lineStyle;
     axisSet.yAxis.labelTextStyle = textStyle;
     axisSet.yAxis.labelOffset = 2.0f;
-    axisSet.yAxis.majorIntervalLength = @(5.0f);
+    axisSet.yAxis.majorIntervalLength = @(20.0f);
     axisSet.yAxis.minorTicksPerInterval = 4;
-    axisSet.yAxis.minorTickLength = 5.0f;
-    axisSet.yAxis.majorTickLength = 7.0f;
+    axisSet.yAxis.minorTickLength = 3.0f;
+    axisSet.yAxis.majorTickLength = 5.0f;
     axisSet.yAxis.tickDirection = CPTSignPositive;
     axisSet.yAxis.tickLabelDirection = CPTSignPositive;
-//    CPTPlotRange *exclusiveRangeY = [[CPTPlotRange alloc] initWithLocationDecimal:[@(-20.0) decimalValue] lengthDecimal:[@(1.0) decimalValue]];
-//    axisSet.yAxis.labelExclusionRanges = @[exclusiveRangeY];
+    axisSet.yAxis.orthogonalPosition = @(self.start + 600);// @(0.0);
+    
+    CPTPlotRange *exclusiveRangeYstart = [[CPTPlotRange alloc] initWithLocation:@(self.minTempereature) length:@(invisibleStartLengthX)];
+    CPTPlotRange *exclusiveRangeYend = [[CPTPlotRange alloc] initWithLocation:@(self.maxTempereature - invisibleEndLengthX) length:@(invisibleEndLengthX)];
+    axisSet.yAxis.labelExclusionRanges = @[exclusiveRangeYstart, exclusiveRangeYend];
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    axisSet.xAxis.labelFormatter = formatter;
+    [formatter setPositivePrefix:@"+"];
     axisSet.yAxis.labelFormatter = formatter;
     
     return _graph;
@@ -147,12 +161,15 @@ static NSString *const kMaxPlotIdentifier = @"MaxTempPlot";
         _maxPlot.identifier = kMaxPlotIdentifier;
         _maxPlot.dataSource = self;
         _maxPlot.interpolation = CPTScatterPlotInterpolationCurved;
+        CPTMutableLineStyle *lineStyleNoLine = [CPTMutableLineStyle lineStyle];
+        lineStyleNoLine.lineWidth = 0.0f;
+        _maxPlot.dataLineStyle = nil;
         
-        CPTGradient *areaGradient =[CPTGradient gradientWithBeginningColor:[CPTColor redColor] endingColor:[CPTColor clearColor]];
-        areaGradient.angle =-90.0f;
-        CPTFill *areaGradientFill =[CPTFill fillWithGradient:areaGradient];
+        CPTGradient *areaGradient =[CPTGradient gradientWithBeginningColor:[CPTColor colorWithCGColor:CGColorFromRGB(0xFF050A)] endingColor:[CPTColor clearColor]];
+        areaGradient.angle = - 90.0f;
+        CPTFill *areaGradientFill = [CPTFill fillWithGradient:areaGradient];
         _maxPlot.areaFill = areaGradientFill;
-        _maxPlot.areaBaseValue = @(-20.0);
+        _maxPlot.areaBaseValue = @(self.minTempereature);
     }
     return _maxPlot;
 }
@@ -160,17 +177,25 @@ static NSString *const kMaxPlotIdentifier = @"MaxTempPlot";
 static NSString *const kMinPlotIdentifier = @"MinTempPlot";
 
 - (CPTScatterPlot *)minPlot {
+    
     if (!_minPlot) {
+
         _minPlot = [[CPTScatterPlot alloc] init];
         _minPlot.identifier = kMinPlotIdentifier;
         _minPlot.dataSource = self;
         _minPlot.interpolation = CPTScatterPlotInterpolationCurved;
+        _minPlot.dataLineStyle = nil;
         
-        CPTGradient *areaGradient =[CPTGradient gradientWithBeginningColor:[CPTColor blueColor] endingColor:[CPTColor clearColor]];
-        areaGradient.angle =-90.0f;
-        CPTFill *areaGradientFill =[CPTFill fillWithGradient:areaGradient];
+        CPTGradient *areaGradient =[CPTGradient gradientWithBeginningColor:[CPTColor colorWithCGColor:CGColorFromRGB(0x03A2FB)] endingColor:[CPTColor colorWithCGColor:CGColorFromRGB(0x64BFFB)]];
+        areaGradient.angle = - 90.0f;
+        CPTFill *areaGradientFill = [CPTFill fillWithGradient:areaGradient];
         _minPlot.areaFill = areaGradientFill;
-        _minPlot.areaBaseValue = @(-20.0);
+        _minPlot.areaBaseValue = @(self.minTempereature);
+//TODO: REMOVE - it's for debugging
+//        CPTPlotSymbol *plotSymbol = [CPTPlotSymbol snowPlotSymbol];
+//        plotSymbol.size = CGSizeMake(8.0, 8.0);
+//        _maxPlot.plotSymbol = plotSymbol;
+
     }
     return _minPlot;
 }
@@ -187,19 +212,12 @@ static NSString *const kMinPlotIdentifier = @"MinTempPlot";
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index {
     
     CGPoint point = CGPointZero;
-    
-    if ([plot.identifier isEqual:kMaxPlotIdentifier]) {
+   
+    if (plot == self.maxPlot)
         point = [self.dataSource valueForMaxTemperatureAtIndex:index];
-    } else if ([plot.identifier isEqual:kMinPlotIdentifier]){
+    if (plot == self.minPlot)
         point = [self.dataSource valueForMinTemperatureAtIndex:index];
-    }
-  
-    
-//    if (plot == self.maxPlot)
-//        point = [self.dataSource valueForMaxTemperatureAtIndex:index];
-//    if (plot == self.minPlot)
-//        point = [self.dataSource valueForMinTemperatureAtIndex:index];
-    NSLog(@"en:%lu  ind:%lu  x:%.2f, y:%.2f", (unsigned long)fieldEnum, index, point.x, point.y);
+//    NSLog(@"en:%lu  ind:%lu  x:%.2f, y:%.2f", (unsigned long)fieldEnum, index, point.x, point.y);
     return fieldEnum == CPTScatterPlotFieldX ? @(point.x) : @(point.y);
 }
 

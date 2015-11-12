@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
 @property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
+@property (nonatomic, strong) NSArray <__kindof OWMObject *> *dayForecast;
 
 
 + (instancetype)defaultManager;
@@ -24,7 +25,7 @@
 - (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
 - (void)getForecastByCity:(NSString *)city success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
 
-- (NSArray *) forecast3hFromDate:(NSDate *) date count: (NSUInteger) count;
-- (NSArray *) forecast3hFromDate:(NSDate *) fromDate toDate: (NSDate *) toDate;
+- (NSArray <__kindof OWMObject *> *) forecast3hForOneDayFromInterval:(NSTimeInterval) secondsFrom;
+- (NSArray <__kindof OWMObject *> *) forecast3hForOneDayFromNow;
 
 @end

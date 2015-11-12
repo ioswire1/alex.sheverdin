@@ -119,6 +119,24 @@
     
 }
 
+- (NSArray<OWMObject *> *)forecast3hForOneDayFromInterval:(NSTimeInterval)secondsFrom {
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    if (self.lastWeather) {
+        NSTimeInterval secondsPerDay = 24 * 60 * 60;
+        
+        for (id <OWMWeather> object in self.lastForecast.list) {
+
+            if (object.dt.floatValue > secondsFrom && object.dt.floatValue < secondsFrom + secondsPerDay) {
+                [resultArray addObject:object];
+            }
+        }
+    }
+    return [resultArray copy];
+}
+
+-(NSArray<OWMObject *> *)forecast3hForOneDayFromNow {
+    return [self forecast3hForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+}
 
 #pragma mark - Memento Design Pattern
 

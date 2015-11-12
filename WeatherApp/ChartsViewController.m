@@ -11,8 +11,6 @@
 #import "AppDelegate.h"
 #import "GradientPlots.h"
 
-static double progressMax = 50.0;
-
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
 
@@ -21,9 +19,6 @@ static double progressMax = 50.0;
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
-
-@property (strong, nonatomic) NSMutableArray *plotsData;
-@property (strong, nonatomic) NSMutableArray *dates;
 
 @end
 
@@ -80,94 +75,37 @@ static double progressMax = 50.0;
     return dateString;
 }
 
-// generates arrays of weatherObjects, grouped by date
-- (NSArray *)setDates {
-//TODO: implement sorting
-    if (!_dates) {
-        _dates = [[NSMutableArray alloc] init];
-    } else {
-        [_dates removeAllObjects];
-    }
-    OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
-    
-    if (firstObject) {
-        NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd.MM"];
-        NSMutableArray *sameDates = [[NSMutableArray alloc] init];
-        
-        for (id <OWMWeather> object in self.currentForecast.list) {
-            NSString *shortDate = [self stringFromTimeInterval:object.dt.floatValue withFormat:@"dd.MM"];
-            
-            if ([shortDate isEqualToString:prevShortDate]) {
-                [sameDates addObject:object];
-            } else {
-                [_dates addObject:[sameDates copy]];
-                [sameDates removeAllObjects];
-                [sameDates addObject:object];
-                prevShortDate = shortDate;
-            }
-        }
-        
-        [_dates addObject:[sameDates copy]];
-    }
-    return [_dates copy];
-}
-
-
-// generates data for plots (array of array with 2 points) by date index (0 - today, 1 - tomorrow)
-- (void) generatePlotsDataForDatesIndex:(NSUInteger)dateIndex {
-    
-    if (!_plotsData) {
-        _plotsData = [[NSMutableArray alloc] init];
-    }
-    [_plotsData removeAllObjects];
-//TODO: implement real hour for X instead index
-    int index = 0;
-    for (id <OWMWeather> obj in self.dates[dateIndex]) {
-        NSMutableArray *array = [NSMutableArray array];
-//        CGFloat X = [[self stringFromTimeInterval:obj.dt.floatValue withFormat:@"H"] doubleValue];
-        NSRange range = NSMakeRange(11, 2);
-        CGFloat X = [[obj.dt_txt substringWithRange: range] doubleValue];
-//        CGFloat X = [obj.dt doubleValue];
-        CGFloat Y = [obj.main.temp_max doubleValue];
-        [array addObject:[NSValue valueWithCGPoint:CGPointMake(X, Y)]];
-        Y = [obj.main.temp_min doubleValue] - 5.0; // minus 5 because "temp" & "temp_min"("temp_max") mostly equals :(
-        [array addObject:[NSValue valueWithCGPoint:CGPointMake(X, Y)]];
-        [_plotsData addObject:array];
-        NSLog(@"%d, %.1f, %.1f, %@", index, X, Y, obj.dt_txt);
-        index++;
-    }
-}
-
-static double const axisTopBottomPadding = 0.05;
-
 - (void)setScaleMinMax {
     
     float xmax, xmin, ymin1, ymax1, ymin2, ymax2;
     xmax = ymax1 = ymax2 = - MAXFLOAT;
     xmin = ymin1 = ymin2 = MAXFLOAT;
 
-    if (_plotsData) {
-        for (NSArray *array in _plotsData) {
-            CGPoint point1 = [array[0] CGPointValue];
-//            CGFloat x = point1.x;
-//            if (x < xmin) xmin = x;
-//            if (x > xmax) xmax = x;
-            CGFloat y1 = point1.y;
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+
+    if (weatherArray) {
+        for (id <OWMWeather> object in weatherArray) {
+            
+            CGFloat x = object.dt.floatValue;
+            if (x < xmin) xmin = x;
+            if (x > xmax) xmax = x;
+            
+            CGFloat y1 = object.main.temp_max.floatValue;
             if (y1 < ymin1) ymin1 = y1;
             if (y1 > ymax1) ymax1 = y1;
-            
-            CGPoint point2 = [array[1] CGPointValue];
-            CGFloat y2 = point2.y;
+
+            CGFloat y2 = object.main.temp_min.floatValue;
             if (y2 < ymin2) ymin2 = y2;
             if (y2 > ymax2) ymax2 = y2;
         }
-
-//        _plots.start = xmin;
-//        _plots.length = xmax - xmin;
         
-        _plots.minTempereature = ymin2;// - ymin2 * axisTopBottomPadding;
-        _plots.maxTempereature = ymax1 + ymax1 * axisTopBottomPadding;
+        _plots.start = xmin;
+        _plots.length = xmax - xmin;
+        
+        _plots.minTempereature = - 55.0;//ymin2 - (ymax1 - ymin2) * axisTopBottomPadding;
+        _plots.maxTempereature = 50.0;//ymax1 + (ymax1 - ymin2) * axisTopBottomPadding;
     }
+
 }
 
 
@@ -207,8 +145,6 @@ static double const axisTopBottomPadding = 0.05;
 - (void)setCurrentForecast:(id<OWMForecastObject>)currentForecast {
     
     _currentForecast = currentForecast;
-    [self setDates];
-    [self generatePlotsDataForDatesIndex:1];
     //[self.tableView reloadData];
 }
 
@@ -233,34 +169,39 @@ static double const axisTopBottomPadding = 0.05;
             [self setGradient];
         }];
         [self loadForecast:^{//
-            wSelf.plots.start = 0.0;
-            wSelf.plots.length = [_plotsData count];
             [wSelf setScaleMinMax];
-//            wSelf.plots.minTempereature = -20.0;
-//            wSelf.plots.maxTempereature = 20.0;
             [wSelf.plots redrawPlots];
         }];
     }
 }
 
 
-#pragma mark - Datasource
+#pragma mark - Datasource for plots
 
 - (NSUInteger)numberOfRecords {
-    if (_dates) {
-        return [_dates[1] count];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+    if (weatherArray) {
+        return [weatherArray count];
     }
     return 0;
 }
 
 - (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index {
 
-    return [[_plotsData[index] objectAtIndex:0] CGPointValue];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+    id <OWMWeather> object = weatherArray[index];
+    CGFloat X = object.dt.floatValue;
+    CGFloat Y = object.main.temp_max.floatValue;
+    return CGPointMake(X, Y);
 }
 
 - (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index {
-    
-    return [[_plotsData[index] objectAtIndex:1] CGPointValue];
+
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+    id <OWMWeather> object = weatherArray[index];
+    CGFloat X = object.dt.floatValue;
+    CGFloat Y = object.main.temp_min.floatValue - 2.0;
+    return CGPointMake(X, Y);
 }
 
 #pragma mark - Lifecycle
@@ -275,7 +216,8 @@ static double const axisTopBottomPadding = 0.05;
     }];
     
     [self loadForecast:^{
-
+        [wSelf setScaleMinMax];
+        [wSelf.plots redrawPlots];
     }];
 }
 

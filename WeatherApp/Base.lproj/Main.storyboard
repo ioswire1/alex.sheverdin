@@ -17,12 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crR-bJ-Ne0" customClass="CPTGraphHostingView">
-                                <rect key="frame" x="0.0" y="202" width="320" height="366"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crR-bJ-Ne0" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="442" width="320" height="126"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="crR-bJ-Ne0" firstAttribute="leading" secondItem="7hs-sn-T08" secondAttribute="leading" id="0cZ-Uo-jS1"/>
+                            <constraint firstItem="crR-bJ-Ne0" firstAttribute="bottom" secondItem="mCG-7e-egQ" secondAttribute="top" id="Pe3-Kk-fve"/>
+                            <constraint firstItem="crR-bJ-Ne0" firstAttribute="top" secondItem="kC6-NW-dpU" secondAttribute="bottom" constant="422" id="ZRx-4L-zAK"/>
+                            <constraint firstAttribute="trailing" secondItem="crR-bJ-Ne0" secondAttribute="trailing" id="x6s-7N-rQo"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="plots" destination="OjG-vo-5TQ" id="8lu-hH-XVA"/>
