@@ -20,6 +20,7 @@
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
 
+@property (strong, nonatomic) IBOutlet UILabel *temperatureLabel;
 @end
 
 @implementation ChartsViewController
@@ -37,7 +38,8 @@
         if (completion) {
             completion();
         }
-        
+        self.navigationItem.title = self.currentWeather.name;
+        self.temperatureLabel.text = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
     } failure:^(NSError *error) {
         // TODO: implementation
     }];
@@ -209,7 +211,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setTitleTextAttributes:
+     @{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self setGradient];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
+    self.navigationController.view.backgroundColor = [UIColor clearColor];
     __weak typeof(self) wSelf = self;
     [self loadWeather:^{
        
