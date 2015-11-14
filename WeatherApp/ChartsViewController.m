@@ -20,6 +20,7 @@
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
+@property (strong, nonatomic) id <OWMForecastDailyObject> forecastsDaily;
 
 @property (strong, nonatomic) IBOutlet UILabel *temperatureLabel;
 @end
@@ -66,6 +67,24 @@
     }];
 }
 
+- (void)loadForecastDaily:(void (^)())completion {
+    
+    __weak typeof(self) wSelf = self;
+    CLLocation *location = [self currentLocation];
+    
+    [[WeatherManager defaultManager] getForecastDailyByLocation:location forDaysCount:16 success:^(OWMObject <OWMForecastDailyObject> *object) {
+
+        wSelf.forecastsDaily = object;
+        
+        if (completion) {
+            completion();
+        }
+        
+    } failure:^(NSError *error) {
+        // TODO: implementation
+    }];
+}
+
 #pragma mark - Prossessing weather data 
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval) seconds withFormat:(NSString *) format{
@@ -85,7 +104,7 @@
     xmax = ymax1 = ymax2 = - MAXFLOAT;
     xmin = ymin1 = ymin2 = MAXFLOAT;
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
 
     if (weatherArray) {
         for (id <OWMWeather> object in weatherArray) {
@@ -176,6 +195,10 @@
             [wSelf setScaleMinMax];
             [wSelf.plots redrawPlots];
         }];
+        [self loadForecastDaily:^{
+            
+        }];
+
     }
 }
 
@@ -183,7 +206,7 @@
 #pragma mark - Datasource for plots
 
 - (NSUInteger)numberOfRecords {
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromNow];
     if (weatherArray) {
         return [weatherArray count];
     }
@@ -192,7 +215,7 @@
 
 - (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index {
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromNow];
     id <OWMWeather> object = weatherArray[index];
     CGFloat X = object.dt.floatValue;
     CGFloat Y = object.main.temp_max.floatValue;
@@ -201,7 +224,7 @@
 
 - (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index {
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromNow];
     id <OWMWeather> object = weatherArray[index];
     CGFloat X = object.dt.floatValue;
     CGFloat Y = object.main.temp_min.floatValue - 2.0;
@@ -230,6 +253,10 @@
     [self loadForecast:^{
         [wSelf setScaleMinMax];
         [wSelf.plots redrawPlots];
+    }];
+    
+    [self loadForecastDaily:^{
+        
     }];
 }
 
@@ -268,7 +295,8 @@
         class = [segue.destinationViewController class];
         if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
             ForecastViewController *vc = (ForecastViewController *)segue.destinationViewController;
-            vc.forecasts = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+//            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
+            vc.forecastsDaily = [self forecastsDaily];
             [vc.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
             
         }

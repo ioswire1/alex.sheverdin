@@ -23,5 +23,5 @@ typedef void (^OWMCompletionBlock)(OWMObject <OWMResponseObject> * __nullable di
 - (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(OWMCompletionBlock __nullable)completion;
 - (void)getWeatherForCityName:(NSString * __nullable)cityName completion:(OWMCompletionBlock __nullable)completion;
 - (void)getForecastForCityName:(NSString * __nullable)cityName completion:(OWMCompletionBlock __nullable)completion;
-
+- (void)getForecastDailyForLocation:(CLLocationCoordinate2D)coordinate forDaysCount:(NSUInteger) daysCount completion:(OWMCompletionBlock __nullable)completion;
 @end

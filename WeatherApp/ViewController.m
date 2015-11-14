@@ -158,7 +158,7 @@ static int progressMax = 50;
     } else {
         [_dates removeAllObjects];
     }
-    OWMObject <OWMWeather> *firstObject = [self.currentForecast.list firstObject];
+    id <OWMWeather> firstObject = [self.currentForecast.list firstObject];
     
     if (firstObject) {
         NSString *prevShortDate = [self stringFromTimeInterval:firstObject.dt.floatValue withFormat:@"dd.MM"];

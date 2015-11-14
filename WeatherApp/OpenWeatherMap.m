@@ -133,19 +133,19 @@ static NSString *_units = @"metric";
     [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
+- (void)getWeatherForCityName:(NSString *)cityName completion:(OWMCompletionBlock) completion {
+    NSDictionary *params = @{@"q": cityName,
+                             @"units": _units,
+                             @"APPID": _apiKey};
+    [self getDataAtPath:@"/weather" params:params completion:completion];
+}
+
 - (void)getForecastForLocation:(CLLocationCoordinate2D)coordinate completion:(OWMCompletionBlock) completion {
     NSDictionary *params = @{@"lat": @(coordinate.latitude),
                              @"lon": @(coordinate.longitude),
                              @"units": _units,
                              @"APPID": _apiKey};
     [self getDataAtPath:@"/forecast" params:params completion:completion];
-}
-
-- (void)getWeatherForCityName:(NSString *)cityName completion:(OWMCompletionBlock) completion {
-    NSDictionary *params = @{@"q": cityName,
-                             @"units": _units,
-                             @"APPID": _apiKey};
-    [self getDataAtPath:@"/weather" params:params completion:completion];
 }
 
 - (void)getForecastForCityName:(NSString *)cityName completion:(OWMCompletionBlock) completion {
@@ -155,6 +155,22 @@ static NSString *_units = @"metric";
     [self getDataAtPath:@"/forecast" params:params completion:completion];
 }
 
+- (void)getForecastDailyForLocation:(CLLocationCoordinate2D)coordinate forDaysCount:(NSUInteger) daysCount completion:(OWMCompletionBlock) completion {
+    NSDictionary *params = @{@"lat": @(coordinate.latitude),
+                             @"lon": @(coordinate.longitude),
+                             @"units": _units,
+                             @"cnt": @(daysCount),
+                             @"APPID": _apiKey};
+    [self getDataAtPath:@"/forecast/daily" params:params completion:completion];
+}
+
+- (void)getForecastDailyForCityName:(NSString *)cityName forDaysCount:(NSUInteger) daysCount completion:(OWMCompletionBlock) completion {
+    NSDictionary *params = @{@"q": cityName,
+                             @"units": _units,
+                             @"cnt": @(daysCount),
+                             @"APPID": _apiKey};
+    [self getDataAtPath:@"/forecast/daily" params:params completion:completion];
+}
 
 
 - (void)getDataAtPath:(NSString *)path params:(nullable NSDictionary *)params completion:(OWMCompletionBlock) completion {

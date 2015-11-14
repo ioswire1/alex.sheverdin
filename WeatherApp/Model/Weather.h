@@ -37,6 +37,16 @@
 
 @end
 
+@interface OWMTempObject : OWMObject
+@property (nonatomic, strong, readonly) NSNumber *day;
+@property (nonatomic, strong, readonly) NSNumber *min;
+@property (nonatomic, strong, readonly) NSNumber *max;
+@property (nonatomic, strong, readonly) NSNumber *night;
+@property (nonatomic, strong, readonly) NSNumber *eve;
+@property (nonatomic, strong, readonly) NSNumber *morn;
+
+@end
+
 @interface OWMWindObject : OWMObject
 @property (nonatomic, strong, readonly) NSNumber *speed;
 @property (nonatomic, strong, readonly) NSNumber *deg;
@@ -67,11 +77,12 @@
 @end
 
 
-@protocol OWMWeather <NSObject>
+
+
+@protocol OWMWeatherCore
 
 @required
 
-@property (nonatomic, strong, readonly) OWMMainObject *main;
 @property (nonatomic, strong, readonly) OWMArrayObject <OWMWeatherObject *> *weather;
 @property (nonatomic, strong, readonly) NSNumber *dt;
 
@@ -85,6 +96,19 @@
 
 @end
 
+
+
+@protocol OWMWeather <NSObject, OWMWeatherCore>
+
+@property (nonatomic, strong, readonly) OWMMainObject *main;
+
+@end
+
+@protocol OWMWeatherDaily <NSObject, OWMWeatherCore>
+
+@property (nonatomic, strong, readonly) OWMTempObject *temp;
+
+@end
 
 
 @protocol OWMSysObject <NSObject>
@@ -140,5 +164,19 @@ typedef NS_ENUM(NSUInteger, DayTime) {
 @required
 
 @property (nonatomic, strong, readonly) OWMArrayObject <OWMObject<OWMWeather> *> *list;
+
+@end
+
+
+@protocol OWMForecastDailyObject <NSObject, OWMResponseObject>
+
+@optional
+
+@property (nonatomic, strong, readonly) OWMCityObject *city;
+@property (nonatomic, copy, readonly) NSString *message;
+
+@required
+
+@property (nonatomic, strong, readonly) OWMArrayObject <OWMObject<OWMWeatherDaily> *> *list;
 
 @end

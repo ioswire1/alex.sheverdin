@@ -119,7 +119,33 @@
     
 }
 
-- (NSArray<OWMObject *> *)forecast3hForOneDayFromInterval:(NSTimeInterval)secondsFrom {
+
+- (void)getForecastDailyByLocation:(CLLocation *)location forDaysCount:(NSUInteger) daysCount success:(void (^)(OWMObject <OWMForecastDailyObject> *weather))success failure:(void (^)(NSError *error))failure {
+    __weak typeof(self) wSelf = self;
+    [[OpenWeatherMap service] getForecastDailyForLocation:location.coordinate forDaysCount:(NSUInteger) daysCount completion:^(OWMObject <OWMForecastDailyObject> *object, NSError * _Nullable error) {
+        if (error) {
+            if (failure)
+                failure(error);
+            return;
+        }
+        
+        if (![object conformsToProtocol:@protocol(OWMForecastDailyObject)]) {
+            NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Wrong response data!"}];
+            if (failure) {
+                failure(error);
+            }
+            return;
+        }
+        
+        wSelf.lastForecast = object;
+        
+        if (success) {
+            success(wSelf.lastForecast);
+        }
+    }];
+}
+
+- (NSArray<OWMObject *> *)forecastForOneDayFromInterval:(NSTimeInterval)secondsFrom {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     if (self.lastWeather) {
         NSTimeInterval secondsPerDay = 24 * 60 * 60;
@@ -134,8 +160,8 @@
     return [resultArray copy];
 }
 
--(NSArray<OWMObject *> *)forecast3hForOneDayFromNow {
-    return [self forecast3hForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+-(NSArray<OWMObject *> *)forecastForOneDayFromNow {
+    return [self forecastForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
 }
 
 #pragma mark - Memento Design Pattern

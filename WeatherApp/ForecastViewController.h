@@ -11,6 +11,7 @@
 
 @interface ForecastViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, strong)NSArray <__kindof id <OWMWeather> > *forecasts;
+@property (strong, nonatomic) id <OWMForecastDailyObject> forecastsDaily;
+//@property (nonatomic, strong)NSArray <__kindof OWMObject <OWMWeather> *> *forecasts;
 
 @end

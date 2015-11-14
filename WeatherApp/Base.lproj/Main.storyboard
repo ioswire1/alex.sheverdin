@@ -71,7 +71,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ip2-Ub-NAF">
-                                <rect key="frame" x="0.0" y="125" width="320" height="360"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="htI-IR-IIT">
                                     <size key="itemSize" width="40" height="80"/>
@@ -192,7 +192,6 @@
         <!--Navigation Controller-->
         <scene sceneID="1Ke-J2-6PP">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5Di-9r-TxQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8KQ-Tw-ntR" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="csa-cY-7QZ">
@@ -204,6 +203,7 @@
                         <segue destination="e1Q-GZ-VkL" kind="relationship" relationship="rootViewController" id="cDn-c2-nnt"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Di-9r-TxQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="456" y="484"/>
         </scene>

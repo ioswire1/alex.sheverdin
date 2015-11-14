@@ -25,20 +25,20 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return  [self.forecasts count];
+    return  [self.forecastsDaily.list count];
 }
 
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.forecastsDaily.list;
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectCell" forIndexPath:indexPath];
     UILabel *labelDay = (UILabel *)[cell viewWithTag:100];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.forecasts[indexPath.row].dt doubleValue]];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[indexPath.row].dt doubleValue]];
     NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"E";
-    //NSArray * shortWeeks = [formatter shortWeekdaySymbols];
     NSString *dateString = [formatter stringFromDate:date];
     labelDay.text = dateString;
     UILabel *labelTemp = (UILabel *)[cell viewWithTag:101];
-    int temperature = self.forecasts[indexPath.row].main.temp.intValue;
+    int temperature = forecasts[indexPath.row].temp.day.intValue;
     
     labelTemp.text = [NSString stringWithFormat:@"%d°", temperature];
 

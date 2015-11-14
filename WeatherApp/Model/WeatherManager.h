@@ -20,12 +20,14 @@
 
 + (instancetype)defaultManager;
 
-- (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
-- (void)getWeatherByCity:(NSString *)city success:(void (^)(OWMObject<OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
-- (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
-- (void)getForecastByCity:(NSString *)city success:(void (^)(OWMObject<OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getWeatherByCity:(NSString *)city success:(void (^)(OWMObject <OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getForecastByCity:(NSString *)city success:(void (^)(OWMObject <OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getForecastDailyByLocation:(CLLocation *)location forDaysCount:(NSUInteger) daysCount success:(void (^)(OWMObject <OWMForecastDailyObject> *weather))success failure:(void (^)(NSError *error))failure;
+- (void)getForecastDailyByCity:(NSString *)city forDaysCount:(NSUInteger) daysCount success:(void (^)(OWMObject <OWMForecastDailyObject> *weather))success failure:(void (^)(NSError *error))failure;
 
-- (NSArray <__kindof OWMObject *> *) forecast3hForOneDayFromInterval:(NSTimeInterval) secondsFrom;
-- (NSArray <__kindof OWMObject *> *) forecast3hForOneDayFromNow;
+- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastForOneDayFromInterval:(NSTimeInterval) secondsFrom;
+- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastForOneDayFromNow;
 
 @end
