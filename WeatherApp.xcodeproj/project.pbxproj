@@ -10,6 +10,7 @@
 		04154AE71BEA2BC6009989FD /* GradientPlots.m in Sources */ = {isa = PBXBuildFile; fileRef = 04154AE61BEA2BC6009989FD /* GradientPlots.m */; settings = {ASSET_TAGS = (); }; };
 		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; settings = {ASSET_TAGS = (); }; };
+		04803C4B1BF5F93F004ED07D /* ForecastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04803C4A1BF5F93F004ED07D /* ForecastViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AC9B551BE9126100D0D429 /* ChartsViewController.m */; settings = {ASSET_TAGS = (); }; };
 		04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */; settings = {ASSET_TAGS = (); }; };
 		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
@@ -44,6 +45,8 @@
 		044A6C491BCFD18E007B3FA4 /* FallBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FallBehavior.m; sourceTree = "<group>"; };
 		04550CB61BC811CE00B07242 /* UIImage+Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Picker.h"; sourceTree = "<group>"; };
 		04550CB71BC811CE00B07242 /* UIImage+Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Picker.m"; sourceTree = "<group>"; };
+		04803C491BF5F93F004ED07D /* ForecastViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastViewController.h; sourceTree = "<group>"; };
+		04803C4A1BF5F93F004ED07D /* ForecastViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastViewController.m; sourceTree = "<group>"; };
 		04AC9B541BE9126100D0D429 /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
 		04AC9B551BE9126100D0D429 /* ChartsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartsViewController.m; sourceTree = "<group>"; };
 		04AE66C51BDA63E2004E6FB5 /* WeatherManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherManager.h; path = Model/WeatherManager.h; sourceTree = "<group>"; };
@@ -118,6 +121,8 @@
 		04550CE51BCC0C7400B07242 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				04803C491BF5F93F004ED07D /* ForecastViewController.h */,
+				04803C4A1BF5F93F004ED07D /* ForecastViewController.m */,
 				04B4291F1BD121A600685BB8 /* ViewController.h */,
 				04B429201BD121A600685BB8 /* ViewController.m */,
 				04AC9B541BE9126100D0D429 /* ChartsViewController.h */,
@@ -392,6 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */,
+				04803C4B1BF5F93F004ED07D /* ForecastViewController.m in Sources */,
 				044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				04B429211BD121A600685BB8 /* ViewController.m in Sources */,

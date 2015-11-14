@@ -10,6 +10,7 @@
 #import "WeatherManager.h"
 #import "AppDelegate.h"
 #import "GradientPlots.h"
+#import "ForecastViewController.h"
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
@@ -38,6 +39,7 @@
         if (completion) {
             completion();
         }
+        
         self.navigationItem.title = self.currentWeather.name;
         self.temperatureLabel.text = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
     } failure:^(NSError *error) {
@@ -111,7 +113,7 @@
 }
 
 
-- (void)setGradient {
+- (CAGradientLayer *)getGradientLayer {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     OWMWeatherSysObject *sys = (OWMWeatherSysObject *)self.currentWeather.sys;
     DayTime daytime = [sys dayTime];
@@ -139,7 +141,7 @@
         default:
             break;
     }
-    [self.view.layer insertSublayer:gradient atIndex:0];
+    return gradient;
 }
 
 #pragma mark - Setters
@@ -168,7 +170,7 @@
         NSLog(@"Location Changed!");
         __weak typeof(self) wSelf = self;
         [self loadWeather:^{
-            [self setGradient];
+            [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
         }];
         [self loadForecast:^{//
             [wSelf setScaleMinMax];
@@ -213,12 +215,13 @@
     [super viewDidLoad];
     [self.navigationController.navigationBar setTitleTextAttributes:
      @{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-    [self setGradient];
+    [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-forBarMetrics:UIBarMetricsDefault];
+                                                  forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
     self.navigationController.view.backgroundColor = [UIColor clearColor];
+    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
     __weak typeof(self) wSelf = self;
     [self loadWeather:^{
        
@@ -253,15 +256,27 @@ forBarMetrics:UIBarMetricsDefault];
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"ToForecast"]) {
+        Class class = [ForecastViewController class];
+        class = [segue.destinationViewController class];
+        if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
+            ForecastViewController *vc = (ForecastViewController *)segue.destinationViewController;
+            vc.forecasts = [[WeatherManager defaultManager] forecast3hForOneDayFromNow];
+            [vc.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
+            
+        }
+    }
+
+    
 }
-*/
+
 
 
 @end

@@ -39,7 +39,7 @@
                     <navigationItem key="navigationItem" title="City Name" id="XLR-UF-UJu">
                         <barButtonItem key="rightBarButtonItem" title="Forecast" id="aAL-Pi-sOb">
                             <connections>
-                                <segue destination="Hr8-sl-3Lt" kind="push" id="Cb1-Vu-Tho"/>
+                                <segue destination="i4u-aS-eYY" kind="push" identifier="ToForecast" id="n5q-cs-6Yj"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -56,14 +56,81 @@
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="1026" y="471"/>
+            <point key="canvasLocation" x="842" y="489"/>
+        </scene>
+        <!--Forecast View Controller-->
+        <scene sceneID="S5b-XZ-Sgy">
+            <objects>
+                <viewController id="i4u-aS-eYY" customClass="ForecastViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pAX-2m-WwJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="yjg-DU-eLd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pul-6Y-mGC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ip2-Ub-NAF">
+                                <rect key="frame" x="0.0" y="125" width="320" height="360"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="htI-IR-IIT">
+                                    <size key="itemSize" width="40" height="80"/>
+                                    <size key="headerReferenceSize" width="50" height="30"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectCell" id="ruq-KS-TBo">
+                                        <rect key="frame" x="0.0" y="94" width="40" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="flX-XC-sqD">
+                                                    <rect key="frame" x="0.0" y="8" width="40" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tnV-ax-sVB">
+                                                    <rect key="frame" x="0.0" y="52" width="40" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="5e9-Cf-bXG">
+                                    <rect key="frame" x="0.0" y="64" width="320" height="30"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionReusableView>
+                                <connections>
+                                    <outlet property="dataSource" destination="i4u-aS-eYY" id="Qt5-sO-Bep"/>
+                                    <outlet property="delegate" destination="i4u-aS-eYY" id="Tuc-YD-2ZC"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Sb3-A5-5Sf"/>
+                    <connections>
+                        <outlet property="collectionView" destination="Ip2-Ub-NAF" id="i7P-GT-03t"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N8K-sn-XCg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1300" y="499"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="2wI-Lz-XvQ">
             <objects>
                 <tableViewController id="Hr8-sl-3Lt" customClass="ViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" indicatorStyle="white" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="lN3-zp-Rd9">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -120,7 +187,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Jp-fx-dCp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1406" y="471"/>
+            <point key="canvasLocation" x="1746" y="497"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="1Ke-J2-6PP">
@@ -138,7 +205,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="494" y="471"/>
+            <point key="canvasLocation" x="456" y="484"/>
         </scene>
     </scenes>
 </document>
