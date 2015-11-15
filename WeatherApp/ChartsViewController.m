@@ -18,11 +18,16 @@
 @interface ChartsViewController () <GradientPlotsDataSource>
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
+@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
 @property (strong, nonatomic) id <OWMForecastDailyObject> forecastsDaily;
 
 @property (strong, nonatomic) IBOutlet UILabel *temperatureLabel;
+@property (strong, nonatomic) IBOutlet UILabel *windLabel;
+@property (strong, nonatomic) IBOutlet UILabel *humidityLabel;
+@property (strong, nonatomic) IBOutlet UILabel *pressureLabel;
 @end
 
 @implementation ChartsViewController
@@ -43,6 +48,10 @@
         
         self.navigationItem.title = self.currentWeather.name;
         self.temperatureLabel.text = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
+        self.windLabel.text = [NSString stringWithFormat:@"%.2f",[self.currentWeather.wind.speed floatValue]];
+        self.humidityLabel.text = [NSString stringWithFormat:@"%d",[self.currentWeather.main.humidity intValue]];
+        self.pressureLabel.text = [NSString stringWithFormat:@"%d",[self.currentWeather.main.pressure intValue]];
+        
     } failure:^(NSError *error) {
         // TODO: implementation
     }];
@@ -75,6 +84,7 @@
     [[WeatherManager defaultManager] getForecastDailyByLocation:location forDaysCount:16 success:^(OWMObject <OWMForecastDailyObject> *object) {
 
         wSelf.forecastsDaily = object;
+        [wSelf.collectionView reloadData];
         
         if (completion) {
             completion();
@@ -230,6 +240,39 @@
     CGFloat Y = object.main.temp_min.floatValue - 2.0;
     return CGPointMake(X, Y);
 }
+
+
+#pragma mark - Delegate for Collection View
+
+
+
+#pragma mark - Datasource for Collection View
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return  [self.forecastsDaily.list count];
+}
+
+- (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.forecastsDaily.list;
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectCell" forIndexPath:indexPath];
+    UILabel *labelDay = (UILabel *)[cell viewWithTag:100];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[indexPath.row].dt doubleValue]];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"E";
+    NSString *dateString = [[formatter stringFromDate:date] uppercaseString];
+    labelDay.text = dateString;
+    UILabel *labelTemp = (UILabel *)[cell viewWithTag:101];
+    int temperature = forecasts[indexPath.row].temp.day.intValue;
+    
+    labelTemp.text = [NSString stringWithFormat:@"%d°", temperature];
+    
+    return cell;
+}
+
 
 #pragma mark - Lifecycle
 

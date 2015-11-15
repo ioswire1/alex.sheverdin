@@ -35,7 +35,7 @@
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[indexPath.row].dt doubleValue]];
     NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"E";
-    NSString *dateString = [formatter stringFromDate:date];
+    NSString *dateString = [[formatter stringFromDate:date] uppercaseString];
     labelDay.text = dateString;
     UILabel *labelTemp = (UILabel *)[cell viewWithTag:101];
     int temperature = forecasts[indexPath.row].temp.day.intValue;

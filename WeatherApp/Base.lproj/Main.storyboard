@@ -22,13 +22,84 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FXd-dT-EQ2">
-                                <rect key="frame" x="16" y="126" width="288" height="76"/>
+                                <rect key="frame" x="16" y="116" width="288" height="76"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="90"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="wind" translatesAutoresizingMaskIntoConstraints="NO" id="AzZ-fW-rFO">
+                                <rect key="frame" x="70" y="235" width="30" height="22"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pressure" translatesAutoresizingMaskIntoConstraints="NO" id="bq2-JQ-GzH">
+                                <rect key="frame" x="221" y="235" width="30" height="22"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="humidity" translatesAutoresizingMaskIntoConstraints="NO" id="qCE-GT-maa">
+                                <rect key="frame" x="145" y="235" width="30" height="22"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0.96" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bLK-oK-kCi">
+                                <rect key="frame" x="60" y="273" width="50" height="26"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="50" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fBY-sM-JN8">
+                                <rect key="frame" x="135" y="273" width="50" height="26"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1023" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KV0-ZO-cEb">
+                                <rect key="frame" x="211" y="273" width="50" height="26"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1kP-dv-Bvm">
+                                <rect key="frame" x="5" y="336" width="310" height="95"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="zUj-qc-P5F">
+                                    <size key="itemSize" width="40" height="85"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectCell" id="0lf-IX-MPX">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="85"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="85"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SUN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YTt-ST-kPt">
+                                                    <rect key="frame" x="0.0" y="0.0" width="40" height="20"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="11"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="20º" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qms-83-mcU">
+                                                    <rect key="frame" x="0.0" y="65" width="40" height="20"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="800" translatesAutoresizingMaskIntoConstraints="NO" id="hf5-Aa-dHd">
+                                                    <rect key="frame" x="0.0" y="23" width="40" height="40"/>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="e1Q-GZ-VkL" id="nUJ-1f-Jse"/>
+                                    <outlet property="delegate" destination="e1Q-GZ-VkL" id="ePP-iy-Jhf"/>
+                                    <outletCollection property="gestureRecognizers" destination="tgy-E6-ZhK" appends="YES" id="87q-e8-yiM"/>
+                                </connections>
+                            </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="crR-bJ-Ne0" secondAttribute="trailing" id="V5L-0y-bzg"/>
                             <constraint firstItem="crR-bJ-Ne0" firstAttribute="top" secondItem="kC6-NW-dpU" secondAttribute="bottom" constant="378" id="ebw-ay-9ZQ"/>
@@ -37,15 +108,22 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="City Name" id="XLR-UF-UJu">
-                        <barButtonItem key="rightBarButtonItem" title="Forecast" id="aAL-Pi-sOb">
-                            <connections>
-                                <segue destination="i4u-aS-eYY" kind="push" identifier="ToForecast" id="n5q-cs-6Yj"/>
-                            </connections>
+                        <barButtonItem key="rightBarButtonItem" image="settings" style="plain" id="r4T-zA-AUD">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Xx6-Bd-sAm">
+                                <rect key="frame" x="276" y="8" width="28" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="settings"/>
+                            </button>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="collectionView" destination="1kP-dv-Bvm" id="yUo-Gz-9pu"/>
+                        <outlet property="humidityLabel" destination="fBY-sM-JN8" id="b58-jB-OvN"/>
                         <outlet property="plots" destination="OjG-vo-5TQ" id="8lu-hH-XVA"/>
+                        <outlet property="pressureLabel" destination="KV0-ZO-cEb" id="Bzf-X2-9S9"/>
                         <outlet property="temperatureLabel" destination="FXd-dT-EQ2" id="MLE-Gw-iQv"/>
+                        <outlet property="windLabel" destination="bLK-oK-kCi" id="7fx-H7-iec"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="096-ma-PtT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -55,6 +133,11 @@
                         <outlet property="hostingView" destination="crR-bJ-Ne0" id="hws-gb-usl"/>
                     </connections>
                 </customObject>
+                <tapGestureRecognizer id="tgy-E6-ZhK">
+                    <connections>
+                        <segue destination="i4u-aS-eYY" kind="push" identifier="ToForecast" id="sby-0W-QXb"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="842" y="489"/>
         </scene>
@@ -70,47 +153,47 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ip2-Ub-NAF">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nj2-m3-fdG">
+                                <rect key="frame" x="5" y="45" width="310" height="357"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="htI-IR-IIT">
-                                    <size key="itemSize" width="40" height="80"/>
-                                    <size key="headerReferenceSize" width="50" height="30"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="uTX-eo-VSi">
+                                    <size key="itemSize" width="40" height="85"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectCell" id="ruq-KS-TBo">
-                                        <rect key="frame" x="0.0" y="94" width="40" height="80"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectCell" id="lQc-xg-GT1">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="85"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="40" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="85"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="flX-XC-sqD">
-                                                    <rect key="frame" x="0.0" y="8" width="40" height="20"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SUN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPf-Nn-zDz">
+                                                    <rect key="frame" x="0.0" y="0.0" width="40" height="20"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="11"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tnV-ax-sVB">
-                                                    <rect key="frame" x="0.0" y="52" width="40" height="20"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="20º" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hon-00-nMT">
+                                                    <rect key="frame" x="0.0" y="65" width="40" height="20"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="800" translatesAutoresizingMaskIntoConstraints="NO" id="d81-RR-rii">
+                                                    <rect key="frame" x="0.0" y="23" width="40" height="40"/>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="5e9-Cf-bXG">
-                                    <rect key="frame" x="0.0" y="64" width="320" height="30"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </collectionReusableView>
                                 <connections>
-                                    <outlet property="dataSource" destination="i4u-aS-eYY" id="Qt5-sO-Bep"/>
-                                    <outlet property="delegate" destination="i4u-aS-eYY" id="Tuc-YD-2ZC"/>
+                                    <outlet property="dataSource" destination="i4u-aS-eYY" id="AxD-As-Ljf"/>
+                                    <outlet property="delegate" destination="i4u-aS-eYY" id="cQr-yK-8rL"/>
                                 </connections>
                             </collectionView>
                         </subviews>
@@ -118,7 +201,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Sb3-A5-5Sf"/>
                     <connections>
-                        <outlet property="collectionView" destination="Ip2-Ub-NAF" id="i7P-GT-03t"/>
+                        <outlet property="collectionView" destination="nj2-m3-fdG" id="xhO-uo-PKW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N8K-sn-XCg" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -208,4 +291,11 @@
             <point key="canvasLocation" x="456" y="484"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="800" width="512" height="512"/>
+        <image name="humidity" width="53" height="74"/>
+        <image name="pressure" width="101" height="76"/>
+        <image name="settings" width="512" height="512"/>
+        <image name="wind" width="105" height="71"/>
+    </resources>
 </document>

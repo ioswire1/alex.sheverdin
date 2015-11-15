@@ -137,12 +137,16 @@
             return;
         }
         
-        wSelf.lastForecast = object;
+        wSelf.lastForecastDaily = object;
         
         if (success) {
-            success(wSelf.lastForecast);
+            success(wSelf.lastForecastDaily);
         }
     }];
+}
+
+- (void)getForecastDailyByCity:(NSString *)city forDaysCount:(NSUInteger)daysCount success:(void (^)(OWMObject<OWMForecastDailyObject> *))success failure:(void (^)(NSError *))failure {
+    
 }
 
 - (NSArray<OWMObject *> *)forecastForOneDayFromInterval:(NSTimeInterval)secondsFrom {
