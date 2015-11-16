@@ -28,6 +28,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *windLabel;
 @property (strong, nonatomic) IBOutlet UILabel *humidityLabel;
 @property (strong, nonatomic) IBOutlet UILabel *pressureLabel;
+@property (strong, nonatomic) IBOutlet UILabel *cityLabel;
+@property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
 @end
 
 @implementation ChartsViewController
@@ -46,9 +48,39 @@
             completion();
         }
         
-        self.navigationItem.title = self.currentWeather.name;
-        self.temperatureLabel.text = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
-        self.windLabel.text = [NSString stringWithFormat:@"%.2f",[self.currentWeather.wind.speed floatValue]];
+//        UILabel *subtitleView = [[UILabel alloc] initWithFrame:self.navigationController.navigationBar.frame];
+//        subtitleView.backgroundColor = [UIColor clearColor];
+//        subtitleView.font = [UIFont boldSystemFontOfSize:15];
+//        subtitleView.textAlignment = NSTextAlignmentCenter;
+//        subtitleView.textColor = [UIColor redColor];
+//        subtitleView.text = self.currentWeather.name;
+//        subtitleView.adjustsFontSizeToFitWidth = YES;
+//        self.navigationItem.titleView = subtitleView;
+        
+        self.cityLabel.text = [NSString stringWithFormat:@"%@, %@", self.currentWeather.name, self.currentWeather.sys.country];
+        self.descriptionLabel.text  = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
+
+        NSString *tempString = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
+
+        
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:tempString];
+        NSRange range = NSMakeRange([attrString length] - 1, 1);
+//        [attrString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:30.0] range:range];
+        
+        UIFont *font = self.temperatureLabel.font;
+//        UIFontDescriptor *fontDescriptor = [UIFontDescriptor fontDescriptorWithName:font.fontName size:font.pointSize / 2];
+//        uint32_t existingTraitsWithNewTrait = [fontDescriptor symbolicTraits] | UIFontDescriptorTraitBold;
+//        UIFontDescriptor *changedFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:existingTraitsWithNewTrait];
+//        UIFont *boldFont = [UIFont fontWithDescriptor:fontDescriptor size:0.0];
+
+        UIFont *smallFont = [UIFont fontWithName:font.fontName size:(font.pointSize / 2 - 6)];
+        NSNumber *offsetAmount = @(font.capHeight - smallFont.capHeight);
+       
+        [attrString addAttribute:NSFontAttributeName value:smallFont range:range];
+        [attrString addAttribute:NSBaselineOffsetAttributeName value:offsetAmount range:range];
+     
+        self.temperatureLabel.attributedText = attrString;
+          self.windLabel.text = [NSString stringWithFormat:@"%.2f",[self.currentWeather.wind.speed floatValue]];
         self.humidityLabel.text = [NSString stringWithFormat:@"%d",[self.currentWeather.main.humidity intValue]];
         self.pressureLabel.text = [NSString stringWithFormat:@"%d",[self.currentWeather.main.pressure intValue]];
         

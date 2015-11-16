@@ -125,6 +125,7 @@ typedef NS_ENUM(NSUInteger, DayTime) {
 @interface OWMWeatherSysObject : OWMObject <OWMSysObject>
 
 @property (nonatomic, readonly) DayTime dayTime;
+@property (nonatomic, readonly) NSString *country;
 
 @end
 
