@@ -11,7 +11,7 @@
 
 static NSString *const kBaseWeatherURL = @"http://api.openweathermap.org/data/2.5";
 static NSString *const kWeatherDomain = @"com.wire.OpenWeatherMap";
-static NSTimeInterval const kRequestTimeLimits = 100;//36000.0; // 10 minutes
+static NSTimeInterval const kRequestTimeLimits = 36000.0; // 10 minutes
 static NSInteger const kCacheLimit = 1024 * 1024 * 2; // 2 mb
 
 #pragma mark - Category NSDictionary (HTTPGETParameters)

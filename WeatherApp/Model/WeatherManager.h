@@ -16,7 +16,7 @@
 @property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
 @property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
 @property (nonatomic, strong) OWMObject<OWMForecastDailyObject> *lastForecastDaily;
-@property (nonatomic, strong) NSArray <__kindof OWMObject *> *dayForecast;
+//@property (nonatomic, strong) NSArray <__kindof OWMObject *> *dayForecast;
 
 
 + (instancetype)defaultManager;

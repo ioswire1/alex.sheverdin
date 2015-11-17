@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "GradientPlots.h"
 #import "ForecastViewController.h"
+#import "UIImage+OWMCondition.h"
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
@@ -30,6 +31,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *pressureLabel;
 @property (strong, nonatomic) IBOutlet UILabel *cityLabel;
 @property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
+
 @end
 
 @implementation ChartsViewController
@@ -65,18 +67,19 @@
         
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:tempString];
         NSRange range = NSMakeRange([attrString length] - 1, 1);
-//        [attrString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:30.0] range:range];
-        
+       
         UIFont *font = self.temperatureLabel.font;
-//        UIFontDescriptor *fontDescriptor = [UIFontDescriptor fontDescriptorWithName:font.fontName size:font.pointSize / 2];
-//        uint32_t existingTraitsWithNewTrait = [fontDescriptor symbolicTraits] | UIFontDescriptorTraitBold;
-//        UIFontDescriptor *changedFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:existingTraitsWithNewTrait];
-//        UIFont *boldFont = [UIFont fontWithDescriptor:fontDescriptor size:0.0];
-
+        
         UIFont *smallFont = [UIFont fontWithName:font.fontName size:(font.pointSize / 2 - 6)];
         NSNumber *offsetAmount = @(font.capHeight - smallFont.capHeight);
+        
+        UIFontDescriptor *fontDescriptor = [UIFontDescriptor fontDescriptorWithName:smallFont.fontName size:smallFont.pointSize];
+        uint32_t existingTraitsWithNewTrait = [fontDescriptor symbolicTraits] | UIFontDescriptorTraitBold;
+        UIFontDescriptor *changedFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:existingTraitsWithNewTrait];
+        UIFont *boldFont = [UIFont fontWithDescriptor:changedFontDescriptor size:0.0];
+        
        
-        [attrString addAttribute:NSFontAttributeName value:smallFont range:range];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:range];
         [attrString addAttribute:NSBaselineOffsetAttributeName value:offsetAmount range:range];
      
         self.temperatureLabel.attributedText = attrString;
@@ -299,8 +302,14 @@
     labelDay.text = dateString;
     UILabel *labelTemp = (UILabel *)[cell viewWithTag:101];
     int temperature = forecasts[indexPath.row].temp.day.intValue;
-    
     labelTemp.text = [NSString stringWithFormat:@"%d°", temperature];
+    
+    int weatherID = [[forecasts[indexPath.row].weather[0] objectForKey:@"id"] intValue];
+    UILabel *labelID = (UILabel *)[cell viewWithTag:222];
+    labelID.text = [NSString stringWithFormat:@"%d", weatherID];
+
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:200];
+    imageView.image = [UIImage imageWithConditionGroup:OWMConditionGroupByConditionCode(weatherID)];
     
     return cell;
 }

@@ -42,6 +42,10 @@
         if (error) {
             if (failure)
                 failure(error);
+            
+            if (wSelf.lastWeather && success)
+                success(wSelf.lastWeather);
+                
             return;
         }
         
@@ -71,6 +75,10 @@
         if (error) {
             if (failure)
                 failure(error);
+            
+            if (wSelf.lastForecast && success)
+                success(wSelf.lastForecast);
+            
             return;
         }
         
@@ -126,6 +134,10 @@
         if (error) {
             if (failure)
                 failure(error);
+            
+            if (wSelf.lastForecastDaily && success)
+                success(wSelf.lastForecastDaily);
+            
             return;
         }
         
@@ -172,7 +184,7 @@
 
 static NSString *const kLastWeatherKey = @"lastWeatherKey";
 static NSString *const kLastForecastKey = @"lastForecastKey";
-
+static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
 
 - (void)setLastWeather:(OWMObject <OWMCurrentWeatherObject> *)lastWeather {
     NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastWeather];
@@ -195,5 +207,17 @@ static NSString *const kLastForecastKey = @"lastForecastKey";
     NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastKey];
     return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
 }
+
+- (void)setLastForecastDaily:(OWMObject<OWMForecastDailyObject> *)lastForecastDaily{
+    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastForecastDaily];
+    [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastForecastDailyKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (OWMObject <OWMForecastDailyObject>*)lastForecastDaily {
+    NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastDailyKey];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+}
+
 
 @end
