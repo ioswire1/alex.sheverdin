@@ -7,6 +7,7 @@
 //
 
 #import "ForecastViewController.h"
+#import "UIImage+OWMCondition.h"
 
 @interface ForecastViewController ()
 
@@ -41,6 +42,13 @@
     int temperature = forecasts[indexPath.row].temp.day.intValue;
     
     labelTemp.text = [NSString stringWithFormat:@"%d°", temperature];
+    
+    int weatherID = [[forecasts[indexPath.row].weather[0] objectForKey:@"id"] intValue];
+    UILabel *labelID = (UILabel *)[cell viewWithTag:222];
+    labelID.text = [NSString stringWithFormat:@"%d", weatherID];
+    
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:200];
+    imageView.image = [UIImage imageWithConditionGroup:OWMConditionGroupByConditionCode(weatherID)];
 
     return cell;
 }

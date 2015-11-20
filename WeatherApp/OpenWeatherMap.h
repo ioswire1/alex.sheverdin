@@ -50,16 +50,44 @@ typedef NS_ENUM(NSUInteger, OWMConditionCode) {
     OWMConditionShowerDrizzle  = 321,
     
     OWMConditionLightRain   = 500,
+    OWMConditionModerateRain   = 501,
+    OWMConditionHeavyRain   = 502,
+    OWMConditionVeryHeavyRain   = 503,
+    OWMConditionExtremeRain   = 504,
+    
+    OWMConditionFreezingRain   = 511,
+    
+    OWMConditionLightShowerRain   = 520,
+    OWMConditionShowerRain   = 521,
+    OWMConditionHeavyShowerRain   = 522,
+    OWMConditionRaggedShowerRain   = 531,
     
     OWMConditionLightSnow   = 600,
+    OWMConditionSnow   = 601,
+    OWMConditionHeavySnow   = 602,
+    
+    OWMConditionSleet   = 611,
+    OWMConditionShowerSleet   = 612,
+    
+    OWMConditionLightRainSnow   = 615,
+    OWMConditionRainSnow   = 616,
+    OWMConditionLightShowerSnow   = 620,
+    OWMConditionShowerSnow   = 621,
+    OWMConditionHeavyShowerSnow   = 622,
     
     OWMConditionMist        = 701,
-    
+    OWMConditionSmoke        = 711,
+    //TODO: add 7xx
+
     OWMConditionClearSky    = 800,
     OWMConditionFewClouds   = 801,
+    OWMConditionScatteredClouds   = 802,
+    OWMConditionBrokenClouds   = 803,
+    OWMConditionOvercastClouds   = 804,
 
     OWMConditionTornado     = 900,
     OWMConditionCalm        = 951,
+    //TODO: add 9xx
     
 };
 
@@ -79,49 +107,33 @@ typedef NS_ENUM(NSUInteger, OWMConditionGroup) {
     OWMConditionGroupCalm  = 951,
 };
 
-//static inline OWMConditionGroup OWMConditionGroupByConditionCode(OWMConditionCode condition) {
-//    return OWMConditionGroupDrizzle;
-//}
-
 static inline OWMConditionGroup OWMConditionGroupByConditionCode(OWMConditionCode condition) {
     OWMConditionGroup conditionGroup = OWMConditionGroupClear;
     if (condition >= 200 && condition <= 232) {
         conditionGroup = OWMConditionGroupThunderstorm;
-    }
-    if (condition >= 300 && condition <= 321) {
+    } else if (condition >= 300 && condition <= 321) {
         conditionGroup = OWMConditionGroupDrizzle;
-    }
-    if (condition >= 500 && condition <= 504) {
+    } else if (condition >= 500 && condition <= 504) {
         conditionGroup = OWMConditionGroupRain;
-    }
-    if (condition == 511) {
+    } else if (condition == 511) {
         conditionGroup = OWMConditionGroupFreezingRain;
-    }
-    if (condition >= 520 && condition <= 531) {
+    } else if (condition >= 520 && condition <= 531) {
         conditionGroup = OWMConditionGroupShowerRain;
-    }
-    if (condition >= 600 && condition <= 622) {
+    } else if (condition >= 600 && condition <= 622) {
         conditionGroup = OWMConditionGroupSnow;
-    }
-    if (condition >= 700 && condition <= 781) {
+    } else if (condition >= 700 && condition <= 781) {
         conditionGroup = OWMConditionGroupAtmosphere;
-    }
-    if (condition == 800) {
+    } else if (condition == 800) {
         conditionGroup = OWMConditionGroupClear;
-    }
-    if (condition == 801) {
+    } else if (condition == 801) {
         conditionGroup = OWMConditionGroupFewClouds;
-    }
-    if (condition == 802) {
+    } else if (condition == 802) {
         conditionGroup = OWMConditionGroupScatteredClouds;
-    }
-    if (condition >= 803 && condition <= 804) {
+    } else if (condition >= 803 && condition <= 804) {
         conditionGroup = OWMConditionGroupOvercastClouds;
-    }
-    if (condition >= 900 && condition <= 906) {
+    } else if (condition >= 900 && condition <= 906) {
         conditionGroup = OWMConditionGroupTornado;
-    }
-    if (condition >= 951 && condition <= 962) {
+    } else if (condition >= 951 && condition <= 962) {
         conditionGroup = OWMConditionGroupCalm;
     }
     return conditionGroup;
