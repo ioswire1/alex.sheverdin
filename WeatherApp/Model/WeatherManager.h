@@ -28,7 +28,8 @@
 - (void)getForecastDailyByLocation:(CLLocation *)location forDaysCount:(NSUInteger) daysCount success:(void (^)(OWMObject <OWMForecastDailyObject> *weather))success failure:(void (^)(NSError *error))failure;
 - (void)getForecastDailyByCity:(NSString *)city forDaysCount:(NSUInteger) daysCount success:(void (^)(OWMObject <OWMForecastDailyObject> *weather))success failure:(void (^)(NSError *error))failure;
 
-- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastForOneDayFromInterval:(NSTimeInterval) secondsFrom;
-- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastForOneDayFromNow;
+- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastArrayOneDayFromInterval:(NSTimeInterval) secondsFrom;
+- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastArrayOneDayFromNow;
+- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastDailyArray;
 
 @end

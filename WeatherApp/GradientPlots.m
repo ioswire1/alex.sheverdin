@@ -83,7 +83,7 @@ static double const invisibleEndLengthX = 9.0;
     axisSet.xAxis.majorTickLineStyle = nil;
     axisSet.xAxis.minorTickLineStyle = nil;
     
-    NSTimeInterval threeHour = 3 * 60 * 60;
+    NSTimeInterval threeHour = 8*4* 3 * 60 * 60;
     axisSet.xAxis.majorIntervalLength = @(threeHour);
     axisSet.xAxis.labelTextStyle = textStyle;
     axisSet.xAxis.labelOffset = -2.0f;
@@ -95,12 +95,13 @@ static double const invisibleEndLengthX = 9.0;
 
 
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init] ;
-    dateFormatter.dateFormat = @"H:mm";
+//    dateFormatter.dateFormat = @"H:mm";
+    dateFormatter.dateFormat = @"dd/MM";
     dateFormatter.locale = [NSLocale currentLocale];
-    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
+//    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
 //    NSDate *refDate = [NSDate dateWithTimeIntervalSince1970:self.start];
 //    timeFormatter.referenceDate = refDate;
-    axisSet.xAxis.labelFormatter = timeFormatter;
+    axisSet.xAxis.labelFormatter = dateFormatter;
 
     axisSet.yAxis.axisLineStyle = nil;
     axisSet.yAxis.majorTickLineStyle = lineStyle;

@@ -161,9 +161,9 @@
     
 }
 
-- (NSArray<OWMObject *> *)forecastForOneDayFromInterval:(NSTimeInterval)secondsFrom {
+- (NSArray<OWMObject *> *)forecastArrayOneDayFromInterval:(NSTimeInterval)secondsFrom {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    if (self.lastWeather) {
+    if (self.lastForecast) {
         NSTimeInterval secondsPerDay = 24 * 60 * 60;
         
         for (id <OWMWeather> object in self.lastForecast.list) {
@@ -176,8 +176,23 @@
     return [resultArray copy];
 }
 
--(NSArray<OWMObject *> *)forecastForOneDayFromNow {
-    return [self forecastForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+-(NSArray<OWMObject *> *)forecastArrayOneDayFromNow {
+    return [self forecastArrayOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+}
+
+- (NSArray <__kindof OWMObject <OWMWeatherDaily>*> *) forecastDailyArray {
+    
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    if (self.lastForecastDaily) {
+        
+        for (int index = 0; index < [self.lastForecastDaily.list count]; index++) {
+            id <OWMWeatherDaily> object = self.lastForecastDaily.list[index];
+
+                [resultArray addObject:object];
+
+        }
+    }
+    return [resultArray copy];
 }
 
 #pragma mark - Memento Design Pattern

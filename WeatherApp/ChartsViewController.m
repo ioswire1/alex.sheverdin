@@ -149,7 +149,7 @@
     xmax = ymax1 = ymax2 = - MAXFLOAT;
     xmin = ymin1 = ymin2 = MAXFLOAT;
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromInterval:[NSDate date].timeIntervalSince1970];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromInterval:[NSDate date].timeIntervalSince1970];
 
     if (weatherArray) {
         for (id <OWMWeather> object in weatherArray) {
@@ -251,7 +251,7 @@
 #pragma mark - Datasource for plots
 
 - (NSUInteger)numberOfRecords {
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromNow];
     if (weatherArray) {
         return [weatherArray count];
     }
@@ -260,7 +260,7 @@
 
 - (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index {
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromNow];
     id <OWMWeather> object = weatherArray[index];
     CGFloat X = object.dt.floatValue;
     CGFloat Y = object.main.temp_max.floatValue;
@@ -269,10 +269,10 @@
 
 - (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index {
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastForOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromNow];
     id <OWMWeather> object = weatherArray[index];
     CGFloat X = object.dt.floatValue;
-    CGFloat Y = object.main.temp_min.floatValue - 2.0;
+    CGFloat Y = object.main.temp_min.floatValue;
     return CGPointMake(X, Y);
 }
 
@@ -288,7 +288,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return  [self.forecastsDaily.list count];
+    return  7;//[self.forecastsDaily.list count];
 }
 
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -329,19 +329,7 @@
     self.navigationController.navigationBar.translucent = YES;
     self.navigationController.view.backgroundColor = [UIColor clearColor];
     self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
-    __weak typeof(self) wSelf = self;
-    [self loadWeather:^{
-       
-    }];
-    
-    [self loadForecast:^{
-        [wSelf setScaleMinMax];
-        [wSelf.plots redrawPlots];
-    }];
-    
-    [self loadForecastDaily:^{
-        
-    }];
+
 }
 
 
@@ -353,6 +341,19 @@
                                             selector:@selector(appDidBecomeActive)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    __weak typeof(self) wSelf = self;
+    [self loadWeather:^{
+        
+    }];
+    
+    [self loadForecast:^{
+        [wSelf setScaleMinMax];
+        [wSelf.plots redrawPlots];
+    }];
+    
+    [self loadForecastDaily:^{
+        
+    }];
 }
 
 
@@ -380,7 +381,6 @@
         if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
             ForecastViewController *vc = (ForecastViewController *)segue.destinationViewController;
 //            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
-            vc.forecastsDaily = [self forecastsDaily];
             [vc.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
             
         }
