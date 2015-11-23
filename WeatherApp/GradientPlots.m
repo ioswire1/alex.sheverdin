@@ -98,10 +98,10 @@ static double const invisibleEndLengthX = 9.0;
 //    dateFormatter.dateFormat = @"H:mm";
     dateFormatter.dateFormat = @"dd/MM";
     dateFormatter.locale = [NSLocale currentLocale];
-//    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
+    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
 //    NSDate *refDate = [NSDate dateWithTimeIntervalSince1970:self.start];
 //    timeFormatter.referenceDate = refDate;
-    axisSet.xAxis.labelFormatter = dateFormatter;
+    axisSet.xAxis.labelFormatter = timeFormatter;
 
     axisSet.yAxis.axisLineStyle = nil;
     axisSet.yAxis.majorTickLineStyle = lineStyle;

@@ -15,11 +15,19 @@
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) id <OWMForecastDailyObject> forecastsDaily;
+@property (weak, nonatomic) IBOutlet UILabel *cityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+
+@property (strong, nonatomic) id <OWMForecastDailyObject> currentForecastsDaily;
 
 @end
 
 @implementation ForecastViewController
+
+
+- (IBAction)swipeToWeather:(UISwipeGestureRecognizer *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 #pragma mark - Get data
 
@@ -30,12 +38,20 @@
     
     [[WeatherManager defaultManager] getForecastDailyByLocation:location forDaysCount:16 success:^(OWMObject <OWMForecastDailyObject> *object) {
         
-        wSelf.forecastsDaily = object;
+        wSelf.currentForecastsDaily = object;
         [wSelf.collectionView reloadData];
         
         if (completion) {
             completion();
         }
+        self.cityLabel.text = [NSString stringWithFormat:@"%@, %@", self.currentForecastsDaily.city.name, self.currentForecastsDaily.city.country];
+        NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.currentForecastsDaily.list;
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[0].dt doubleValue]];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [NSLocale currentLocale];
+        formatter.dateFormat = @"MMMM";
+        NSString *dateString = [formatter stringFromDate:date];
+        self.descriptionLabel.text = dateString;
         
     } failure:^(NSError *error) {
         // TODO: implementation
@@ -46,24 +62,6 @@
 
 - (CLLocation *)currentLocation {
     return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
-}
-
-
-#pragma mark - Notifications
-
-- (void)appDidBecomeActive {
-    //TODO: to implement
-}
-
-- (void)locationDidChange:(NSNotification *)notification {
-    if (notification.object) {
-        __weak typeof(self) wSelf = self;
-        [self loadForecastDaily:^{
-            [wSelf setScaleMinMax];
-            [wSelf.plots redrawPlots];
-        }];
-        
-    }
 }
 
 
@@ -110,39 +108,46 @@
 }
 
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.forecastsDaily.list;
+    NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.currentForecastsDaily.list;
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectCell" forIndexPath:indexPath];
     
     NSDate *firstDate = [NSDate dateWithTimeIntervalSince1970:[forecasts[0].dt doubleValue]];
     UILabel *labelDayOfWeek = (UILabel *)[cell viewWithTag:300];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
     formatter.dateFormat = @"e";
     int dayOfWeek = [[formatter stringFromDate:firstDate] intValue];
-    labelDayOfWeek.text = [NSString stringWithFormat:@"%d", dayOfWeek];
+    //    labelDayOfWeek.text = [NSString stringWithFormat:@"%d", dayOfWeek];
+    UILabel *labelDay = (UILabel *)[cell viewWithTag:100];
+    UILabel *labelTemp = (UILabel *)[cell viewWithTag:101];
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:200];
     
-    NSUInteger temp = dayOfWeek + [self.forecastsDaily.list count];
-    if ((indexPath.row + 1 >= dayOfWeek) && (indexPath.row < dayOfWeek + [self.forecastsDaily.list count] - 1)) {
-        long int index = indexPath.row - dayOfWeek;
-        UILabel *labelDay = (UILabel *)[cell viewWithTag:100];
+    if ((indexPath.row + 1 >= dayOfWeek) && (indexPath.row < dayOfWeek + [self.currentForecastsDaily.list count] - 1)) {
+        long int index = indexPath.row + 1 - dayOfWeek;
+
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[index].dt doubleValue]];
         
-        formatter.dateFormat = @"E";
+        formatter.dateFormat = @"dd";
         NSString *dateString = [[formatter stringFromDate:date] uppercaseString];
         labelDay.text = dateString;
-        UILabel *labelTemp = (UILabel *)[cell viewWithTag:101];
+        formatter.dateFormat = @"E";
+//        labelDayOfWeek.text = [formatter stringFromDate:date];
+        
         int temperature = forecasts[index].temp.day.intValue;
         
         labelTemp.text = [NSString stringWithFormat:@"%d°", temperature];
         
         int weatherID = [[forecasts[index].weather[0] objectForKey:@"id"] intValue];
-        UILabel *labelID = (UILabel *)[cell viewWithTag:222];
-        labelID.text = [NSString stringWithFormat:@"%d", weatherID];
-        
-        UIImageView *imageView = (UIImageView *)[cell viewWithTag:200];
-        imageView.image = [UIImage imageWithConditionGroup:OWMConditionGroupByConditionCode(weatherID)];
-    }
 
+        imageView.image = [UIImage imageWithConditionGroup:OWMConditionGroupByConditionCode(weatherID)];
+    } else {
+        labelDay.text = @"";
+        labelTemp.text = @"";
+        labelDayOfWeek.text = @"";
+        imageView.image = nil;
+    }
+    
     return cell;
 }
 
@@ -195,19 +200,39 @@
 //    return UIEdgeInsetsMake(2, 2, 2, 2);
 //}
 
+#pragma mark - Notifications
+
+- (void)appDidBecomeActive {
+    //TODO: to implement
+}
+
+- (void)locationDidChange:(NSNotification *)notification {
+    if (notification.object) {
+        __weak typeof(self) wSelf = self;
+        [self loadForecastDaily:^{
+                        [wSelf setScaleMinMax];
+                        [wSelf.plots redrawPlots];
+        }];
+        
+    }
+}
+
 
 #pragma mark - Life cycle
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.collectionView reloadData];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                  forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
-    self.navigationController.navigationBar.translucent = YES;
-    self.navigationController.view.backgroundColor = [UIColor clearColor];
-    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
+    
+    self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.leftBarButtonItem.title = @"qqq";
     __weak typeof(self) wSelf = self;
     [self loadForecastDaily:^{
         [wSelf setScaleMinMax];

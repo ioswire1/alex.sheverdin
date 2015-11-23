@@ -23,7 +23,7 @@
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
-@property (strong, nonatomic) id <OWMForecastDailyObject> forecastsDaily;
+@property (strong, nonatomic) id <OWMForecastDailyObject> currentForecastsDaily;
 
 @property (strong, nonatomic) IBOutlet UILabel *temperatureLabel;
 @property (strong, nonatomic) IBOutlet UILabel *windLabel;
@@ -78,8 +78,8 @@
         UIFontDescriptor *changedFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:existingTraitsWithNewTrait];
         UIFont *boldFont = [UIFont fontWithDescriptor:changedFontDescriptor size:0.0];
         
-       
-        [attrString addAttribute:NSFontAttributeName value:boldFont range:range];
+//        [attrString addAttribute:NSFontAttributeName value:boldFont range:range];       
+        [attrString addAttribute:NSFontAttributeName value:smallFont range:range];
         [attrString addAttribute:NSBaselineOffsetAttributeName value:offsetAmount range:range];
      
         self.temperatureLabel.attributedText = attrString;
@@ -118,7 +118,7 @@
     
     [[WeatherManager defaultManager] getForecastDailyByLocation:location forDaysCount:16 success:^(OWMObject <OWMForecastDailyObject> *object) {
 
-        wSelf.forecastsDaily = object;
+        wSelf.currentForecastsDaily = object;
         [wSelf.collectionView reloadData];
         
         if (completion) {
@@ -292,7 +292,7 @@
 }
 
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.forecastsDaily.list;
+    NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.currentForecastsDaily.list;
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectCell" forIndexPath:indexPath];
     UILabel *labelDay = (UILabel *)[cell viewWithTag:100];
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[indexPath.row].dt doubleValue]];
@@ -317,9 +317,18 @@
 
 #pragma mark - Lifecycle
 
+
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [self setNeedsStatusBarAppearanceUpdate];
     [self.navigationController.navigationBar setTitleTextAttributes:
      @{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];

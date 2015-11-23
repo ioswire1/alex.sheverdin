@@ -27,6 +27,7 @@
 		CE69C1F81B77954E005CC71D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F71B77954E005CC71D /* Images.xcassets */; };
 		CE69C1FB1B77954E005CC71D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE69C1F91B77954E005CC71D /* LaunchScreen.xib */; };
 		CE69C2071B77954F005CC71D /* WeatherAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE69C2061B77954F005CC71D /* WeatherAppTests.m */; };
+		CED1CA011C03C3120039BA9D /* CollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED1CA001C03C3110039BA9D /* CollectionReusableView.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		CE69C2001B77954F005CC71D /* WeatherAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE69C2051B77954F005CC71D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE69C2061B77954F005CC71D /* WeatherAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherAppTests.m; sourceTree = "<group>"; };
+		CED1C9FF1C03C3110039BA9D /* CollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionReusableView.h; sourceTree = "<group>"; };
+		CED1CA001C03C3110039BA9D /* CollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionReusableView.m; sourceTree = "<group>"; };
 		D6FF7968807FCA3E7085C27C /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -214,6 +217,8 @@
 				635EDD761BDBFBC6008D48C6 /* UIImage+ImageEffects.h */,
 				635EDD771BDBFBC6008D48C6 /* UIImage+ImageEffects.m */,
 				CE69C1F41B77954E005CC71D /* Main.storyboard */,
+				CED1C9FF1C03C3110039BA9D /* CollectionReusableView.h */,
+				CED1CA001C03C3110039BA9D /* CollectionReusableView.m */,
 				CE69C1F91B77954E005CC71D /* LaunchScreen.xib */,
 				CE69C1F71B77954E005CC71D /* Images.xcassets */,
 				CE69C1EE1B77954E005CC71D /* AppDelegate.h */,
@@ -412,6 +417,7 @@
 				635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */,
 				043F5BDB1BFB97660061A8AA /* UIImage+OWMCondition.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,
+				CED1CA011C03C3120039BA9D /* CollectionReusableView.m in Sources */,
 				04154AE71BEA2BC6009989FD /* GradientPlots.m in Sources */,
 				04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */,
 				CE69C1ED1B77954E005CC71D /* main.m in Sources */,
