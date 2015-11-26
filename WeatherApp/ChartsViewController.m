@@ -253,7 +253,7 @@
 #pragma mark - Datasource for plots
 
 - (NSUInteger)numberOfRecords {
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromLastUpdate];
     if (weatherArray) {
         return [weatherArray count];
     }
@@ -262,7 +262,7 @@
 
 - (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index {
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromLastUpdate];
     id <OWMWeather> object = weatherArray[index];
     CGFloat X = object.dt.floatValue;
     CGFloat Y = object.main.temp_max.floatValue;
@@ -271,7 +271,7 @@
 
 - (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index {
 
-    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromNow];
+    NSArray * weatherArray = [[WeatherManager defaultManager] forecastArrayOneDayFromLastUpdate];
     id <OWMWeather> object = weatherArray[index];
     CGFloat X = object.dt.floatValue;
     CGFloat Y = object.main.temp_min.floatValue;

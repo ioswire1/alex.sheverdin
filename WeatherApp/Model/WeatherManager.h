@@ -13,10 +13,6 @@
 
 @interface WeatherManager : NSObject
 
-@property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
-@property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
-@property (nonatomic, strong) OWMObject<OWMForecastDailyObject> *lastForecastDaily;
-//@property (nonatomic, strong) NSArray <__kindof OWMObject *> *dayForecast;
 
 
 + (instancetype)defaultManager;
@@ -29,7 +25,8 @@
 - (void)getForecastDailyByCity:(NSString *)city forDaysCount:(NSUInteger) daysCount success:(void (^)(OWMObject <OWMForecastDailyObject> *weather))success failure:(void (^)(NSError *error))failure;
 
 - (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastArrayOneDayFromInterval:(NSTimeInterval) secondsFrom;
-- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastArrayOneDayFromNow;
-- (NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> *) forecastDailyArray;
+@property (strong, nonatomic) NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> * forecastArrayOneDayFromLastUpdate;
+
+@property (strong, nonatomic) NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> * forecastDailyArray;
 
 @end

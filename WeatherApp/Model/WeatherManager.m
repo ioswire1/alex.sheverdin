@@ -14,6 +14,10 @@
 
 @interface WeatherManager()
 
+@property (nonatomic, strong) OWMObject<OWMCurrentWeatherObject> *lastWeather;
+@property (nonatomic, strong) OWMObject<OWMForecastObject> *lastForecast;
+@property (nonatomic, strong) OWMObject<OWMForecastDailyObject> *lastForecastDaily;
+
 @end
 
 @implementation WeatherManager
@@ -135,9 +139,11 @@
             if (failure)
                 failure(error);
             
-            if (wSelf.lastForecastDaily && success)
-                success(wSelf.lastForecastDaily);
-            
+            NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastDailyKey];
+            OWMObject <OWMForecastDailyObject>*lastForecastDaily = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+            if (lastForecastDaily && success)
+                success(lastForecastDaily);
+        
             return;
         }
         
@@ -176,24 +182,6 @@
     return [resultArray copy];
 }
 
--(NSArray<OWMObject *> *)forecastArrayOneDayFromNow {
-    return [self forecastArrayOneDayFromInterval:[NSDate date].timeIntervalSince1970];
-}
-
-- (NSArray <__kindof OWMObject <OWMWeatherDaily>*> *) forecastDailyArray {
-    
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    if (self.lastForecastDaily) {
-        
-        for (int index = 0; index < [self.lastForecastDaily.list count]; index++) {
-            id <OWMWeatherDaily> object = self.lastForecastDaily.list[index];
-
-                [resultArray addObject:object];
-
-        }
-    }
-    return [resultArray copy];
-}
 
 #pragma mark - Memento Design Pattern
 
@@ -216,6 +204,8 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
     NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastForecast];
     [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastForecastKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    _forecastArrayOneDayFromLastUpdate = [self forecastArrayOneDayFromInterval:[NSDate date].timeIntervalSince1970];
 }
 
 - (OWMObject <OWMForecastObject>*)lastForecast {
@@ -227,12 +217,23 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
     NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastForecastDaily];
     [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastForecastDailyKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
-}
+    _lastForecastDaily = lastForecastDaily;    
+    
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    if (_lastForecastDaily) {
+        
+        for (int index = 0; index < [_lastForecastDaily.list count]; index++) {
+            id <OWMWeatherDaily> object = _lastForecastDaily.list[index];
+            
+            [resultArray addObject:object];
+            
+        }
+    }
+    _forecastDailyArray = [resultArray copy];
+    }
 
-- (OWMObject <OWMForecastDailyObject>*)lastForecastDaily {
-    NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastDailyKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-}
+
+
 
 
 @end

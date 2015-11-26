@@ -54,12 +54,10 @@ static double const invisibleStartLengthX = 14.0;
 static double const invisibleEndLengthX = 9.0;
 - (CPTXYGraph *)graph {
     
-    if (_graph != nil) {
-        return _graph;
+    if (!_graph) {
+        CGRect frame = [self.hostingView bounds];
+        _graph = [[CPTXYGraph alloc] initWithFrame:frame];
     }
-    
-    CGRect frame = [self.hostingView bounds];
-    _graph = [[CPTXYGraph alloc] initWithFrame:frame];
     
     _graph.paddingTop = 0.0f;
     _graph.paddingRight = 0.0f;
