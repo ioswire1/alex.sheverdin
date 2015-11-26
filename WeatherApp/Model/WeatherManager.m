@@ -76,13 +76,17 @@
 - (void)getForecastByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMForecastObject> *weather))success failure:(void (^)(NSError *error))failure {
     __weak typeof(self) wSelf = self;
     [[OpenWeatherMap service] getForecastForLocation:location.coordinate completion:^(OWMObject <OWMForecastObject> *object, NSError * _Nullable error) {
+        
         if (error) {
             if (failure)
                 failure(error);
             
-            if (wSelf.lastForecast && success)
-                success(wSelf.lastForecast);
+            NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastKey];
+            OWMObject <OWMForecastObject>* lastForecast = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
             
+            if (lastForecast && success)
+                success(lastForecast);
+
             return;
         }
         
@@ -105,12 +109,18 @@
 
 - (void)getForecastByCity:(NSString *)city success:(void (^)(OWMObject<OWMForecastObject> *))success failure:(void (^)(NSError *))failure {
     __weak typeof(self) wSelf = self;
-//    [[OpenWeatherMap service] getForecastForLocation:location.coordinate completion:^(OWMObject <OWMForecastObject> *object, NSError * _Nullable error) {
     [[OpenWeatherMap service] getForecastForCityName:city completion:^(OWMObject<OWMForecastObject> * _Nullable object, NSError * _Nullable error) {
         
         if (error) {
             if (failure)
                 failure(error);
+            
+            NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastKey];
+            OWMObject <OWMForecastObject>* lastForecast = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+            
+            if (lastForecast && success)
+                success(lastForecast);
+            
             return;
         }
         
@@ -204,13 +214,9 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
     NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:lastForecast];
     [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:kLastForecastKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    _lastForecast = lastForecast;
     
     _forecastArrayOneDayFromLastUpdate = [self forecastArrayOneDayFromInterval:[NSDate date].timeIntervalSince1970];
-}
-
-- (OWMObject <OWMForecastObject>*)lastForecast {
-    NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kLastForecastKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
 }
 
 - (void)setLastForecastDaily:(OWMObject<OWMForecastDailyObject> *)lastForecastDaily{
