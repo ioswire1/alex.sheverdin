@@ -15,6 +15,9 @@
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *weekdayLabels;
+
+
 @property (weak, nonatomic) IBOutlet UILabel *cityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
@@ -232,7 +235,7 @@
     [self.collectionView reloadData];
     
     self.navigationItem.hidesBackButton = YES;
-    self.navigationItem.leftBarButtonItem.title = @"qqq";
+
     __weak typeof(self) wSelf = self;
     [self loadForecastDaily:^{
         [wSelf setScaleMinMax];
@@ -244,6 +247,23 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [NSLocale currentLocale];
+    NSArray<NSString *> *shortWeekdaySymbols = dateFormatter.shortWeekdaySymbols;
+    
+    if ([[NSCalendar currentCalendar] firstWeekday] == 2) {
+        NSMutableArray *mutableArray = [shortWeekdaySymbols mutableCopy];
+        NSObject* obj = [mutableArray firstObject];
+        [mutableArray addObject:obj]; 
+        [mutableArray removeObjectAtIndex:0];
+        shortWeekdaySymbols = [mutableArray copy];
+    }
+    for (int i = 0;  i < [self.weekdayLabels count]; i++) {
+        UILabel *label = self.weekdayLabels[i];
+        label.text = [shortWeekdaySymbols[i] uppercaseString];
+    }
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self
