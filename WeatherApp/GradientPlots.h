@@ -11,8 +11,6 @@
 
 @protocol GradientPlotsDataSource <NSObject>
 
-@required
-
 - (NSUInteger)numberOfRecords;
 - (CGPoint)valueForMaxTemperatureAtIndex:(NSUInteger)index;
 - (CGPoint)valueForMinTemperatureAtIndex:(NSUInteger)index;

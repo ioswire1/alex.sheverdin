@@ -21,6 +21,7 @@
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 
+
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
 @property (strong, nonatomic) id <OWMForecastDailyObject> currentForecastsDaily;
@@ -62,6 +63,9 @@
         self.cityLabel.text = [NSString stringWithFormat:@"%@, %@", self.currentWeather.name, self.currentWeather.sys.country];
         self.descriptionLabel.text  = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
 
+        
+        
+        
         NSString *tempString = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
 
         
@@ -70,16 +74,14 @@
        
         UIFont *font = self.temperatureLabel.font;
         
-        UIFont *smallFont = [UIFont fontWithName:font.fontName size:(font.pointSize / 2 - 6)];
-        NSNumber *offsetAmount = @(font.capHeight - smallFont.capHeight);
+        UIFontDescriptor *fontDescriptor = [UIFontDescriptor
+                                            fontDescriptorWithFontAttributes:@{UIFontDescriptorFamilyAttribute: font.fontName,
+                                                                               UIFontDescriptorTraitsAttribute: @{UIFontWeightTrait:@(0.25)}}];
         
-        UIFontDescriptor *fontDescriptor = [UIFontDescriptor fontDescriptorWithName:smallFont.fontName size:smallFont.pointSize];
-        uint32_t existingTraitsWithNewTrait = [fontDescriptor symbolicTraits] | UIFontDescriptorTraitBold;
-        UIFontDescriptor *changedFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:existingTraitsWithNewTrait];
-        UIFont *boldFont = [UIFont fontWithDescriptor:changedFontDescriptor size:0.0];
+        UIFont *boldFont = [UIFont fontWithDescriptor:fontDescriptor size:font.pointSize * 0.4];
+        NSNumber *offsetAmount = @(font.capHeight - boldFont.capHeight - 2);
         
-//        [attrString addAttribute:NSFontAttributeName value:boldFont range:range];       
-        [attrString addAttribute:NSFontAttributeName value:smallFont range:range];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:range];
         [attrString addAttribute:NSBaselineOffsetAttributeName value:offsetAmount range:range];
      
         self.temperatureLabel.attributedText = attrString;

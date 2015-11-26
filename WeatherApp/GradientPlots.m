@@ -53,10 +53,14 @@
 static double const invisibleStartLengthX = 14.0;
 static double const invisibleEndLengthX = 9.0;
 - (CPTXYGraph *)graph {
-    if (!_graph) {
-        CGRect frame = [self.hostingView bounds];
-        _graph = [[CPTXYGraph alloc] initWithFrame:frame];
+    
+    if (_graph != nil) {
+        return _graph;
     }
+    
+    CGRect frame = [self.hostingView bounds];
+    _graph = [[CPTXYGraph alloc] initWithFrame:frame];
+    
     _graph.paddingTop = 0.0f;
     _graph.paddingRight = 0.0f;
     _graph.paddingBottom = 0.0f;
@@ -132,25 +136,25 @@ static double const invisibleEndLengthX = 9.0;
 
 - (void)setStart:(CGFloat)start {
     _start = start;
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)_graph.defaultPlotSpace;
+    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:@(_start) length:@(_length)];
 }
 
 - (void)setLength:(CGFloat)length {
     _length = length;
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)_graph.defaultPlotSpace;
+    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:@(_start) length:@(_length)];
 }
 
 - (void)setMinTempereature:(CGFloat)minTempereature {
     _minTempereature = minTempereature;
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)_graph.defaultPlotSpace;
+    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:@(_minTempereature) length:@(_maxTempereature - _minTempereature)];
 }
 
 - (void)setMaxTempereature:(CGFloat)maxTempereature {
     _maxTempereature = maxTempereature;
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)_graph.defaultPlotSpace;
+    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:@(_minTempereature) length:@(_maxTempereature - _minTempereature)];
 }
 
