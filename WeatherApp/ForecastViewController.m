@@ -10,6 +10,7 @@
 #import "UIImage+OWMCondition.h"
 #import "AppDelegate.h"
 #import "GradientPlots.h"
+#import "Design.h"
 
 @interface ForecastViewController () <GradientPlotsDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -47,14 +48,16 @@
         if (completion) {
             completion();
         }
-        self.cityLabel.text = [NSString stringWithFormat:@"%@, %@", self.currentForecastsDaily.city.name, self.currentForecastsDaily.city.country];
+        NSString *title = [NSString stringWithFormat:@"%@, %@\n", self.currentForecastsDaily.city.name, self.currentForecastsDaily.city.country];
         NSArray <__kindof OWMObject <OWMWeatherDaily> *> *forecasts = self.currentForecastsDaily.list;
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[forecasts[0].dt doubleValue]];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.locale = [NSLocale currentLocale];
         formatter.dateFormat = @"MMMM";
-        NSString *dateString = [formatter stringFromDate:date];
-        self.descriptionLabel.text = dateString;
+        NSString *subtitle = [formatter stringFromDate:date];
+        
+        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
+        [self.navigationItem.titleView sizeToFit];
         
     } failure:^(NSError *error) {
         // TODO: implementation

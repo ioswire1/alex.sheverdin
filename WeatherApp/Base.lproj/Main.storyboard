@@ -137,30 +137,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="XLR-UF-UJu">
                         <nil key="title"/>
-                        <view key="titleView" contentMode="scaleToFill" id="cUO-0y-Sry">
-                            <rect key="frame" x="96" y="6" width="128" height="33"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y3L-bi-odF">
-                                    <rect key="frame" x="-96" y="12" width="320" height="22"/>
-                                    <animations/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z9e-Va-WQv">
-                                    <rect key="frame" x="-96" y="-7" width="320" height="22"/>
-                                    <animations/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <animations/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        </view>
                         <barButtonItem key="rightBarButtonItem" image="settings" style="plain" id="r4T-zA-AUD">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Xx6-Bd-sAm">
                                 <rect key="frame" x="276" y="8" width="28" height="28"/>
@@ -172,9 +148,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="cityLabel" destination="Z9e-Va-WQv" id="bRO-eU-IcC"/>
                         <outlet property="collectionView" destination="1kP-dv-Bvm" id="yUo-Gz-9pu"/>
-                        <outlet property="descriptionLabel" destination="y3L-bi-odF" id="JW6-Y6-PBK"/>
                         <outlet property="humidityLabel" destination="fBY-sM-JN8" id="b58-jB-OvN"/>
                         <outlet property="plots" destination="OjG-vo-5TQ" id="8lu-hH-XVA"/>
                         <outlet property="pressureLabel" destination="KV0-ZO-cEb" id="Bzf-X2-9S9"/>
@@ -291,29 +265,6 @@
                                     <outlet property="delegate" destination="i4u-aS-eYY" id="cQr-yK-8rL"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6r5-uK-NVB">
-                                <rect key="frame" x="96" y="22" width="128" height="36"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wlg-FZ-TdN">
-                                        <rect key="frame" x="-96" y="15" width="320" height="22"/>
-                                        <animations/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rjj-IL-ihA">
-                                        <rect key="frame" x="-96" y="-4" width="320" height="22"/>
-                                        <animations/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <animations/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MON" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hc5-MU-AiL">
                                 <rect key="frame" x="5" y="92" width="40" height="20"/>
                                 <animations/>
@@ -372,9 +323,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="gMM-2Y-sJQ"/>
                     <connections>
-                        <outlet property="cityLabel" destination="Rjj-IL-ihA" id="4vp-VI-iK6"/>
                         <outlet property="collectionView" destination="nj2-m3-fdG" id="xhO-uo-PKW"/>
-                        <outlet property="descriptionLabel" destination="wlg-FZ-TdN" id="QNf-Lr-v85"/>
                         <outlet property="plots" destination="aIL-VU-lA7" id="Evi-MW-ned"/>
                         <outletCollection property="weekdayLabels" destination="Hc5-MU-AiL" id="OJp-TF-DnV"/>
                         <outletCollection property="weekdayLabels" destination="B5f-OF-wRR" id="Gfj-K7-4pt"/>

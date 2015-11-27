@@ -12,6 +12,7 @@
 #import "GradientPlots.h"
 #import "ForecastViewController.h"
 #import "UIImage+OWMCondition.h"
+#import "Design.h"
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
@@ -51,23 +52,13 @@
             completion();
         }
         
-//        UILabel *subtitleView = [[UILabel alloc] initWithFrame:self.navigationController.navigationBar.frame];
-//        subtitleView.backgroundColor = [UIColor clearColor];
-//        subtitleView.font = [UIFont boldSystemFontOfSize:15];
-//        subtitleView.textAlignment = NSTextAlignmentCenter;
-//        subtitleView.textColor = [UIColor redColor];
-//        subtitleView.text = self.currentWeather.name;
-//        subtitleView.adjustsFontSizeToFitWidth = YES;
-//        self.navigationItem.titleView = subtitleView;
+        NSString *title = [NSString stringWithFormat:@"%@, %@\n", self.currentWeather.name, self.currentWeather.sys.country];
+        NSString *subtitle = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
         
-        self.cityLabel.text = [NSString stringWithFormat:@"%@, %@", self.currentWeather.name, self.currentWeather.sys.country];
-        self.descriptionLabel.text  = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
-
-        
-        
+        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
+        [self.navigationItem.titleView sizeToFit];
         
         NSString *tempString = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
-
         
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:tempString];
         NSRange range = NSMakeRange([attrString length] - 1, 1);
@@ -78,7 +69,7 @@
                                             fontDescriptorWithFontAttributes:@{UIFontDescriptorFamilyAttribute: font.fontName,
                                                                                UIFontDescriptorTraitsAttribute: @{UIFontWeightTrait:@(0.25)}}];
         
-        UIFont *boldFont = [UIFont fontWithDescriptor:fontDescriptor size:font.pointSize * 0.4];
+        UIFont *boldFont = [UIFont fontWithDescriptor:fontDescriptor size:font.pointSize * 0.45];
         NSNumber *offsetAmount = @(font.capHeight - boldFont.capHeight - 2);
         
         [attrString addAttribute:NSFontAttributeName value:boldFont range:range];
@@ -329,17 +320,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [self setNeedsStatusBarAppearanceUpdate];
-    [self.navigationController.navigationBar setTitleTextAttributes:
-     @{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//    [self setNeedsStatusBarAppearanceUpdate];
+
+//    [self.navigationController.navigationBar setTitleTextAttributes:
+//     @{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-    self.navigationController.navigationBar.translucent = YES;
-    self.navigationController.view.backgroundColor = [UIColor clearColor];
-    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
+//    self.navigationController.navigationBar.translucent = YES;
+//    self.navigationController.view.backgroundColor = [UIColor clearColor];
+//    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
 
 }
 
