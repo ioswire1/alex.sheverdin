@@ -13,4 +13,6 @@
 
 @interface ChartsViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
+@property (strong, nonatomic) IBOutlet UILabel *indexLabel;
+
 @end
