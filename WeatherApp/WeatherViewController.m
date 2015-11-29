@@ -6,7 +6,7 @@
 //  Copyright © 2015 Alex Sheverdin. All rights reserved.
 //
 
-#import "ChartsViewController.h"
+#import "WeatherViewController.h"
 #import "WeatherManager.h"
 #import "AppDelegate.h"
 #import "GradientPlots.h"
@@ -17,7 +17,7 @@
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
 
-@interface ChartsViewController () <GradientPlotsDataSource>
+@interface WeatherViewController () <GradientPlotsDataSource>
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -320,11 +320,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-//    [self setNeedsStatusBarAppearanceUpdate];
+    
+    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
 
-//    [self.navigationController.navigationBar setTitleTextAttributes:
-//     @{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];

@@ -11,8 +11,9 @@
 #import "CorePlot-CocoaTouch.h"
 #import <UIKit/UIKit.h>
 
-@interface ChartsViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface WeatherViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *indexLabel;
+@property (nonatomic) NSUInteger pageIndex;
 
 @end
