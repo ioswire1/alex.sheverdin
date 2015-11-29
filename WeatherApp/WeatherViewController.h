@@ -1,5 +1,5 @@
 //
-//  ChartsViewController.h
+//  WeatherViewController.h
 //  WeatherApp
 //
 //  Created by Alex Sheverdin on 11/1/15.

@@ -12,15 +12,15 @@
 #import "GradientPlots.h"
 #import "Design.h"
 
+
+#define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
+
+
 @interface ForecastViewController () <GradientPlotsDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *weekdayLabels;
-
-
-@property (weak, nonatomic) IBOutlet UILabel *cityLabel;
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
 @property (strong, nonatomic) id <OWMForecastDailyObject> currentForecastsDaily;
 
@@ -63,6 +63,17 @@
         // TODO: implementation
     }];
 }
+
+- (CAGradientLayer *)getGradientLayer {
+
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.view.bounds;
+    gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
+    gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
+
+    return gradient;
+}
+
 
 #pragma mark - Location
 
@@ -226,18 +237,19 @@
 
 #pragma mark - Life cycle
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
+    
+    [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    
     [self.collectionView reloadData];
     
-    self.navigationItem.hidesBackButton = YES;
+//    self.navigationItem.hidesBackButton = YES;
 
     __weak typeof(self) wSelf = self;
     [self loadForecastDaily:^{

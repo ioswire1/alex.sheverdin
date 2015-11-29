@@ -1,5 +1,5 @@
 //
-//  ChartsViewController.m
+//  WeatherViewController.m
 //  WeatherApp
 //
 //  Created by Alex Sheverdin on 11/1/15.
@@ -36,7 +36,7 @@
 
 @end
 
-@implementation ChartsViewController
+@implementation WeatherViewController
 
 
 #pragma mark - Load weather data

@@ -13,7 +13,9 @@
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; };
 		04803C4B1BF5F93F004ED07D /* ForecastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04803C4A1BF5F93F004ED07D /* ForecastViewController.m */; };
 		0493FB921C08C0C500358F3C /* Design.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB911C08C0C500358F3C /* Design.m */; };
-		04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AC9B551BE9126100D0D429 /* ChartsViewController.m */; };
+		0493FB961C0A165F00358F3C /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB951C0A165F00358F3C /* NavigationController.m */; };
+		0493FB991C0A20DF00358F3C /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB981C0A20DE00358F3C /* PageViewController.m */; };
+		04AC9B561BE9126100D0D429 /* WeatherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AC9B551BE9126100D0D429 /* WeatherViewController.m */; };
 		04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */; };
 		04B3E0851B7E0B030010BE5E /* OpenWeatherMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B3E0841B7E0B030010BE5E /* OpenWeatherMap.m */; };
 		04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FE0E181BA6D2D1005B061F /* CircleView.m */; };
@@ -53,8 +55,12 @@
 		04803C4A1BF5F93F004ED07D /* ForecastViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastViewController.m; sourceTree = "<group>"; };
 		0493FB911C08C0C500358F3C /* Design.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Design.m; sourceTree = "<group>"; };
 		0493FB931C08C0ED00358F3C /* Design.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Design.h; sourceTree = "<group>"; };
-		04AC9B541BE9126100D0D429 /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
-		04AC9B551BE9126100D0D429 /* ChartsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartsViewController.m; sourceTree = "<group>"; };
+		0493FB941C0A165F00358F3C /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		0493FB951C0A165F00358F3C /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
+		0493FB971C0A20DE00358F3C /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
+		0493FB981C0A20DE00358F3C /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
+		04AC9B541BE9126100D0D429 /* WeatherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherViewController.h; sourceTree = "<group>"; };
+		04AC9B551BE9126100D0D429 /* WeatherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherViewController.m; sourceTree = "<group>"; };
 		04AE66C51BDA63E2004E6FB5 /* WeatherManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherManager.h; path = Model/WeatherManager.h; sourceTree = "<group>"; };
 		04AE66C61BDA63E2004E6FB5 /* WeatherManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WeatherManager.m; path = Model/WeatherManager.m; sourceTree = "<group>"; };
 		04B3E0831B7E0B030010BE5E /* OpenWeatherMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMap.h; sourceTree = "<group>"; };
@@ -129,8 +135,12 @@
 			children = (
 				04803C491BF5F93F004ED07D /* ForecastViewController.h */,
 				04803C4A1BF5F93F004ED07D /* ForecastViewController.m */,
-				04AC9B541BE9126100D0D429 /* ChartsViewController.h */,
-				04AC9B551BE9126100D0D429 /* ChartsViewController.m */,
+				04AC9B541BE9126100D0D429 /* WeatherViewController.h */,
+				04AC9B551BE9126100D0D429 /* WeatherViewController.m */,
+				0493FB941C0A165F00358F3C /* NavigationController.h */,
+				0493FB951C0A165F00358F3C /* NavigationController.m */,
+				0493FB971C0A20DE00358F3C /* PageViewController.h */,
+				0493FB981C0A20DE00358F3C /* PageViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -411,9 +421,11 @@
 				044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				0493FB921C08C0C500358F3C /* Design.m in Sources */,
+				0493FB961C0A165F00358F3C /* NavigationController.m in Sources */,
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,
+				0493FB991C0A20DF00358F3C /* PageViewController.m in Sources */,
 				04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */,
-				04AC9B561BE9126100D0D429 /* ChartsViewController.m in Sources */,
+				04AC9B561BE9126100D0D429 /* WeatherViewController.m in Sources */,
 				635EDD781BDBFBC6008D48C6 /* UIImage+ImageEffects.m in Sources */,
 				043F5BDB1BFB97660061A8AA /* UIImage+OWMCondition.m in Sources */,
 				CE45718C1B83D1C300323C90 /* Weather.m in Sources */,

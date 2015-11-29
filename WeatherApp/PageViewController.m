@@ -7,63 +7,46 @@
 //
 
 #import "PageViewController.h"
-#import "ChartsViewController.h"
+#import "WeatherViewController.h"
+#import "NavigationController.h"
 #import "ForecastViewController.h"
 
 @interface PageViewController ()
 
 @end
 
-@implementation PageViewController {
-    
-    NSArray *_pages;
-    
-}
-
-- (void)setupPages {
-    /*
-     * set up three pages, each with a different background color
-     */
-    
-    ChartsViewController *a = [[ChartsViewController alloc] initWithNibName:nil bundle:nil];
-    //a.indexLabel.text = @"first";
-    ChartsViewController *b = [[ChartsViewController alloc] initWithNibName:nil bundle:nil];
-    //b.indexLabel.text = @"second";
-    ChartsViewController *c = [[ChartsViewController alloc] initWithNibName:nil bundle:nil];
-    //c.indexLabel.text = @"third";
-    
-    _pages = @[a, b, c];
-}
+@implementation PageViewController 
 
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    if (nil == viewController) {
-        return _pages[0];
-    }
-    NSInteger idx = [_pages indexOfObject:viewController];
-    NSParameterAssert(idx != NSNotFound);
-    if (idx >= [_pages count] - 1) {
-        // we're at the end of the _pages array
-        return nil;
-    }
-    // return the next page's view controller
-    return _pages[idx + 1];
+    NavigationController *nvc = (NavigationController *)viewController;
+    NSInteger index = nvc.pageIndex;
+    index++;
+    return [self viewControllerAtIndex:index];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    if (nil == viewController) {
-        return _pages[0];
-    }
-    NSInteger idx = [_pages indexOfObject:viewController];
-    NSParameterAssert(idx != NSNotFound);
-    if (idx <= 0) {
-        // we're at the end of the _pages array
+    NavigationController *vc = (NavigationController *)viewController;
+    NSInteger index = vc.pageIndex;
+    index--;
+    return [self viewControllerAtIndex:index];
+}
+
+- (UIViewController *) viewControllerAtIndex:(NSInteger) index {
+    if (index < 0|| index > 2) {
         return nil;
     }
-    // return the previous page's view controller
-    return _pages[idx - 1];
+    NavigationController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"NavigationController")];
+    if (controller) {
+//        controller.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)controller.pageIndex];
+        controller.pageIndex = index;
+        return controller;
+    }
+    return nil;
 }
+
+
 
 
 #pragma mark - Life cycle
@@ -71,9 +54,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupPages];
     self.dataSource = self;
-    [self setViewControllers:@[_pages[0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
+    [self setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
     }];
 }
 
