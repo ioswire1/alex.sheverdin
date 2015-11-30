@@ -23,12 +23,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    WeatherViewController *vc = (WeatherViewController *) [self visibleViewController];
-    vc.pageIndex = self.pageIndex;
+//    WeatherViewController *vc = (WeatherViewController *) [self visibleViewController];
+//    vc.pageIndex = self.pageIndex;
+//    
+//    UIViewController *topVC = [self topViewController];
+//    UIViewController *visiVC = [self visibleViewController];
+//    NSLog(@"top: %@, visi: %@", [topVC class], [visiVC class]);
     
-    UIViewController *topVC = [self topViewController];
-    UIViewController *visiVC = [self visibleViewController];
-    NSLog(@"top: %@, visi: %@", [topVC class], [visiVC class]);
+    
 //    ForecastViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"ForecastViewController")];
 //    [self setViewControllers:@[controller] animated:NO];
 //    ForecastViewController *tempVC = (ForecastViewController *)[self visibleViewController];
@@ -36,8 +38,12 @@
 //    NSLog(@"new vc: %@", [tempVC class]);
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    NSLog(@"NaviCtr Appear!");
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
-    NSLog(@"dissapear!");
+    NSLog(@"NaviCtr Disappear!");
 }
 
 - (void)didReceiveMemoryWarning {
@@ -49,13 +55,13 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    WeatherViewController *vc = (WeatherViewController *)[segue destinationViewController];
-    vc.pageIndex = self.pageIndex;
-    vc.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)vc.pageIndex];
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    // Get the new view controller using [segue destinationViewController].
+//    // Pass the selected object to the new view controller.
+//    WeatherViewController *vc = (WeatherViewController *)[segue destinationViewController];
+//    vc.pageIndex = self.pageIndex;
+//    vc.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)vc.pageIndex];
+//}
 
 
 @end

@@ -1,36 +1,38 @@
 //
-//  PageViewController.m
+//  PageForecastController.m
 //  WeatherApp
 //
-//  Created by Alex Sheverdin on 11/28/15.
+//  Created by User on 30.11.15.
 //  Copyright © 2015 Alex Sheverdin. All rights reserved.
 //
 
-#import "PageViewController.h"
+#import "PageForecastController.h"
 #import "WeatherViewController.h"
 #import "NavigationController.h"
 #import "ForecastViewController.h"
-
-@interface PageViewController ()
+@interface PageForecastController ()
 
 @end
 
-@implementation PageViewController 
+@implementation PageForecastController
 
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    WeatherViewController *nvc = (WeatherViewController *)viewController;
-    NSInteger index = nvc.pageIndex;
+    ForecastViewController *vc = (ForecastViewController *)viewController;
+    NSInteger index = vc.pageIndex;
     index++;
+    NavigationController *nvc = (NavigationController *) self.navigationController;
+    nvc.pageIndex =index;
     return [self viewControllerAtIndex:index];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    WeatherViewController *vc = (WeatherViewController *)viewController;
+    ForecastViewController *vc = (ForecastViewController *)viewController;
     NSInteger index = vc.pageIndex;
     index--;
-    
+    NavigationController *nvc = (NavigationController *) self.navigationController;
+    nvc.pageIndex =index;
     return [self viewControllerAtIndex:index];
 }
 
@@ -38,8 +40,9 @@
     if (index < 0|| index > 2) {
         return nil;
     }
-    WeatherViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
+    ForecastViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"ForecastViewController")];
     if (controller) {
+        //        controller.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)controller.pageIndex];
         controller.pageIndex = index;
         return controller;
     }
@@ -57,32 +60,26 @@
     self.dataSource = self;
     [self setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
     }];
-    
 }
-
 
 -(void)viewWillAppear:(BOOL)animated {
-    NSLog(@"PageCtr Appear!");
-    NavigationController *nvc = (NavigationController *) self.navigationController;
-    NSUInteger index = nvc.pageIndex;
-    [self setViewControllers:@[[self viewControllerAtIndex:index]] direction: UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-    }];
+    NSLog(@"PageForecastCtr Appear!");
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    ;
 }
-*/
+
 
 @end

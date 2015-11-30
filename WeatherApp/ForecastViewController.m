@@ -29,9 +29,9 @@
 @implementation ForecastViewController
 
 
-- (IBAction)swipeToWeather:(UISwipeGestureRecognizer *)sender {
-    [self.navigationController popViewControllerAnimated:YES];
-}
+//- (IBAction)swipeToWeather:(UISwipeGestureRecognizer *)sender {
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 #pragma mark - Get data
 
@@ -285,6 +285,7 @@
                                             selector:@selector(appDidBecomeActive)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

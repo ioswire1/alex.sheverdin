@@ -13,6 +13,7 @@
 #import "ForecastViewController.h"
 #import "UIImage+OWMCondition.h"
 #import "Design.h"
+#import "PageForecastController.h"
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
@@ -35,6 +36,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
 
 @end
+
 
 @implementation WeatherViewController
 
@@ -376,20 +378,18 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqualToString:@"ToForecast"]) {
-        Class class = [ForecastViewController class];
-        class = [segue.destinationViewController class];
-        if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
-            ForecastViewController *vc = (ForecastViewController *)segue.destinationViewController;
-//            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
-            [vc.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
-            
-        }
-    }
-
     
-}
+    Class class = [PageForecastController class];
+    class = [segue.destinationViewController class];
+    if ([segue.destinationViewController isKindOfClass:[PageForecastController class]]) {
+        PageForecastController *vc = (PageForecastController *)segue.destinationViewController;
+        //            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
 
+    NSUInteger index = self.pageIndex;
+    [vc setViewControllers:@[[vc viewControllerAtIndex:index]] direction: UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+    }];
+    }
+}
 
 
 @end

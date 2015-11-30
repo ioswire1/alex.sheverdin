@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ywI-0m-jBe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="LBL-U3-7ed">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
         <!--Weather View Controller-->
         <scene sceneID="zkj-Q6-iMy">
             <objects>
-                <viewController storyboardIdentifier="WeatherController" id="e1Q-GZ-VkL" userLabel="Weather View Controller" customClass="WeatherViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WeatherViewController" id="e1Q-GZ-VkL" userLabel="Weather View Controller" customClass="WeatherViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kC6-NW-dpU"/>
                         <viewControllerLayoutGuide type="bottom" id="mCG-7e-egQ"/>
@@ -16,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crR-bJ-Ne0" customClass="CPTGraphHostingView">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crR-bJ-Ne0" customClass="CPTGraphHostingView">
                                 <rect key="frame" x="0.0" y="442" width="320" height="126"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -172,11 +173,12 @@
                 </customObject>
                 <tapGestureRecognizer id="tgy-E6-ZhK">
                     <connections>
-                        <segue destination="i4u-aS-eYY" kind="push" identifier="ToForecast" id="sby-0W-QXb"/>
+                        <action selector="tapToForecast:" destination="e1Q-GZ-VkL" id="k2g-b9-by8"/>
+                        <segue destination="kKD-Qx-9ZM" kind="push" id="lSb-AO-p6g"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1062" y="486"/>
+            <point key="canvasLocation" x="1082" y="481"/>
         </scene>
         <!--Forecast Controller-->
         <scene sceneID="S5b-XZ-Sgy">
@@ -331,9 +333,6 @@
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="fk6-an-50W" appends="YES" id="wHm-zG-Jhz"/>
-                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="gMM-2Y-sJQ"/>
                     <connections>
@@ -356,40 +355,46 @@
                         <outlet property="hostingView" destination="xsh-ck-DNw" id="CGa-80-6ph"/>
                     </connections>
                 </customObject>
-                <swipeGestureRecognizer direction="right" id="fk6-an-50W">
-                    <connections>
-                        <action selector="swipeToWeather:" destination="i4u-aS-eYY" id="Y97-K5-Fxa"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1423" y="486"/>
+            <point key="canvasLocation" x="1868" y="486"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="N7Q-g5-UaJ">
             <objects>
-                <pageViewController storyboardIdentifier="PageViewController" autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="ywI-0m-jBe" customClass="PageViewController" sceneMemberID="viewController"/>
+                <pageViewController storyboardIdentifier="PageForecastController" autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="ywI-0m-jBe" customClass="PageViewController" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="qer-fq-imt"/>
+                </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Se7-Rd-a9H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="321" y="486"/>
+            <point key="canvasLocation" x="721" y="481"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="JLD-xZ-guO">
+        <scene sceneID="EXM-35-8mf">
             <objects>
-                <navigationController storyboardIdentifier="NavigationController" automaticallyAdjustsScrollViewInsets="NO" id="K4N-7o-PET" customClass="NavigationController" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LBL-U3-7ed" customClass="NavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="WAT-ac-0Dx">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hgh-Zl-0Ab">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="e1Q-GZ-VkL" kind="relationship" relationship="rootViewController" id="zAK-hO-nIq"/>
+                        <segue destination="ywI-0m-jBe" kind="relationship" relationship="rootViewController" id="mkh-yJ-pwg"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BTk-ed-8re" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HK6-n1-0u8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="664" y="486"/>
+            <point key="canvasLocation" x="321" y="486"/>
+        </scene>
+        <!--Page Forecast Controller-->
+        <scene sceneID="Mmb-nC-U1b">
+            <objects>
+                <pageViewController storyboardIdentifier="PageViewController" autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="kKD-Qx-9ZM" customClass="PageForecastController" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="4sO-xp-iA0"/>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nc2-Xh-MDJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1505" y="481"/>
         </scene>
     </scenes>
     <resources>
