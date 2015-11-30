@@ -13,7 +13,7 @@
 
 @interface WeatherManager : NSObject
 
-
+@property (nonatomic, strong) NSArray *cities;
 
 + (instancetype)defaultManager;
 

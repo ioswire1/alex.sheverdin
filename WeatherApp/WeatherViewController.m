@@ -14,6 +14,7 @@
 #import "UIImage+OWMCondition.h"
 #import "Design.h"
 #import "PageForecastController.h"
+#import "NavigationController.h"
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
 
@@ -22,6 +23,7 @@
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
@@ -57,8 +59,21 @@
         NSString *title = [NSString stringWithFormat:@"%@, %@\n", self.currentWeather.name, self.currentWeather.sys.country];
         NSString *subtitle = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
         
-        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
+        UIView *view = self.navigationItem.titleView;
+        UILabel *label = [UILabel navigationTitle:title andSubtitle:subtitle];
+        [label sizeToFit];
+        
+        UINavigationItem *navigationItem = self.navigationItem;
+        navigationItem = self.pageNavigationItem;
+        UILabel *tempLabel = (UILabel *)navigationItem.titleView;
+        
+        self.navigationItem.titleView = label;
+        self.pageNavigationItem.titleView = label;
+
+//        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
+
         [self.navigationItem.titleView sizeToFit];
+        [self.pageNavigationItem.titleView sizeToFit];
         
         NSString *tempString = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
         
@@ -171,6 +186,9 @@
 
 }
 
+- (NSArray *)cities {
+    return [[WeatherManager defaultManager] cities];
+}
 
 - (CAGradientLayer *)getGradientLayer {
     CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -314,16 +332,11 @@
 
 
 
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleLightContent;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
+//    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
 
     [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
@@ -338,6 +351,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.indexLabel.text = [[self cities] objectAtIndex:self.pageIndex];
+    self.pageControl.currentPage = self.pageIndex;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self
@@ -379,16 +394,16 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     
-    Class class = [PageForecastController class];
-    class = [segue.destinationViewController class];
-    if ([segue.destinationViewController isKindOfClass:[PageForecastController class]]) {
-        PageForecastController *vc = (PageForecastController *)segue.destinationViewController;
-        //            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
-
-    NSUInteger index = self.pageIndex;
-    [vc setViewControllers:@[[vc viewControllerAtIndex:index]] direction: UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-    }];
-    }
+//    Class class = [PageForecastController class];
+//    class = [segue.destinationViewController class];
+//    if ([segue.destinationViewController isKindOfClass:[PageForecastController class]]) {
+//        PageForecastController *vc = (PageForecastController *)segue.destinationViewController;
+//        //            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
+//
+//    NSUInteger index = self.pageIndex;
+//    [vc setViewControllers:@[[vc viewControllerAtIndex:index]] direction: UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+//    }];
+//    }
 }
 
 

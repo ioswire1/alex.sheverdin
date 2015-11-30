@@ -40,6 +40,10 @@
     return self;
 }
 
+- (NSArray *)cities {
+        return @[@"Kharkov", @"Mumbai", @"London"];
+}
+
 - (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure {
     __weak typeof(self) wSelf = self;
     [[OpenWeatherMap service] getWeatherForLocation:location.coordinate completion:^(OWMObject <OWMCurrentWeatherObject> *object, NSError * _Nullable error) {

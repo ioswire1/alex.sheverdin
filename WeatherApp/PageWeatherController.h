@@ -1,5 +1,5 @@
 //
-//  PageViewController.h
+//  PageWeatherController.h
 //  WeatherApp
 //
 //  Created by Alex Sheverdin on 11/28/15.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PageViewController : UIPageViewController <UIPageViewControllerDataSource>
+@interface PageWeatherController : UIPageViewController <UIPageViewControllerDataSource>
 
 @end

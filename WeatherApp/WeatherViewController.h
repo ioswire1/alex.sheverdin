@@ -15,5 +15,6 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *indexLabel;
 @property (nonatomic) NSUInteger pageIndex;
+@property (strong, nonatomic) UINavigationItem *pageNavigationItem;
 
 @end

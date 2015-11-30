@@ -1,37 +1,49 @@
 //
-//  PageViewController.m
+//  PageWeatherController.m
 //  WeatherApp
 //
 //  Created by Alex Sheverdin on 11/28/15.
 //  Copyright © 2015 Alex Sheverdin. All rights reserved.
 //
 
-#import "PageViewController.h"
+#import "PageWeatherController.h"
 #import "WeatherViewController.h"
 #import "NavigationController.h"
 #import "ForecastViewController.h"
+#import "Design.h"
 
-@interface PageViewController ()
+#define CityCount 3
+
+@interface PageWeatherController ()
 
 @end
 
-@implementation PageViewController 
+@implementation PageWeatherController 
 
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    WeatherViewController *nvc = (WeatherViewController *)viewController;
-    NSInteger index = nvc.pageIndex;
-    index++;
-    return [self viewControllerAtIndex:index];
+    NavigationController *nvc = (NavigationController *) self.navigationController;
+    if (nvc) {
+        if (nvc.pageIndex >= 2) {
+            return nil;
+        } else {
+            nvc.pageIndex++;
+        }
+    }
+    return [self viewControllerAtIndex:nvc.pageIndex];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    WeatherViewController *vc = (WeatherViewController *)viewController;
-    NSInteger index = vc.pageIndex;
-    index--;
-    
-    return [self viewControllerAtIndex:index];
+    NavigationController *nvc = (NavigationController *) self.navigationController;
+    if (nvc) {
+        if (nvc.pageIndex <= 0) {
+            return nil;
+        } else {
+            nvc.pageIndex--;
+        }
+    }
+    return [self viewControllerAtIndex:nvc.pageIndex];
 }
 
 - (UIViewController *) viewControllerAtIndex:(NSInteger) index {
@@ -41,6 +53,7 @@
     WeatherViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
     if (controller) {
         controller.pageIndex = index;
+        controller.pageNavigationItem = self.navigationItem;
         return controller;
     }
     return nil;
@@ -55,8 +68,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.dataSource = self;
-    [self setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-    }];
+
     
 }
 
@@ -64,9 +76,12 @@
 -(void)viewWillAppear:(BOOL)animated {
     NSLog(@"PageCtr Appear!");
     NavigationController *nvc = (NavigationController *) self.navigationController;
-    NSUInteger index = nvc.pageIndex;
-    [self setViewControllers:@[[self viewControllerAtIndex:index]] direction: UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+    [self setViewControllers:@[[self viewControllerAtIndex:nvc.pageIndex]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
     }];
+
+//    UILabel *label = [UILabel navigationTitle:@"Title!" andSubtitle:@"SubTitle!"];
+//    [label sizeToFit];
+//    self.navigationItem.titleView = label;
 }
 
 

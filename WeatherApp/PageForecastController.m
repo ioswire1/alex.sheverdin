@@ -10,6 +10,8 @@
 #import "WeatherViewController.h"
 #import "NavigationController.h"
 #import "ForecastViewController.h"
+#import "WeatherManager.h"
+
 @interface PageForecastController ()
 
 @end
@@ -19,21 +21,27 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    ForecastViewController *vc = (ForecastViewController *)viewController;
-    NSInteger index = vc.pageIndex;
-    index++;
     NavigationController *nvc = (NavigationController *) self.navigationController;
-    nvc.pageIndex =index;
-    return [self viewControllerAtIndex:index];
+    if (nvc) {
+        if (nvc.pageIndex >= 2) {
+            return nil;
+        } else {
+            nvc.pageIndex++;
+        }
+    }
+    return [self viewControllerAtIndex:nvc.pageIndex];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    ForecastViewController *vc = (ForecastViewController *)viewController;
-    NSInteger index = vc.pageIndex;
-    index--;
     NavigationController *nvc = (NavigationController *) self.navigationController;
-    nvc.pageIndex =index;
-    return [self viewControllerAtIndex:index];
+    if (nvc) {
+        if (nvc.pageIndex <= 0) {
+            return nil;
+        } else {
+            nvc.pageIndex--;
+        }
+    }
+    return [self viewControllerAtIndex:nvc.pageIndex];
 }
 
 - (UIViewController *) viewControllerAtIndex:(NSInteger) index {
@@ -42,7 +50,6 @@
     }
     ForecastViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"ForecastViewController")];
     if (controller) {
-        //        controller.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)controller.pageIndex];
         controller.pageIndex = index;
         return controller;
     }
@@ -58,12 +65,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.dataSource = self;
-    [self setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-    }];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     NSLog(@"PageForecastCtr Appear!");
+    NavigationController *nvc = (NavigationController *) self.navigationController;
+    [self setViewControllers:@[[self viewControllerAtIndex:nvc.pageIndex]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

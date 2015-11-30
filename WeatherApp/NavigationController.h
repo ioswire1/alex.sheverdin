@@ -12,5 +12,4 @@
 
 @property (nonatomic) NSUInteger pageIndex;
 
-
 @end

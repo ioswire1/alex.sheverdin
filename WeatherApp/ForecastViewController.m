@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "GradientPlots.h"
 #import "Design.h"
+#import "NavigationController.h"
 
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
@@ -21,6 +22,7 @@
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *weekdayLabels;
+@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @property (strong, nonatomic) id <OWMForecastDailyObject> currentForecastsDaily;
 
@@ -74,6 +76,9 @@
     return gradient;
 }
 
+- (NSArray *)cities {
+    return [[WeatherManager defaultManager] cities];
+}
 
 #pragma mark - Location
 
@@ -240,7 +245,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
+//    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
     
     [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
@@ -262,6 +267,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.indexLabel.text = [[self cities] objectAtIndex:self.pageIndex];
+    self.pageControl.currentPage = self.pageIndex;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [NSLocale currentLocale];
