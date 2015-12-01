@@ -186,9 +186,6 @@
 
 }
 
-- (NSArray *)cities {
-    return [[WeatherManager defaultManager] cities];
-}
 
 - (CAGradientLayer *)getGradientLayer {
     CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -219,6 +216,21 @@
             break;
     }
     return gradient;
+}
+
+#pragma mark - Navigation Controller Helpers
+
+
+- (NSArray *)cities {
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    NavigationController *nvc = (NavigationController *)window.rootViewController;
+    return nvc.cities;
+}
+
+- (NSUInteger)pageIndex {
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    NavigationController *nvc = (NavigationController *)window.rootViewController;
+    return nvc.pageIndex;
 }
 
 #pragma mark - Setters

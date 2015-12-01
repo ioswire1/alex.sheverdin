@@ -17,25 +17,18 @@
 
 @implementation NavigationController
 
+- (NSArray *)cities {
+    return @[@"Kharkov", @"Mumbai", @"London"];
+}
+
+
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
-//    WeatherViewController *vc = (WeatherViewController *) [self visibleViewController];
-//    vc.pageIndex = self.pageIndex;
-//    
-//    UIViewController *topVC = [self topViewController];
-//    UIViewController *visiVC = [self visibleViewController];
-//    NSLog(@"top: %@, visi: %@", [topVC class], [visiVC class]);
-    
-    
-//    ForecastViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"ForecastViewController")];
-//    [self setViewControllers:@[controller] animated:NO];
-//    ForecastViewController *tempVC = (ForecastViewController *)[self visibleViewController];
-//    tempVC.pageIndex = self.pageIndex;
-//    NSLog(@"new vc: %@", [tempVC class]);
 }
-
+    
 -(void)viewWillAppear:(BOOL)animated {
     NSLog(@"NaviCtr Appear!");
 }

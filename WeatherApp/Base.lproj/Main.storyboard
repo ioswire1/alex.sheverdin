@@ -363,7 +363,7 @@
         <!--Page Weather Controller-->
         <scene sceneID="N7Q-g5-UaJ">
             <objects>
-                <pageViewController storyboardIdentifier="PageForecastController" autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" pageSpacing="1" navigationOrientation="horizontal" spineLocation="none" id="ywI-0m-jBe" customClass="PageWeatherController" sceneMemberID="viewController">
+                <pageViewController storyboardIdentifier="PageForecastController" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="ywI-0m-jBe" customClass="PageWeatherController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="qer-fq-imt"/>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Se7-Rd-a9H" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -51,8 +51,9 @@
         return nil;
     }
     WeatherViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
+        UIViewController *vc = controller.parentViewController;
     if (controller) {
-        controller.pageIndex = index;
+        //controller.pageIndex = index;
         controller.pageNavigationItem = self.navigationItem;
         return controller;
     }

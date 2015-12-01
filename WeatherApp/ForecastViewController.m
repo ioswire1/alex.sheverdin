@@ -76,9 +76,19 @@
     return gradient;
 }
 
+
+#pragma mark - Navigation Controller Helpers
+
 - (NSArray *)cities {
-    return [[WeatherManager defaultManager] cities];
+    NavigationController *nvc = (NavigationController *)self.parentViewController.navigationController;
+    return nvc.cities;
 }
+
+- (NSUInteger)pageIndex {
+    NavigationController *nvc = (NavigationController *)self.parentViewController.navigationController;
+    return nvc.pageIndex;
+}
+
 
 #pragma mark - Location
 

@@ -13,8 +13,6 @@
 
 @interface WeatherManager : NSObject
 
-@property (nonatomic, strong) NSArray *cities;
-
 + (instancetype)defaultManager;
 
 - (void)getWeatherByLocation:(CLLocation *)location success:(void (^)(OWMObject <OWMCurrentWeatherObject> *weather))success failure:(void (^)(NSError *error))failure;
