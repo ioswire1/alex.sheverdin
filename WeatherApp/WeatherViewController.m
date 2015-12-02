@@ -16,15 +16,13 @@
 #import "PageForecastController.h"
 #import "NavigationController.h"
 
-#define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
+
 
 
 @interface WeatherViewController () <GradientPlotsDataSource>
 
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
-
 
 @property (strong, nonatomic) id <OWMCurrentWeatherObject> currentWeather;
 @property (strong, nonatomic) id <OWMForecastObject> currentForecast;
@@ -58,22 +56,12 @@
         
         NSString *title = [NSString stringWithFormat:@"%@, %@\n", self.currentWeather.name, self.currentWeather.sys.country];
         NSString *subtitle = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
-        
-        UIView *view = self.navigationItem.titleView;
+
         UILabel *label = [UILabel navigationTitle:title andSubtitle:subtitle];
         [label sizeToFit];
-        
-        UINavigationItem *navigationItem = self.navigationItem;
-        navigationItem = self.pageNavigationItem;
-        UILabel *tempLabel = (UILabel *)navigationItem.titleView;
-        
-        self.navigationItem.titleView = label;
-        self.pageNavigationItem.titleView = label;
-
-//        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
-
-        [self.navigationItem.titleView sizeToFit];
-        [self.pageNavigationItem.titleView sizeToFit];
+       
+        self.parentViewController.navigationItem.titleView = label;
+        [self.parentViewController.navigationItem.titleView sizeToFit];
         
         NSString *tempString = [NSString stringWithFormat:@"%dº",[self.currentWeather.main.temp intValue]];
         
@@ -186,46 +174,14 @@
 
 }
 
-
-- (CAGradientLayer *)getGradientLayer {
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    OWMWeatherSysObject *sys = (OWMWeatherSysObject *)self.currentWeather.sys;
-    DayTime daytime = [sys dayTime];
-    switch (daytime) {
-        case DayTimeMorning:
-            gradient.frame = self.view.bounds;
-            gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
-            gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
-            break;
-        case DayTimeDay:
-            gradient.frame = self.view.bounds;
-            gradient.colors = @[UIColorFromRGB(0x6dcff6), UIColorFromRGB(0x0daaed), UIColorFromRGB(0x0771c7), UIColorFromRGB(0x012d78)];
-            gradient.locations = @[@(0.0), @(0.35), @(0.6), @(1.0)];
-            break;
-        case DayTimeEvening:
-            gradient.frame = self.view.bounds;
-            gradient.colors = @[UIColorFromRGB(0xb47c4b), UIColorFromRGB(0xac6049), UIColorFromRGB(0x432a51), UIColorFromRGB(0x110724), UIColorFromRGB(0x150c1f)];
-            gradient.locations = @[@(0.0), @(0.11), @(0.36), @(0.7), @(1.0)];
-            break;
-        case DayTimeNigth:
-            gradient.frame = self.view.bounds;
-            gradient.colors = @[UIColorFromRGB(0x387d7e), UIColorFromRGB(0x154e59), UIColorFromRGB(0x05111d), UIColorFromRGB(0x02020c)];
-            gradient.locations = @[@(0.0), @(0.14), @(0.55), @(1.0)];
-            break;
-        default:
-            break;
-    }
-    return gradient;
-}
-
 #pragma mark - Navigation Controller Helpers
 
 
-- (NSArray *)cities {
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    NavigationController *nvc = (NavigationController *)window.rootViewController;
-    return nvc.cities;
-}
+//- (NSArray *)cities {
+//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+//    NavigationController *nvc = (NavigationController *)window.rootViewController;
+//    return nvc.cities;
+//}
 
 - (NSUInteger)pageIndex {
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -259,7 +215,7 @@
         NSLog(@"Location Changed!");
         __weak typeof(self) wSelf = self;
         [self loadWeather:^{
-            [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
+            
         }];
         [self loadForecast:^{//
             [wSelf setScaleMinMax];
@@ -344,29 +300,21 @@
 
 
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
-
-    [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
+    self.view.backgroundColor = [UIColor clearColor];
+    self.title = @[@"aaa", @"bbb", @"ccc"][arc4random() % 3];
+//    self.navigationItem
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-//    self.navigationController.navigationBar.translucent = YES;
-//    self.navigationController.view.backgroundColor = [UIColor clearColor];
-//    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
-
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.indexLabel.text = [[self cities] objectAtIndex:self.pageIndex];
-    self.pageControl.currentPage = self.pageIndex;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(appDidBecomeActive)
                                                 name:UIApplicationDidBecomeActiveNotification

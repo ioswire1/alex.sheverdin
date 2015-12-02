@@ -31,9 +31,6 @@
 @implementation ForecastViewController
 
 
-//- (IBAction)swipeToWeather:(UISwipeGestureRecognizer *)sender {
-//    [self.navigationController popViewControllerAnimated:YES];
-//}
 
 #pragma mark - Get data
 
@@ -58,8 +55,8 @@
         formatter.dateFormat = @"MMMM";
         NSString *subtitle = [formatter stringFromDate:date];
         
-        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
-        [self.navigationItem.titleView sizeToFit];
+        self.parentViewController.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
+        [self.parentViewController.navigationItem.titleView sizeToFit];
         
     } failure:^(NSError *error) {
         // TODO: implementation
@@ -74,19 +71,6 @@
     gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
 
     return gradient;
-}
-
-
-#pragma mark - Navigation Controller Helpers
-
-- (NSArray *)cities {
-    NavigationController *nvc = (NavigationController *)self.parentViewController.navigationController;
-    return nvc.cities;
-}
-
-- (NSUInteger)pageIndex {
-    NavigationController *nvc = (NavigationController *)self.parentViewController.navigationController;
-    return nvc.pageIndex;
 }
 
 
@@ -277,8 +261,6 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.indexLabel.text = [[self cities] objectAtIndex:self.pageIndex];
-    self.pageControl.currentPage = self.pageIndex;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [NSLocale currentLocale];

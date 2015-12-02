@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PageWeatherController : UIPageViewController <UIPageViewControllerDataSource>
-
+@interface PageWeatherController : UIPageViewController
+@property NSUInteger currentPage;
 @end

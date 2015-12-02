@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "OpenWeatherMap.h"
 
+#define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
+
 static NSString *const kOpenWeatherApiKey = @"317eb1575c16aa97869f70407660d3e6";
 
 @interface AppDelegate ()
@@ -42,7 +44,50 @@ static NSString *const kOpenWeatherApiKey = @"317eb1575c16aa97869f70407660d3e6";
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
     self.locationManager.distanceFilter = 500;
     [self.locationManager startUpdatingLocation];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kDidUpdateLocationsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        [self updateBackground];
+    }];
     return YES;
+}
+
+- (void)setWindow:(UIWindow *)window {
+    _window = window;
+    [self updateBackground];
+}
+
+- (void)updateBackground {
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.window.bounds;
+    //OWMWeatherSysObject *sys = (OWMWeatherSysObject *)self.currentWeather.sys;
+    DayTime daytime = DayTimeDay;//[sys dayTime];
+    switch (daytime) {
+        case DayTimeMorning:
+            
+            gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
+            gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
+            break;
+        case DayTimeDay:
+            
+            gradient.colors = @[UIColorFromRGB(0x6dcff6), UIColorFromRGB(0x0daaed), UIColorFromRGB(0x0771c7), UIColorFromRGB(0x012d78)];
+            gradient.locations = @[@(0.0), @(0.35), @(0.6), @(1.0)];
+            break;
+        case DayTimeEvening:
+            
+            gradient.colors = @[UIColorFromRGB(0xb47c4b), UIColorFromRGB(0xac6049), UIColorFromRGB(0x432a51), UIColorFromRGB(0x110724), UIColorFromRGB(0x150c1f)];
+            gradient.locations = @[@(0.0), @(0.11), @(0.36), @(0.7), @(1.0)];
+            break;
+        case DayTimeNigth:
+            
+            gradient.colors = @[UIColorFromRGB(0x387d7e), UIColorFromRGB(0x154e59), UIColorFromRGB(0x05111d), UIColorFromRGB(0x02020c)];
+            gradient.locations = @[@(0.0), @(0.14), @(0.55), @(1.0)];
+            break;
+        default:
+            break;
+    }
+    
+    [self.window.layer insertSublayer:gradient atIndex:0];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

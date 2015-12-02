@@ -14,91 +14,92 @@
 
 #define CityCount 3
 
-@interface PageWeatherController ()
-
+@interface PageWeatherController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
+@property (nonatomic, strong) NSMutableArray <UIViewController *> *controllers;
+@property (nonatomic, strong) UIPageControl *pageControl;
 @end
 
 @implementation PageWeatherController 
 
+NSUInteger const pageCount = 5;
+
 #pragma mark - UIPageViewControllerDataSource
 
+- (NSMutableArray *)controllers {
+    if (!_controllers) {
+        _controllers = [@[] mutableCopy];
+        for (int i = 0; i < pageCount; i++) {
+            UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
+            [_controllers addObject:controller];
+        }
+    }
+    return _controllers;
+}
+
+- (UIPageControl *)pageControl {
+    if (!_pageControl) {
+        _pageControl = [[UIPageControl alloc] init];
+        _pageControl.numberOfPages = self.controllers.count;
+        _pageControl.currentPage = 0;
+        [self.view addSubview:_pageControl];
+    }
+    return _pageControl;
+}
+
+- (void)setCurrentPage:(NSUInteger)currentPage {
+    // Scroll to page
+    self.pageControl.currentPage = currentPage;
+    self.navigationItem.title = [self.controllers[currentPage] title];
+}
+
+- (NSUInteger)currentPage {
+    return self.pageControl.currentPage;
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect frame = self.view.bounds;
+    frame.size.height = 40;
+    self.pageControl.frame = frame;
+    [self.view bringSubviewToFront:self.pageControl];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.dataSource = self;
+    self.delegate = self;
+    
+    [self setViewControllers:@[self.controllers.firstObject]
+                   direction:UIPageViewControllerNavigationDirectionForward
+                    animated:NO completion:nil];
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController
+        didFinishAnimating:(BOOL)finished
+   previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers
+       transitionCompleted:(BOOL)completed
+{
+    if (completed) {
+        self.currentPage = [self.controllers indexOfObject:self.viewControllers.firstObject];
+    }
+}
+
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    NavigationController *nvc = (NavigationController *) self.navigationController;
-    if (nvc) {
-        if (nvc.pageIndex >= 2) {
-            return nil;
-        } else {
-            nvc.pageIndex++;
-        }
-    }
-    return [self viewControllerAtIndex:nvc.pageIndex];
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    NavigationController *nvc = (NavigationController *) self.navigationController;
-    if (nvc) {
-        if (nvc.pageIndex <= 0) {
-            return nil;
-        } else {
-            nvc.pageIndex--;
-        }
-    }
-    return [self viewControllerAtIndex:nvc.pageIndex];
-}
-
-- (UIViewController *) viewControllerAtIndex:(NSInteger) index {
-    if (index < 0|| index > 2) {
-        return nil;
-    }
-    WeatherViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
-        UIViewController *vc = controller.parentViewController;
-    if (controller) {
-        //controller.pageIndex = index;
-        controller.pageNavigationItem = self.navigationItem;
-        return controller;
+    NSUInteger index = [self.controllers indexOfObject:viewController];
+    index++;
+    if (index < self.controllers.count) {
+        return self.controllers[index];
     }
     return nil;
 }
 
-
-
-
-#pragma mark - Life cycle
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.dataSource = self;
-
-    
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
+    NSInteger index = [self.controllers indexOfObject:viewController];
+    index--;
+    if (index >= 0) {
+        return self.controllers[index];
+    }
+    return nil;
 }
-
-
--(void)viewWillAppear:(BOOL)animated {
-    NSLog(@"PageCtr Appear!");
-    NavigationController *nvc = (NavigationController *) self.navigationController;
-    [self setViewControllers:@[[self viewControllerAtIndex:nvc.pageIndex]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-    }];
-
-//    UILabel *label = [UILabel navigationTitle:@"Title!" andSubtitle:@"SubTitle!"];
-//    [label sizeToFit];
-//    self.navigationItem.titleView = label;
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
