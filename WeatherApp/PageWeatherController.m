@@ -11,8 +11,8 @@
 #import "NavigationController.h"
 #import "ForecastViewController.h"
 #import "Design.h"
+#import "WeatherManager.h"
 
-#define CityCount 3
 
 @interface PageWeatherController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 @property (nonatomic, strong) NSMutableArray <UIViewController *> *controllers;
@@ -21,14 +21,13 @@
 
 @implementation PageWeatherController 
 
-NSUInteger const pageCount = 5;
+//static  NSUInteger const pageCount = 5;
 
-#pragma mark - UIPageViewControllerDataSource
 
 - (NSMutableArray *)controllers {
     if (!_controllers) {
         _controllers = [@[] mutableCopy];
-        for (int i = 0; i < pageCount; i++) {
+        for (int i = 0; i < [[WeatherManager defaultManager].cities count]; i++) {
             UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
             [_controllers addObject:controller];
         }
@@ -64,15 +63,7 @@ NSUInteger const pageCount = 5;
     [self.view bringSubviewToFront:self.pageControl];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.dataSource = self;
-    self.delegate = self;
-    
-    [self setViewControllers:@[self.controllers.firstObject]
-                   direction:UIPageViewControllerNavigationDirectionForward
-                    animated:NO completion:nil];
-}
+#pragma mark - UIPageViewControllerDelegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController
         didFinishAnimating:(BOOL)finished
@@ -83,6 +74,8 @@ NSUInteger const pageCount = 5;
         self.currentPage = [self.controllers indexOfObject:self.viewControllers.firstObject];
     }
 }
+
+#pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     NSUInteger index = [self.controllers indexOfObject:viewController];
@@ -100,6 +93,18 @@ NSUInteger const pageCount = 5;
         return self.controllers[index];
     }
     return nil;
+}
+
+#pragma mark - Life cycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.dataSource = self;
+    self.delegate = self;
+    
+    [self setViewControllers:@[self.controllers.firstObject]
+                   direction:UIPageViewControllerNavigationDirectionForward
+                    animated:NO completion:nil];
 }
 
 @end

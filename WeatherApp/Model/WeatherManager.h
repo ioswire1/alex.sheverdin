@@ -11,7 +11,19 @@
 
 #import "Weather.h"
 
+@interface City : NSObject
+
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) CLLocation *location;
+
+- (instancetype) initWithName: (NSString *) name;
+
+@end
+
 @interface WeatherManager : NSObject
+
+@property (nonatomic, strong) NSArray<City*> *cities;
+
 
 + (instancetype)defaultManager;
 
@@ -28,3 +40,4 @@
 @property (strong, nonatomic) NSArray <__kindof OWMObject <OWMCurrentWeatherObject>*> * forecastDailyArray;
 
 @end
+

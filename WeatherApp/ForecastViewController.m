@@ -63,15 +63,15 @@
     }];
 }
 
-- (CAGradientLayer *)getGradientLayer {
-
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = self.view.bounds;
-    gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
-    gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
-
-    return gradient;
-}
+//- (CAGradientLayer *)getGradientLayer {
+//
+//    CAGradientLayer *gradient = [CAGradientLayer layer];
+//    gradient.frame = self.view.bounds;
+//    gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
+//    gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
+//
+//    return gradient;
+//}
 
 
 #pragma mark - Location
@@ -238,30 +238,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    self.indexLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.pageIndex];
-    
-    [self.view.layer insertSublayer:[self getGradientLayer] atIndex:0];
+    self.view.backgroundColor = [UIColor clearColor];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-    
     [self.collectionView reloadData];
-    
-//    self.navigationItem.hidesBackButton = YES;
 
     __weak typeof(self) wSelf = self;
     [self loadForecastDaily:^{
         [wSelf setScaleMinMax];
         [wSelf.plots redrawPlots];
-        
     }];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [NSLocale currentLocale];
     NSArray<NSString *> *shortWeekdaySymbols = dateFormatter.shortWeekdaySymbols;
@@ -285,6 +277,11 @@
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
 }
 
 - (void)didReceiveMemoryWarning {

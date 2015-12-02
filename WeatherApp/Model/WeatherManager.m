@@ -238,8 +238,51 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
     _forecastDailyArray = [resultArray copy];
     }
 
-
-
+- (NSArray<City *> *)cities {
+    if (!_cities) {
+        NSMutableArray *array = [@[] mutableCopy];
+        City *city = [[City alloc] initWithName:@"Kharkov"];
+        [array addObject:city];
+        city = [[City alloc] initWithName:@"Mumbai"];
+        [array addObject:city];
+        city = [[City alloc] initWithName:@"Tokyo"];
+        [array addObject:city];
+        city = [[City alloc] initWithName:@"Moscow"];
+        [array addObject:city];
+//        city = [[City alloc] initWithName:@"Sydney"];
+//        [array addObject:city];
+        _cities = [@[] copy];
+        _cities = [array copy];
+        
+//        CLGeocoder* gc = [[CLGeocoder alloc] init];
+//        [gc geocodeAddressString:@"Kharkov" completionHandler:^(NSArray *placemarks, NSError *error) {
+//            if ([placemarks count]>0)
+//            {
+//                CLPlacemark* mark = (CLPlacemark*)[placemarks objectAtIndex:0];
+//                double lat = mark.location.coordinate.latitude;
+//                double lng = mark.location.coordinate.longitude;
+//                lat = 0;
+//            }
+//        }];
+        
+    }
+    return _cities;
+}
 
 
 @end
+
+@implementation City
+
+- (instancetype) initWithName: (NSString *) name {
+    self = [super init];
+    if (self) {
+        _name = name;
+    }
+    return self;
+}
+
+
+@end
+
+

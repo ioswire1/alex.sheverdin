@@ -13,6 +13,7 @@
 #import "ForecastViewController.h"
 #import "UIImage+OWMCondition.h"
 #import "Design.h"
+#import "PageWeatherController.h"
 #import "PageForecastController.h"
 #import "NavigationController.h"
 
@@ -200,7 +201,28 @@
 #pragma mark - Location
 
 - (CLLocation *)currentLocation {
-    return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
+    
+    PageWeatherController *vc = (PageWeatherController *)self.parentViewController;
+    NSUInteger index = vc.currentPage;
+    if (!index) {
+        return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
+    }
+    NSString *city = [WeatherManager defaultManager].cities[index].name;
+    CLGeocoder* gc = [[CLGeocoder alloc] init];
+    __block CLLocation *location;
+    [gc geocodeAddressString:city completionHandler:^(NSArray *placemarks, NSError *error) {
+        if ([placemarks count]>0)
+        {
+            CLPlacemark* mark = (CLPlacemark*)[placemarks objectAtIndex:0];
+            double lat = mark.location.coordinate.latitude;
+            double lng = mark.location.coordinate.longitude;
+            location = mark.location;
+            [self loadWeather:nil];
+        }
+    }];
+    return location;
+    
+    
 }
 
 
@@ -303,16 +325,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
-    self.title = @[@"aaa", @"bbb", @"ccc"][arc4random() % 3];
-//    self.navigationItem
+//    self.title = @[@"aaa", @"bbb", @"ccc"][arc4random() % 3];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
+    
+    
+
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
+        self.view.alpha = 1.0;
+    } completion:nil];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self
@@ -337,6 +365,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
+        self.view.alpha = 0.0;
+    } completion:nil];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

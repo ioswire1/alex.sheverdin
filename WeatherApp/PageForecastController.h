@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PageForecastController : UIPageViewController <UIPageViewControllerDataSource>
+@interface PageForecastController : UIPageViewController
 
-@property (nonatomic) NSUInteger pageIndex;
+@property NSUInteger currentPage;
+//@property (nonatomic) NSUInteger pageIndex;
 
-- (UIViewController *) viewControllerAtIndex:(NSInteger) index;
+//- (UIViewController *) viewControllerAtIndex:(NSInteger) index;
 
 @end

@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class City;
 
 @interface NavigationController : UINavigationController
 
-@property (nonatomic, strong) NSArray *cities;
 @property (nonatomic) NSUInteger pageIndex;
 
 @end
