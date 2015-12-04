@@ -15,7 +15,7 @@
 
 
 @interface PageWeatherController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
-@property (nonatomic, strong) NSMutableArray <UIViewController *> *controllers;
+
 @property (nonatomic, strong) UIPageControl *pageControl;
 @end
 
@@ -48,7 +48,7 @@
 - (void)setCurrentPage:(NSUInteger)currentPage {
     // Scroll to page
     self.pageControl.currentPage = currentPage;
-    self.navigationItem.title = [self.controllers[currentPage] title];
+//    self.navigationItem.title = [self.controllers[currentPage] title];
 }
 
 - (NSUInteger)currentPage {
@@ -105,6 +105,16 @@
     [self setViewControllers:@[self.controllers.firstObject]
                    direction:UIPageViewControllerNavigationDirectionForward
                     animated:NO completion:nil];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSArray *cities = [WeatherManager defaultManager].cities;
+    for (int i = 0; i < [cities count] - [_controllers count]; i++) {
+            UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
+            [_controllers addObject:controller];
+    }
+    _pageControl.numberOfPages = self.controllers.count;
 }
 
 @end

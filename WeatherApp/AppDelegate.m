@@ -26,6 +26,10 @@ static NSString *const kOpenWeatherApiKey = @"317eb1575c16aa97869f70407660d3e6";
     
     [OpenWeatherMap setApiKey:kOpenWeatherApiKey];
     
+    NSString* units = [[NSUserDefaults standardUserDefaults] stringForKey:kUnitKey];
+    if (units) {
+        [OpenWeatherMap setUnits:units];
+    }
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self.window setBackgroundColor:[UIColor blackColor]];
     
@@ -43,8 +47,7 @@ static NSString *const kOpenWeatherApiKey = @"317eb1575c16aa97869f70407660d3e6";
     }
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
     self.locationManager.distanceFilter = 500;
-    [self.locationManager startUpdatingLocation];
-    
+    [self.locationManager startUpdatingLocation];    
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kDidUpdateLocationsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         [self updateBackground];

@@ -18,6 +18,7 @@ static NSInteger const kCacheLimit = 1024 * 1024 * 2; // 2 mb
 
 @interface NSDictionary (HTTPGETParameters)
 
+
 - (NSString *)wic_GETParameters; // return a string in format ?key1=value1&key2=value2&...
 
 @end

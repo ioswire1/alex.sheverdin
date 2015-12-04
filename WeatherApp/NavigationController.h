@@ -11,6 +11,4 @@
 
 @interface NavigationController : UINavigationController
 
-@property (nonatomic) NSUInteger pageIndex;
-
 @end

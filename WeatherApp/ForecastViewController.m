@@ -11,7 +11,6 @@
 #import "AppDelegate.h"
 #import "GradientPlots.h"
 #import "Design.h"
-#import "NavigationController.h"
 
 
 #define UIColorFromRGB(rgbValue) (id)[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0].CGColor
@@ -22,7 +21,6 @@
 @property (nonatomic, strong) IBOutlet GradientPlots *plots;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *weekdayLabels;
-@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @property (strong, nonatomic) id <OWMForecastDailyObject> currentForecastsDaily;
 
@@ -54,30 +52,40 @@
         formatter.locale = [NSLocale currentLocale];
         formatter.dateFormat = @"MMMM";
         NSString *subtitle = [formatter stringFromDate:date];
-        
-        self.parentViewController.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
-        [self.parentViewController.navigationItem.titleView sizeToFit];
+        self.navigationItem.titleView = [UILabel navigationTitle:title andSubtitle:subtitle];
+        [self.navigationItem.titleView sizeToFit];
         
     } failure:^(NSError *error) {
         // TODO: implementation
     }];
 }
 
-//- (CAGradientLayer *)getGradientLayer {
-//
-//    CAGradientLayer *gradient = [CAGradientLayer layer];
-//    gradient.frame = self.view.bounds;
-//    gradient.colors = @[UIColorFromRGB(0x3a4f6e), UIColorFromRGB(0x55e75), UIColorFromRGB(0xd3808a), UIColorFromRGB(0xf4aca0), UIColorFromRGB(0xf8f3c9)];
-//    gradient.locations = @[@(0.0), @(0.3), @(0.66), @(0.8), @(1.0)];
-//
-//    return gradient;
-//}
-
 
 #pragma mark - Location
 
 - (CLLocation *)currentLocation {
-    return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
+    
+    NSUInteger index = self.pageIndex;
+    if (!self.pageIndex) {
+        return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
+    }
+    City *city = [WeatherManager defaultManager].cities[self.pageIndex];
+    
+    //    CLGeocoder* gc = [[CLGeocoder alloc] init];
+    //    __block CLLocation *location;
+    //    [gc geocodeAddressString:city completionHandler:^(NSArray *placemarks, NSError *error) {
+    //        if ([placemarks count]>0)
+    //        {
+    //            CLPlacemark* mark = (CLPlacemark*)[placemarks objectAtIndex:0];
+    //            double lat = mark.location.coordinate.latitude;
+    //            double lng = mark.location.coordinate.longitude;
+    //            location = mark.location;
+    //            [self loadWeather:nil];
+    //        }
+    //    }];
+    return city.location;
+    
+    
 }
 
 
@@ -148,7 +156,6 @@
         NSString *dateString = [[formatter stringFromDate:date] uppercaseString];
         labelDay.text = dateString;
         formatter.dateFormat = @"E";
-//        labelDayOfWeek.text = [formatter stringFromDate:date];
         
         int temperature = forecasts[index].temp.day.intValue;
         
@@ -157,7 +164,9 @@
         int weatherID = [[forecasts[index].weather[0] objectForKey:@"id"] intValue];
 
         imageView.image = [UIImage imageWithConditionGroup:OWMConditionGroupByConditionCode(weatherID)];
+        
     } else {
+        
         labelDay.text = @"";
         labelTemp.text = @"";
         labelDayOfWeek.text = @"";
@@ -254,6 +263,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [NSLocale currentLocale];
     NSArray<NSString *> *shortWeekdaySymbols = dateFormatter.shortWeekdaySymbols;
@@ -269,18 +279,18 @@
         UILabel *label = self.weekdayLabels[i];
         label.text = [shortWeekdaySymbols[i] uppercaseString];
     }
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(appDidBecomeActive)
-                                                name:UIApplicationDidBecomeActiveNotification
-                                              object:nil];
+    if (!self.pageIndex) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
+    }
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    if (!self.pageIndex) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
+        
 
 }
 

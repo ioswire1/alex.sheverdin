@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface PageWeatherController : UIPageViewController
+@property (nonatomic, strong) NSMutableArray <UIViewController *> *controllers;
 @property NSUInteger currentPage;
 @end

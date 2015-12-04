@@ -14,11 +14,6 @@
 #import "UIImage+OWMCondition.h"
 #import "Design.h"
 #import "PageWeatherController.h"
-#import "PageForecastController.h"
-#import "NavigationController.h"
-
-
-
 
 @interface WeatherViewController () <GradientPlotsDataSource>
 
@@ -33,8 +28,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *windLabel;
 @property (strong, nonatomic) IBOutlet UILabel *humidityLabel;
 @property (strong, nonatomic) IBOutlet UILabel *pressureLabel;
-@property (strong, nonatomic) IBOutlet UILabel *cityLabel;
-@property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (nonatomic) NSUInteger pageIndex;
 
 @end
 
@@ -98,7 +92,7 @@
     CLLocation *location = [self currentLocation];
     
     [[WeatherManager defaultManager] getForecastByLocation:location success:^(OWMObject <OWMForecastObject> *object) {
-//    [[WeatherManager defaultManager] getForecastByCity:@"London" success:^(OWMObject <OWMForecastObject> *object) {
+        
         wSelf.currentForecast = object;
   
         if (completion) {
@@ -175,55 +169,25 @@
 
 }
 
-#pragma mark - Navigation Controller Helpers
-
-
-//- (NSArray *)cities {
-//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-//    NavigationController *nvc = (NavigationController *)window.rootViewController;
-//    return nvc.cities;
-//}
-
-- (NSUInteger)pageIndex {
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    NavigationController *nvc = (NavigationController *)window.rootViewController;
-    return nvc.pageIndex;
-}
 
 #pragma mark - Setters
 
 - (void)setCurrentForecast:(id<OWMForecastObject>)currentForecast {
     
     _currentForecast = currentForecast;
-    //[self.tableView reloadData];
 }
 
 #pragma mark - Location
 
 - (CLLocation *)currentLocation {
     
-    PageWeatherController *vc = (PageWeatherController *)self.parentViewController;
-    NSUInteger index = vc.currentPage;
-    if (!index) {
+    NSUInteger index = self.pageIndex;
+    if (!self.pageIndex) {
         return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
     }
-    NSString *city = [WeatherManager defaultManager].cities[index].name;
-    CLGeocoder* gc = [[CLGeocoder alloc] init];
-    __block CLLocation *location;
-    [gc geocodeAddressString:city completionHandler:^(NSArray *placemarks, NSError *error) {
-        if ([placemarks count]>0)
-        {
-            CLPlacemark* mark = (CLPlacemark*)[placemarks objectAtIndex:0];
-            double lat = mark.location.coordinate.latitude;
-            double lng = mark.location.coordinate.longitude;
-            location = mark.location;
-            [self loadWeather:nil];
-        }
-    }];
-    return location;
+    City *city = [WeatherManager defaultManager].cities[self.pageIndex];
     
-    
-}
+    return city.location;}
 
 
 #pragma mark - Notifications
@@ -325,28 +289,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
-//    self.title = @[@"aaa", @"bbb", @"ccc"][arc4random() % 3];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-    
-    
-
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    PageWeatherController *pvc = (PageWeatherController *)self.parentViewController;
+    self.pageIndex = [pvc.controllers indexOfObject:self];
+    
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
         self.view.alpha = 1.0;
     } completion:nil];
 
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(appDidBecomeActive)
-                                                name:UIApplicationDidBecomeActiveNotification
-                                              object:nil];
+    if (!self.pageIndex) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
+    }
+
     __weak typeof(self) wSelf = self;
     [self loadWeather:^{
         
@@ -368,8 +329,9 @@
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
         self.view.alpha = 0.0;
     } completion:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (!self.pageIndex) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
 }
 
 
@@ -385,17 +347,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    
-//    Class class = [PageForecastController class];
-//    class = [segue.destinationViewController class];
-//    if ([segue.destinationViewController isKindOfClass:[PageForecastController class]]) {
-//        PageForecastController *vc = (PageForecastController *)segue.destinationViewController;
-//        //            vc.forecasts = [[WeatherManager defaultManager] forecastForOneDayFromNow];
-//
-//    NSUInteger index = self.pageIndex;
-//    [vc setViewControllers:@[[vc viewControllerAtIndex:index]] direction: UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-//    }];
-//    }
+
+    if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
+        ForecastViewController *vc = (ForecastViewController *)segue.destinationViewController;
+        vc.pageIndex = self.pageIndex;
+    }
 }
 
 

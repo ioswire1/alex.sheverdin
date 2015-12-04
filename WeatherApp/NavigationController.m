@@ -17,11 +17,6 @@
 
 @implementation NavigationController
 
-- (NSArray *)cities {
-    return @[@"Kharkov", @"Mumbai", @"London"];
-}
-
-
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad {

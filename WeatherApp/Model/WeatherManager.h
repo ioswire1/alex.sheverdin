@@ -14,6 +14,7 @@
 @interface City : NSObject
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *countryCode;
 @property (nonatomic, strong) CLLocation *location;
 
 - (instancetype) initWithName: (NSString *) name;
@@ -22,7 +23,7 @@
 
 @interface WeatherManager : NSObject
 
-@property (nonatomic, strong) NSArray<City*> *cities;
+@property (nonatomic, strong) NSMutableArray<City*> *cities;
 
 
 + (instancetype)defaultManager;

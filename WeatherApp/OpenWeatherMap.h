@@ -8,8 +8,11 @@
 
 @import Foundation;
 @import CoreLocation;
-
 #import "Weather.h"
+
+static NSString *const _Nonnull kUnitKey = @"units";
+static NSString *const _Nonnull kWeatherUnitMetric = @"metric";
+static NSString *const _Nonnull kWeatherUnitImperial = @"imperial";
 
 typedef void (^OWMCompletionBlock)(OWMObject <OWMResponseObject> * __nullable dictionary, NSError * __nullable error);
 
