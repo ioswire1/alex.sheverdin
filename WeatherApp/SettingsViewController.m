@@ -10,10 +10,12 @@
 #import "SettingsViewController.h"
 #import "WeatherManager.h"
 #import "OpenWeatherMap.h"
+#import "CitySearchViewController.h"
 
 @interface SettingsViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *cityNameInput;
 @property (strong, nonatomic) IBOutlet UISwitch *unitSwitch;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 
 @end
@@ -51,7 +53,8 @@
                                            CLLocation *location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
                                            city.location = location;
                                            
-                                           [[WeatherManager defaultManager].cities addObject:city];                                           
+                                           [[WeatherManager defaultManager].cities addObject:city];
+                                           [self.tableView reloadData];
                                        }];
             
             [alertController addAction:cancelAction];
@@ -69,19 +72,73 @@
     [OpenWeatherMap setUnits:units];    
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return [[WeatherManager defaultManager].cities count];
+    } else
+        return 1;
+    
 }
 
 
--(void)viewWillAppear:(BOOL)animated {
+ - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cityCell" forIndexPath:indexPath];
+     if (indexPath.section == 0) {
+         cell.textLabel.text = [WeatherManager defaultManager].cities[indexPath.row].name;
+         cell.accessoryType = UITableViewCellAccessoryNone;
+     } else {
+         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+         cell.textLabel.text = @"Add new city...";
+     }
+ 
+     return cell;
+ }
+
+
+/*
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+
+    if (indexPath.section == 1) {
+        CitySearchViewController *vc = (CitySearchViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"CitySearchViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+ }
+
+
+#pragma mark - Life cycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor clearColor];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+}
+
+
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSString *units = [[NSUserDefaults standardUserDefaults] stringForKey:kUnitKey];
     if ([units containsString:kWeatherUnitMetric])
         self.unitSwitch.on = NO;
     else
         self.unitSwitch.on = YES;
+    [self.tableView reloadData];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

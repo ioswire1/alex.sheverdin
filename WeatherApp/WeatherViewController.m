@@ -51,6 +51,12 @@
         
         NSString *title = [NSString stringWithFormat:@"%@, %@\n", self.currentWeather.name, self.currentWeather.sys.country];
         NSString *subtitle = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
+        
+        if (!self.pageIndex) {
+            [WeatherManager defaultManager].cities[0].name = self.currentWeather.name;
+            [WeatherManager defaultManager].cities[0].countryCode = self.currentWeather.sys.country;
+            [WeatherManager defaultManager].cities[0].location = location;
+        }
 
         UILabel *label = [UILabel navigationTitle:title andSubtitle:subtitle];
         [label sizeToFit];
@@ -79,6 +85,7 @@
           self.windLabel.text = [NSString stringWithFormat:@"%.2f",[self.currentWeather.wind.speed floatValue]];
         self.humidityLabel.text = [NSString stringWithFormat:@"%d",[self.currentWeather.main.humidity intValue]];
         self.pressureLabel.text = [NSString stringWithFormat:@"%d",[self.currentWeather.main.pressure intValue]];
+
         
     } failure:^(NSError *error) {
         // TODO: implementation
