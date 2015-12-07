@@ -73,6 +73,7 @@
 }
 
 
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -113,8 +114,11 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-
-    if (indexPath.section == 1) {
+    if (indexPath.section == 0) {
+        UIViewController *pvc = self.parentViewController;
+        UIViewController *nvc = self.navigationController;
+        UIViewController *prvc = self.presentationController;
+    } else {
         CitySearchViewController *vc = (CitySearchViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"CitySearchViewController"];
         [self.navigationController pushViewController:vc animated:YES];
     }

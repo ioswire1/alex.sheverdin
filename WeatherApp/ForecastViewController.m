@@ -65,24 +65,11 @@
 
 - (CLLocation *)currentLocation {
     
-    NSUInteger index = self.pageIndex;
     if (!self.pageIndex) {
         return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
     }
     City *city = [WeatherManager defaultManager].cities[self.pageIndex];
     
-    //    CLGeocoder* gc = [[CLGeocoder alloc] init];
-    //    __block CLLocation *location;
-    //    [gc geocodeAddressString:city completionHandler:^(NSArray *placemarks, NSError *error) {
-    //        if ([placemarks count]>0)
-    //        {
-    //            CLPlacemark* mark = (CLPlacemark*)[placemarks objectAtIndex:0];
-    //            double lat = mark.location.coordinate.latitude;
-    //            double lng = mark.location.coordinate.longitude;
-    //            location = mark.location;
-    //            [self loadWeather:nil];
-    //        }
-    //    }];
     return city.location;
     
     

@@ -33,12 +33,6 @@
         if ([placemarks count] > 0) {
             self.cities = [placemarks mutableCopy];
             [self.tableView reloadData];
-//            for(CLPlacemark* mark in placemarks) {
-//                //            CLPlacemark* mark = (CLPlacemark*)[placemarks objectAtIndex:0];
-//                double lat = mark.location.coordinate.latitude;
-//                double lng = mark.location.coordinate.longitude;
-//                NSString *countryCode = mark.ISOcountryCode;
-//            }
         }
     }];
 }
@@ -74,6 +68,7 @@
     [[WeatherManager defaultManager].cities addObject:city];
     [self.tableView reloadData];
     NSLog(@"%@", [NSString stringWithFormat:@"%@, %@, %f, %f", mark.name, mark.country, mark.location.coordinate.latitude, mark.location.coordinate.longitude]);
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

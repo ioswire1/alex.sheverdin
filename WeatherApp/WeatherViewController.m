@@ -188,7 +188,6 @@
 
 - (CLLocation *)currentLocation {
     
-    NSUInteger index = self.pageIndex;
     if (!self.pageIndex) {
         return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
     }
