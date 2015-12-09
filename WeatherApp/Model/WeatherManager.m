@@ -238,21 +238,21 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
     _forecastDailyArray = [resultArray copy];
     }
 
-- (NSArray<City *> *)cities {
-    if (!_cities) {
+- (NSArray<Place *> *)places {
+    if (!_places) {
         NSMutableArray *array = [@[] mutableCopy];
-        City *city = [[City alloc] initWithName:@"City was not found"];
+        Place *city = [[Place alloc] initWithName:@"City was not found"];
         city.countryCode = @"-";
         [array addObject:city];
-       _cities = [array mutableCopy];
+       _places = [array mutableCopy];
     }
-    return _cities;
+    return _places;
 }
 
 
 @end
 
-@implementation City
+@implementation Place
 
 - (instancetype) initWithName: (NSString *) name {
     self = [super init];

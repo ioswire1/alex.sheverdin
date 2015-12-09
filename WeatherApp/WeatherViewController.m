@@ -14,6 +14,7 @@
 #import "UIImage+OWMCondition.h"
 #import "Design.h"
 #import "PageWeatherController.h"
+#import "SettingsViewController.h"
 
 @interface WeatherViewController () <GradientPlotsDataSource>
 
@@ -53,9 +54,9 @@
         NSString *subtitle = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
         
         if (!self.pageIndex) {
-            [WeatherManager defaultManager].cities[0].name = self.currentWeather.name;
-            [WeatherManager defaultManager].cities[0].countryCode = self.currentWeather.sys.country;
-            [WeatherManager defaultManager].cities[0].location = location;
+            [WeatherManager defaultManager].places[0].name = self.currentWeather.name;
+            [WeatherManager defaultManager].places[0].countryCode = self.currentWeather.sys.country;
+            [WeatherManager defaultManager].places[0].location = location;
         }
 
         UILabel *label = [UILabel navigationTitle:title andSubtitle:subtitle];
@@ -191,9 +192,10 @@
     if (!self.pageIndex) {
         return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
     }
-    City *city = [WeatherManager defaultManager].cities[self.pageIndex];
+    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
     
-    return city.location;}
+    return city.location;
+}
 
 
 #pragma mark - Notifications
@@ -306,10 +308,9 @@
     PageWeatherController *pvc = (PageWeatherController *)self.parentViewController;
     self.pageIndex = [pvc.controllers indexOfObject:self];
     
-    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
-        self.view.alpha = 1.0;
-    } completion:nil];
-
+//    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
+//        self.view.alpha = 1.0;
+//    } completion:nil];
     if (!self.pageIndex) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
     }
@@ -332,9 +333,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
-        self.view.alpha = 0.0;
-    } completion:nil];
+//    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
+//        self.view.alpha = 0.0;
+//    } completion:nil];
     if (!self.pageIndex) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
@@ -355,7 +356,7 @@
     // Pass the selected object to the new view controller.
 
     if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
-        ForecastViewController *vc = (ForecastViewController *)segue.destinationViewController;
+        ForecastViewController *vc = segue.destinationViewController;
         vc.pageIndex = self.pageIndex;
     }
 }

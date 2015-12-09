@@ -12,6 +12,7 @@
 #import "ForecastViewController.h"
 #import "Design.h"
 #import "WeatherManager.h"
+#import "SettingsViewController.h"
 
 
 @interface PageWeatherController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
@@ -27,7 +28,7 @@
 - (NSMutableArray *)controllers {
     if (!_controllers) {
         _controllers = [@[] mutableCopy];
-        for (int i = 0; i < [[WeatherManager defaultManager].cities count]; i++) {
+        for (int i = 0; i < [[WeatherManager defaultManager].places count]; i++) {
             UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
             [_controllers addObject:controller];
         }
@@ -109,12 +110,31 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSArray *cities = [WeatherManager defaultManager].cities;
+    NSArray *cities = [WeatherManager defaultManager].places;
     for (int i = 0; i < [cities count] - [_controllers count]; i++) {
             UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
             [_controllers addObject:controller];
     }
     _pageControl.numberOfPages = self.controllers.count;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"ToSettings"]) {
+        SettingsViewController *controller = segue.destinationViewController;
+        controller.cityDidSelect = ^(NSUInteger pageIndex) {
+        
+            NSArray *cities = [WeatherManager defaultManager].places;
+            for (int i = 0; i < [cities count] - [_controllers count]; i++) {
+                UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
+                [_controllers addObject:controller];
+            }
+            [self setViewControllers:@[self.controllers[pageIndex]]
+                           direction:UIPageViewControllerNavigationDirectionForward
+                            animated:NO completion:nil];
+            self.currentPage = pageIndex;
+        };
+        
+    }
 }
 
 @end

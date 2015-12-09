@@ -13,6 +13,7 @@
 		044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 044A6C491BCFD18E007B3FA4 /* FallBehavior.m */; };
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; };
 		04803C4B1BF5F93F004ED07D /* ForecastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04803C4A1BF5F93F004ED07D /* ForecastViewController.m */; };
+		048532121C160FE800BD0F22 /* SwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 048532111C160FE800BD0F22 /* SwitchTableViewCell.m */; };
 		0493FB921C08C0C500358F3C /* Design.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB911C08C0C500358F3C /* Design.m */; };
 		0493FB961C0A165F00358F3C /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB951C0A165F00358F3C /* NavigationController.m */; };
 		0493FB991C0A20DF00358F3C /* PageWeatherController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB981C0A20DE00358F3C /* PageWeatherController.m */; };
@@ -57,6 +58,8 @@
 		04550CB71BC811CE00B07242 /* UIImage+Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Picker.m"; sourceTree = "<group>"; };
 		04803C491BF5F93F004ED07D /* ForecastViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastViewController.h; sourceTree = "<group>"; };
 		04803C4A1BF5F93F004ED07D /* ForecastViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastViewController.m; sourceTree = "<group>"; };
+		048532101C160FE800BD0F22 /* SwitchTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchTableViewCell.h; sourceTree = "<group>"; };
+		048532111C160FE800BD0F22 /* SwitchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchTableViewCell.m; sourceTree = "<group>"; };
 		0493FB911C08C0C500358F3C /* Design.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Design.m; sourceTree = "<group>"; };
 		0493FB931C08C0ED00358F3C /* Design.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Design.h; sourceTree = "<group>"; };
 		0493FB941C0A165F00358F3C /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -230,6 +233,8 @@
 		CE69C1EA1B77954E005CC71D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				048532101C160FE800BD0F22 /* SwitchTableViewCell.h */,
+				048532111C160FE800BD0F22 /* SwitchTableViewCell.m */,
 				0493FB931C08C0ED00358F3C /* Design.h */,
 				0493FB911C08C0C500358F3C /* Design.m */,
 				043F5BD91BFB97660061A8AA /* UIImage+OWMCondition.h */,
@@ -431,6 +436,7 @@
 				044A6C4A1BCFD18E007B3FA4 /* FallBehavior.m in Sources */,
 				04ABDBC11C135E7100931CE8 /* CitySearchViewController.m in Sources */,
 				041131FF1C10BB0E008D7580 /* SettingsViewController.m in Sources */,
+				048532121C160FE800BD0F22 /* SwitchTableViewCell.m in Sources */,
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				0493FB921C08C0C500358F3C /* Design.m in Sources */,
 				0493FB961C0A165F00358F3C /* NavigationController.m in Sources */,

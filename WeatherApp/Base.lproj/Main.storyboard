@@ -163,7 +163,7 @@
                 <tapGestureRecognizer id="tgy-E6-ZhK">
                     <connections>
                         <action selector="tapToForecast:" destination="e1Q-GZ-VkL" id="k2g-b9-by8"/>
-                        <segue destination="i4u-aS-eYY" kind="push" id="G7g-E3-Edv"/>
+                        <segue destination="i4u-aS-eYY" kind="push" identifier="ToForecast" id="G7g-E3-Edv"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -335,7 +335,7 @@
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="1528" y="481"/>
+            <point key="canvasLocation" x="1505" y="447"/>
         </scene>
         <!--Settings-->
         <scene sceneID="O2i-IS-1Lh">
@@ -356,20 +356,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="MQj-z1-jA8">
-                                <rect key="frame" x="218" y="172" width="51" height="31"/>
-                                <animations/>
-                                <connections>
-                                    <action selector="unitSwitchChanged:" destination="TmN-5T-XWY" eventType="valueChanged" id="Foy-v2-1TK"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ºC / ºF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9rg-uc-Pes">
-                                <rect key="frame" x="216" y="143" width="52" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldo-qU-fub">
                                 <rect key="frame" x="238" y="101" width="30" height="30"/>
                                 <animations/>
@@ -378,13 +364,40 @@
                                     <action selector="tapSearch:" destination="TmN-5T-XWY" eventType="touchUpInside" id="3Hb-tc-mOt"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xrd-QV-trs">
-                                <rect key="frame" x="0.0" y="223" width="320" height="345"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="xrd-QV-trs">
+                                <rect key="frame" x="0.0" y="147" width="320" height="421"/>
                                 <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <label key="tableFooterView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wire IT College ©" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xtQ-34-kTF">
+                                    <rect key="frame" x="0.0" y="156" width="320" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <animations/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cityCell" id="1w9-Ea-RTU">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Switch Cell" id="sQV-cc-6E7" customClass="SwitchTableViewCell">
+                                        <rect key="frame" x="0.0" y="50" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" tableViewCell="sQV-cc-6E7" id="e35-WG-RPk">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H25-PT-GGz">
+                                                    <rect key="frame" x="247" y="6" width="51" height="31"/>
+                                                    <animations/>
+                                                </switch>
+                                            </subviews>
+                                            <animations/>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                        <connections>
+                                            <outlet property="switchUnits" destination="H25-PT-GGz" id="wjM-1z-wXa"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="City Cell" id="1w9-Ea-RTU">
+                                        <rect key="frame" x="0.0" y="94" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1w9-Ea-RTU" id="mhQ-GW-aFx">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -401,13 +414,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Units (metric / imperial)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CVp-qY-FyG">
-                                <rect key="frame" x="31" y="177" width="179" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -417,7 +423,6 @@
                         <outlet property="cityNameInput" destination="oyf-RW-UPm" id="JZy-Lf-Iyo"/>
                         <outlet property="searchDisplayController" destination="Qis-Iw-EKQ" id="GgQ-9e-KvD"/>
                         <outlet property="tableView" destination="xrd-QV-trs" id="pRd-Qi-HbO"/>
-                        <outlet property="unitSwitch" destination="MQj-z1-jA8" id="bbd-Ej-Vbl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZbR-o7-6jM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -438,7 +443,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="1885" y="481"/>
+            <point key="canvasLocation" x="710" y="1211"/>
         </scene>
         <!--City Search View Controller-->
         <scene sceneID="rjw-n8-AhX">
@@ -459,13 +464,13 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="prT-LP-5sx">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="prT-LP-5sx">
                                 <rect key="frame" x="0.0" y="112" width="320" height="392"/>
                                 <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cityFoundCell" id="qjc-mh-36g">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="50" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qjc-mh-36g" id="Nk8-Hi-uHa">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -594,7 +599,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="psx-V4-Pw0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2560" y="830"/>
+            <point key="canvasLocation" x="1511" y="1156"/>
         </scene>
         <!--Page Weather Controller-->
         <scene sceneID="N7Q-g5-UaJ">
@@ -610,7 +615,7 @@
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="settings"/>
                                 <connections>
-                                    <segue destination="TmN-5T-XWY" kind="push" id="eum-5y-Wbx"/>
+                                    <segue destination="TmN-5T-XWY" kind="push" identifier="ToSettings" id="eum-5y-Wbx"/>
                                 </connections>
                             </button>
                         </barButtonItem>
@@ -657,7 +662,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9t2-E4-piv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2079" y="830"/>
+            <point key="canvasLocation" x="1082" y="1211"/>
         </scene>
     </scenes>
     <resources>

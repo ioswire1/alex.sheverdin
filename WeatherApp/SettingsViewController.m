@@ -11,12 +11,11 @@
 #import "WeatherManager.h"
 #import "OpenWeatherMap.h"
 #import "CitySearchViewController.h"
+#import "SwitchTableViewCell.h"
 
 @interface SettingsViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *cityNameInput;
-@property (strong, nonatomic) IBOutlet UISwitch *unitSwitch;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-
 
 @end
 
@@ -48,12 +47,12 @@
                                        actionWithTitle:NSLocalizedString(@"OK", @"OK action")
                                        style:UIAlertActionStyleDefault
                                        handler:^(UIAlertAction *action) {
-                                           City *city = [[City alloc] initWithName:mark.name];
+                                           Place *city = [[Place alloc] initWithName:mark.name];
                                            city.countryCode = countryCode;
                                            CLLocation *location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
                                            city.location = location;
                                            
-                                           [[WeatherManager defaultManager].cities addObject:city];
+                                           [[WeatherManager defaultManager].places addObject:city];
                                            [self.tableView reloadData];
                                        }];
             
@@ -63,42 +62,62 @@
         }
     }];
 }
-- (IBAction)unitSwitchChanged:(UISwitch *)sender {
-    NSString *units = kWeatherUnitMetric;
-    if (sender.isOn) {
-        units = kWeatherUnitImperial;
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:units forKey:kUnitKey];
-    [OpenWeatherMap setUnits:units];    
-}
 
 
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return [[WeatherManager defaultManager].cities count];
+    if (section == 1) {
+        return [[WeatherManager defaultManager].places count];
     } else
         return 1;
     
 }
 
+- (void) switchChanged:(UISwitch *) sender {
+    NSString *units = kWeatherUnitMetric;
+    if (sender.isOn) {
+        units = kWeatherUnitImperial;
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:units forKey:kUnitKey];
+    [OpenWeatherMap setUnits:units];
+}
 
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cityCell" forIndexPath:indexPath];
+     
+     static NSString * const reuseCityIdentifier = @"City Cell";
+     static NSString * const reuseSwitchIdentifier = @"Switch Cell";
+     
+     UITableViewCell *cell;
+     
      if (indexPath.section == 0) {
-         cell.textLabel.text = [WeatherManager defaultManager].cities[indexPath.row].name;
-         cell.accessoryType = UITableViewCellAccessoryNone;
+         cell = [tableView dequeueReusableCellWithIdentifier:reuseSwitchIdentifier];
+         cell.textLabel.text = @"metric (ºC) / imperial (ºF)";
+         UISwitch *switcher = [(SwitchTableViewCell *)cell switchUnits];
+         NSString *units = [[NSUserDefaults standardUserDefaults] stringForKey:kUnitKey];
+         if ([units containsString:kWeatherUnitMetric])
+             switcher.on = NO;
+         else
+             switcher.on = YES;;
+         [switcher addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+         [cell.contentView bringSubviewToFront:switcher];
      } else {
-         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-         cell.textLabel.text = @"Add new city...";
+     
+         cell = [tableView dequeueReusableCellWithIdentifier:reuseCityIdentifier];
+         if (indexPath.section == 1) {
+             cell.textLabel.text = [WeatherManager defaultManager].places[indexPath.row].name;
+             cell.accessoryType = UITableViewCellAccessoryNone;
+         } else if (indexPath.section == 2) {
+             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+             cell.textLabel.text = @"Add new city...";
+         }
      }
- 
+
      return cell;
  }
 
@@ -114,11 +133,13 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-    if (indexPath.section == 0) {
-        UIViewController *pvc = self.parentViewController;
-        UIViewController *nvc = self.navigationController;
-        UIViewController *prvc = self.presentationController;
-    } else {
+    if (indexPath.section == 1) {
+        if (self.cityDidSelect) {
+            self.cityDidSelect(indexPath.row);
+            self.cityDidSelect = nil;
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } else if (indexPath.section == 2) {
         CitySearchViewController *vc = (CitySearchViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"CitySearchViewController"];
         [self.navigationController pushViewController:vc animated:YES];
     }
@@ -137,13 +158,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSString *units = [[NSUserDefaults standardUserDefaults] stringForKey:kUnitKey];
-    if ([units containsString:kWeatherUnitMetric])
-        self.unitSwitch.on = NO;
-    else
-        self.unitSwitch.on = YES;
-    [self.tableView reloadData];
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

@@ -60,12 +60,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
  
     CLPlacemark *mark = self.cities[indexPath.row];
-    City *city = [[City alloc] initWithName:mark.name];
+    Place *city = [[Place alloc] initWithName:mark.name];
     city.countryCode = mark.ISOcountryCode;
     CLLocation *location = [[CLLocation alloc] initWithLatitude:mark.location.coordinate.latitude longitude:mark.location.coordinate.longitude];
     city.location = location;
     
-    [[WeatherManager defaultManager].cities addObject:city];
+    [[WeatherManager defaultManager].places addObject:city];
     [self.tableView reloadData];
     NSLog(@"%@", [NSString stringWithFormat:@"%@, %@, %f, %f", mark.name, mark.country, mark.location.coordinate.latitude, mark.location.coordinate.longitude]);
     [self.navigationController popViewControllerAnimated:YES];

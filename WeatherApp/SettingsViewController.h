@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^CityDidSelect)(NSUInteger);
+
 @interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, copy) CityDidSelect cityDidSelect;
 
 @end

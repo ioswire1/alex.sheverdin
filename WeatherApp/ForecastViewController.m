@@ -68,7 +68,7 @@
     if (!self.pageIndex) {
         return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
     }
-    City *city = [WeatherManager defaultManager].cities[self.pageIndex];
+    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
     
     return city.location;
     

@@ -11,7 +11,7 @@
 
 #import "Weather.h"
 
-@interface City : NSObject
+@interface Place : NSObject
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *countryCode;
@@ -23,7 +23,7 @@
 
 @interface WeatherManager : NSObject
 
-@property (nonatomic, strong) NSMutableArray<City*> *cities;
+@property (nonatomic, strong) NSMutableArray<Place*> *places;
 
 
 + (instancetype)defaultManager;
