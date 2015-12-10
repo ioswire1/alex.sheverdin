@@ -11,6 +11,8 @@
 
 #import "Weather.h"
 
+static NSString *const kNewPlaceAddedNotification = @"DidPlaceAddedNotification";
+
 @interface Place : NSObject
 
 @property (nonatomic, strong) NSString *name;

@@ -249,6 +249,10 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
     return _places;
 }
 
+- (void) addNewPlace:(Place *) place{
+    [self.places addObject:place];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNewPlaceAddedNotification object:place];
+}
 
 @end
 

@@ -10,7 +10,7 @@
 #import "SettingsViewController.h"
 #import "WeatherManager.h"
 #import "OpenWeatherMap.h"
-#import "CitySearchViewController.h"
+
 #import "SwitchTableViewCell.h"
 
 @interface SettingsViewController ()
@@ -139,10 +139,7 @@
             self.cityDidSelect = nil;
             [self.navigationController popViewControllerAnimated:YES];
         }
-    } else if (indexPath.section == 2) {
-        CitySearchViewController *vc = (CitySearchViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"CitySearchViewController"];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
+    } 
  }
 
 
