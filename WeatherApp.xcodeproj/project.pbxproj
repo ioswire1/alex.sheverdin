@@ -14,6 +14,7 @@
 		04550CB81BC811CE00B07242 /* UIImage+Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04550CB71BC811CE00B07242 /* UIImage+Picker.m */; };
 		04803C4B1BF5F93F004ED07D /* ForecastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04803C4A1BF5F93F004ED07D /* ForecastViewController.m */; };
 		048532121C160FE800BD0F22 /* SwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 048532111C160FE800BD0F22 /* SwitchTableViewCell.m */; };
+		048C0B601C1B10630071DF51 /* LocatedWeatherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 048C0B5F1C1B10630071DF51 /* LocatedWeatherViewController.m */; };
 		0493FB921C08C0C500358F3C /* Design.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB911C08C0C500358F3C /* Design.m */; };
 		0493FB961C0A165F00358F3C /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB951C0A165F00358F3C /* NavigationController.m */; };
 		0493FB991C0A20DF00358F3C /* PageWeatherController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0493FB981C0A20DE00358F3C /* PageWeatherController.m */; };
@@ -59,6 +60,8 @@
 		04803C4A1BF5F93F004ED07D /* ForecastViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastViewController.m; sourceTree = "<group>"; };
 		048532101C160FE800BD0F22 /* SwitchTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchTableViewCell.h; sourceTree = "<group>"; };
 		048532111C160FE800BD0F22 /* SwitchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchTableViewCell.m; sourceTree = "<group>"; };
+		048C0B5E1C1B10630071DF51 /* LocatedWeatherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocatedWeatherViewController.h; sourceTree = "<group>"; };
+		048C0B5F1C1B10630071DF51 /* LocatedWeatherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocatedWeatherViewController.m; sourceTree = "<group>"; };
 		0493FB911C08C0C500358F3C /* Design.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Design.m; sourceTree = "<group>"; };
 		0493FB931C08C0ED00358F3C /* Design.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Design.h; sourceTree = "<group>"; };
 		0493FB941C0A165F00358F3C /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				0493FB951C0A165F00358F3C /* NavigationController.m */,
 				04AC9B541BE9126100D0D429 /* WeatherViewController.h */,
 				04AC9B551BE9126100D0D429 /* WeatherViewController.m */,
+				048C0B5E1C1B10630071DF51 /* LocatedWeatherViewController.h */,
+				048C0B5F1C1B10630071DF51 /* LocatedWeatherViewController.m */,
 				04803C491BF5F93F004ED07D /* ForecastViewController.h */,
 				04803C4A1BF5F93F004ED07D /* ForecastViewController.m */,
 			);
@@ -434,6 +439,7 @@
 				CE69C1F01B77954E005CC71D /* AppDelegate.m in Sources */,
 				0493FB921C08C0C500358F3C /* Design.m in Sources */,
 				0493FB961C0A165F00358F3C /* NavigationController.m in Sources */,
+				048C0B601C1B10630071DF51 /* LocatedWeatherViewController.m in Sources */,
 				04FE0E191BA6D2D1005B061F /* CircleView.m in Sources */,
 				0493FB991C0A20DF00358F3C /* PageWeatherController.m in Sources */,
 				04AE66C71BDA63E2004E6FB5 /* WeatherManager.m in Sources */,

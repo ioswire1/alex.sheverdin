@@ -11,6 +11,7 @@
 
 @interface ForecastViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic) NSUInteger pageIndex;
+//@property (nonatomic) NSUInteger pageIndex;
+@property (nonatomic, strong) Place *place;
 
 @end

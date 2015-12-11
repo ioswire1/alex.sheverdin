@@ -52,7 +52,9 @@
                                            CLLocation *location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
                                            city.location = location;
                                            
-                                           [[WeatherManager defaultManager].places addObject:city];
+//                                           [[WeatherManager defaultManager].places addObject:city];
+                                           [[WeatherManager defaultManager] addNewPlace:city];
+                                           
                                            [self.tableView reloadData];
                                        }];
             

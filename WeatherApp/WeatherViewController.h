@@ -10,7 +10,14 @@
 
 #import "CorePlot-CocoaTouch.h"
 #import <UIKit/UIKit.h>
+#import "WeatherManager.h"
 
 @interface WeatherViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+
+@property (nonatomic, strong) Place *place;
+
+- (void)loadWeather:(void (^)())completion;
+- (void)loadForecast:(void (^)())completion;
+- (void)loadForecastDaily:(void (^)())completion;
 
 @end

@@ -65,12 +65,13 @@
 
 - (CLLocation *)currentLocation {
     
-    if (!self.pageIndex) {
-        return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
-    }
-    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
-    
-    return city.location;
+//    if (!self.pageIndex) {
+//        return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
+//    }
+//    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
+//
+    CLLocation *loc = self.place.location;
+    return self.place.location;
     
     
 }
@@ -266,18 +267,18 @@
         UILabel *label = self.weekdayLabels[i];
         label.text = [shortWeekdaySymbols[i] uppercaseString];
     }
-    if (!self.pageIndex) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
-    }
+//    if (!self.pageIndex) {
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
+//    }
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    if (!self.pageIndex) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-    }
-        
+//    if (!self.pageIndex) {
+//        [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    }
+    
 
 }
 

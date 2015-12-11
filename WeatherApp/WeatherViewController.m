@@ -7,7 +7,6 @@
 //
 
 #import "WeatherViewController.h"
-#import "WeatherManager.h"
 #import "AppDelegate.h"
 #import "GradientPlots.h"
 #import "ForecastViewController.h"
@@ -29,7 +28,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *windLabel;
 @property (strong, nonatomic) IBOutlet UILabel *humidityLabel;
 @property (strong, nonatomic) IBOutlet UILabel *pressureLabel;
-@property (nonatomic) NSUInteger pageIndex;
 
 @end
 
@@ -38,6 +36,13 @@
 
 
 #pragma mark - Load weather data
+
+- (Place *)place {
+    if (!_place) {
+        _place = [[Place alloc] init];
+    }
+    return _place;
+}
 
 - (void)loadWeather:(void (^)())completion {
     
@@ -53,11 +58,16 @@
         NSString *title = [NSString stringWithFormat:@"%@, %@\n", self.currentWeather.name, self.currentWeather.sys.country];
         NSString *subtitle = [[self.currentWeather.weather[0] objectForKey:@"description"] lowercaseString];
         
-        if (!self.pageIndex) {
-            [WeatherManager defaultManager].places[0].name = self.currentWeather.name;
-            [WeatherManager defaultManager].places[0].countryCode = self.currentWeather.sys.country;
-            [WeatherManager defaultManager].places[0].location = location;
-        }
+//        if (!self.pageIndex) {
+//            [WeatherManager defaultManager].places[0].name = self.currentWeather.name;
+//            [WeatherManager defaultManager].places[0].countryCode = self.currentWeather.sys.country;
+//            [WeatherManager defaultManager].places[0].location = location;
+//        }
+        
+        self.place.name = self.currentWeather.name;
+        self.place.countryCode = self.currentWeather.sys.country;
+        self.place.location = location;
+        
 
         UILabel *label = [UILabel navigationTitle:title andSubtitle:subtitle];
         [label sizeToFit];
@@ -102,7 +112,9 @@
     [[WeatherManager defaultManager] getForecastByLocation:location success:^(OWMObject <OWMForecastObject> *object) {
         
         wSelf.currentForecast = object;
-  
+        [wSelf setScaleMinMax];
+        [wSelf.plots redrawPlots];
+        
         if (completion) {
             completion();
         }
@@ -189,12 +201,12 @@
 
 - (CLLocation *)currentLocation {
     
-    if (!self.pageIndex) {
+//    if (!self.pageIndex) {
         return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
-    }
-    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
+//    }
+//    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
     
-    return city.location;
+//    return city.location;
 }
 
 
@@ -203,25 +215,6 @@
 - (void)appDidBecomeActive {
 //TODO: to implement
 }
-
-- (void)locationDidChange:(NSNotification *)notification {
-    if (notification.object) {
-        NSLog(@"Location Changed!");
-        __weak typeof(self) wSelf = self;
-        [self loadWeather:^{
-            
-        }];
-        [self loadForecast:^{//
-            [wSelf setScaleMinMax];
-            [wSelf.plots redrawPlots];
-        }];
-        [self loadForecastDaily:^{
-            
-        }];
-
-    }
-}
-
 
 #pragma mark - Datasource for plots
 
@@ -306,14 +299,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     PageWeatherController *pvc = (PageWeatherController *)self.parentViewController;
-    self.pageIndex = [pvc.controllers indexOfObject:self];
+//    self.pageIndex = [pvc.controllers indexOfObject:self];
     
 //    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
 //        self.view.alpha = 1.0;
 //    } completion:nil];
-    if (!self.pageIndex) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
-    }
+//    if (!self.pageIndex) {
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationDidChange:) name:kDidUpdateLocationsNotification object:nil];
+//    }
 
     __weak typeof(self) wSelf = self;
     [self loadWeather:^{
@@ -321,8 +314,8 @@
     }];
     
     [self loadForecast:^{
-        [wSelf setScaleMinMax];
-        [wSelf.plots redrawPlots];
+//        [wSelf setScaleMinMax];
+//        [wSelf.plots redrawPlots];
     }];
     
     [self loadForecastDaily:^{
@@ -336,9 +329,9 @@
 //    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionOverrideInheritedDuration animations:^{
 //        self.view.alpha = 0.0;
 //    } completion:nil];
-    if (!self.pageIndex) {
+//    if (!self.pageIndex) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
-    }
+//    }
 }
 
 
@@ -357,7 +350,8 @@
 
     if ([segue.destinationViewController isKindOfClass:[ForecastViewController class]]) {
         ForecastViewController *vc = segue.destinationViewController;
-        vc.pageIndex = self.pageIndex;
+//        vc.pageIndex = self.pageIndex;
+        vc.place = self.place;
     }
 }
 

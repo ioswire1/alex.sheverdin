@@ -251,7 +251,7 @@ static NSString *const kLastForecastDailyKey = @"lastForecastDailyKey";
 
 - (void) addNewPlace:(Place *) place{
     [self.places addObject:place];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNewPlaceAddedNotification object:place];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNewPlaceAddedNotification object:nil userInfo:[NSDictionary dictionaryWithObject:place forKey:@"Place"]];
 }
 
 @end

@@ -26,6 +26,7 @@ static NSString *const kNewPlaceAddedNotification = @"DidPlaceAddedNotification"
 @interface WeatherManager : NSObject
 
 @property (nonatomic, strong) NSMutableArray<Place*> *places;
+- (void) addNewPlace:(Place *) place;
 
 
 + (instancetype)defaultManager;
