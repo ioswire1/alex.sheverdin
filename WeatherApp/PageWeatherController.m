@@ -50,7 +50,6 @@
 - (void)setCurrentPage:(NSUInteger)currentPage {
     // Scroll to page
     self.pageControl.currentPage = currentPage;
-//    self.navigationItem.title = [self.controllers[currentPage] title];
 }
 
 - (NSUInteger)currentPage {
@@ -117,7 +116,7 @@
 //            UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
 //            [_controllers addObject:controller];
 //    }
-//    _pageControl.numberOfPages = self.controllers.count;
+    _pageControl.numberOfPages = self.controllers.count;
 }
 
 - (void)onCityAdded:(NSNotification *) notification {
@@ -140,14 +139,9 @@
         SettingsViewController *controller = segue.destinationViewController;
         controller.cityDidSelect = ^(NSUInteger pageIndex) {
         
-            NSArray *cities = [WeatherManager defaultManager].places;
-            for (int i = 0; i < [cities count] - [_controllers count]; i++) {
-                UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:(@"WeatherViewController")];
-                [_controllers addObject:controller];
-            }
-            [self setViewControllers:@[self.controllers[pageIndex]]
-                           direction:UIPageViewControllerNavigationDirectionForward
-                            animated:NO completion:nil];
+        [self setViewControllers:@[self.controllers[pageIndex]]
+                       direction:UIPageViewControllerNavigationDirectionForward
+                        animated:NO completion:nil];
             self.currentPage = pageIndex;
         };
         

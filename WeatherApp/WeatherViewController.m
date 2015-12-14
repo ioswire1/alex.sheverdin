@@ -200,13 +200,8 @@
 #pragma mark - Location
 
 - (CLLocation *)currentLocation {
-    
-//    if (!self.pageIndex) {
-        return [(AppDelegate *)[UIApplication sharedApplication].delegate currentLocation];
-//    }
-//    Place *city = [WeatherManager defaultManager].places[self.pageIndex];
-    
-//    return city.location;
+
+    return self.place.location;
 }
 
 
